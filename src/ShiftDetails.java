@@ -1,9 +1,9 @@
 
 public class ShiftDetails {
 	
-	int numberOfShifts;
-	int hoursInShift;
-	int ordersPerHour[]; //size of hoursInShift
+	private int numberOfShifts;
+	private int hoursInShift;
+	private int ordersPerHour[]; //size of hoursInShift
 	
 	/**
 	 * constructor

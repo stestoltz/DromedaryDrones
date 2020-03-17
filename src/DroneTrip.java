@@ -19,7 +19,7 @@ public class DroneTrip {
 	 * @return shallow copy of stops[]
 	 */
 	public Order[] getStops() {
-		
+		return null;
 	}
 	
 	

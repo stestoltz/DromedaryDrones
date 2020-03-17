@@ -2,10 +2,10 @@ import java.util.ArrayList;
 
 public class SimulationDetails {
 		
-	ArrayList<Meal> meals;
-	Location location;
-	ShiftDetails shift;
-	Drone drone;
+	private ArrayList<Meal> meals;
+	private Location location;
+	private ShiftDetails shift;
+	private Drone drone;
 	
 	/**
 	 * constructor
@@ -20,27 +20,35 @@ public class SimulationDetails {
 		this.shift = shift;
 		this.drone = drone;
 	}
+	
 	public ArrayList<Meal> getMeals() {
 		return meals;
 	}
+	
 	public void setMeals(ArrayList<Meal> meals) {
 		this.meals = meals;
 	}
+	
 	public Location getLocation() {
 		return location;
 	}
+	
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+	
 	public ShiftDetails getShift() {
 		return shift;
 	}
+	
 	public void setShift(ShiftDetails shift) {
 		this.shift = shift;
 	}
+	
 	public Drone getDrone() {
 		return drone;
 	}
+	
 	public void setDrone(Drone drone) {
 		this.drone = drone;
 	}
@@ -66,7 +74,7 @@ public class SimulationDetails {
 	 * @return the random meal
 	 */
 	public Meal getRandomMeal() {
-		
+		return null;
 	}
 	
 	/**
@@ -74,7 +82,7 @@ public class SimulationDetails {
 	 * @return a delivery point
 	 */
 	public DeliveryPoint getRandomPoint() {
-		
+		return null;
 	}
 	
 	/**
@@ -83,6 +91,6 @@ public class SimulationDetails {
 	 * @return a meal from the arraylist
 	 */
 	public Meal getMeal(int n) { 
-		
+		return null;
 	}
 }

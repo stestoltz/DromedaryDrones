@@ -2,7 +2,7 @@ import java.util.Queue;
 
 public class KnapsackPacking extends PackingAlgorithm {
 
-	Queue<Meal> skippedMeals;
+	private Queue<Meal> skippedMeals;
 	
 	/**
 	 * constructor
