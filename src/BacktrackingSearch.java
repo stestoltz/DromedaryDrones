@@ -10,7 +10,7 @@ public class BacktrackingSearch implements RoutingAlgorithm {
 	 */
 	@Override
 	public DroneTrip createTrip(List<Order> orders) {
-		
+		return null;
 	}
 
 }

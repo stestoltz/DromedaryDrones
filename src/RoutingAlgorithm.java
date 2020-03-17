@@ -16,7 +16,7 @@ public interface RoutingAlgorithm {
 	 * @return the distance between the two points
 	 */
 	default double distance(DeliveryPoint a, DeliveryPoint b) {
-		
+		return 0.0;
 	}
 	
 }

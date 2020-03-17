@@ -2,8 +2,8 @@ import java.util.Queue;
 
 public abstract class PackingAlgorithm {
 	
-	Queue<Meal> shiftMeals;
-	Drone drone;
+	private Queue<Meal> shiftMeals;
+	private Drone drone;
 	
 	/**
 	 * next order builds the next order

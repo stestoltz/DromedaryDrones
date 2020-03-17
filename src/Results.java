@@ -34,7 +34,7 @@ public class Results {
 	 * @throws Exception if list is empty
 	 */
 	public double worstTime() throws Exception {
-		
+		return 0.0;
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class Results {
 	 * @throws Exception if list is empty
 	 */
 	public double averageTime() throws Exception {
-		
+		return 0.0;
 	}
 	
 }

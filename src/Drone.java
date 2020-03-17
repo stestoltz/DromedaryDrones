@@ -1,11 +1,11 @@
 
 public class Drone {
 	
-	double cargoWeight;
-	double averageCruisingSpeed;
-	double maxFlightTime;
-	double turnAroundTime;
-	double defaultDeliveryTime;
+	private double cargoWeight;
+	private double averageCruisingSpeed;
+	private double maxFlightTime;
+	private double turnAroundTime;
+	private double defaultDeliveryTime;
 	
 	/**
 	 * constructor
