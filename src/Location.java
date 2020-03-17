@@ -2,8 +2,8 @@ import java.util.HashMap;
 
 public class Location {
 	
-	HashMap<DeliveryPoint, Boolean> DeliveryPoints;
-	String name;
+	private HashMap<DeliveryPoint, Boolean> DeliveryPoints;
+	private String name;
 	
 	/**
 	 * constructor

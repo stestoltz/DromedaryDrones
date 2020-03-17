@@ -21,7 +21,7 @@ public class Simulation {
 	 * @return array of results objects, one per packing algorithm
 	 */
 	public Results[] runSimulation(PackingAlgorithm[] packingAlgorithms, RoutingAlgorithm routingAlgorithm) {
-		
+		return null;
 	}
 	
 	/**
@@ -30,7 +30,7 @@ public class Simulation {
 	 * @return the queue
 	 */
 	public Queue<Order> generateOrders(PackingAlgorithm packingAlgorithm) {
-		
+		return null;
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class Simulation {
 	 * @return file path to XML file
 	 */
 	public String generateXML(Queue<Order> orders) {
-		
+		return "";
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public class Simulation {
 	 * @return queue of orders
 	 */
 	public Queue<Order> readXML(String filePath) {
-		
+		return null;
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class Simulation {
 	 * @return the time the trip takes
 	 */
 	public double processTrip(DroneTrip trip) {
-		
+		return 0.0;
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class Simulation {
 	 * @return the sequence of trips the drone will take
 	 */
 	public DroneTrip[] processOrders(Queue<Order> orders, RoutingAlgorithm routingAlgorithm) {
-		
+		return null;
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class Simulation {
 	 * @return results for an individual shift
 	 */
 	public Results generateResults(DroneTrip[] trips) {
-		
+		return null;
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public class Simulation {
 	 * @return results for a whole simulation
 	 */
 	public Results generateResults(Results[] allShiftsResults) {
-		
+		return null;
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class Simulation {
 	 * @return a randomly generated order
 	 */
 	public Order generateOrder(double timestamp) {
-		
+		return null;
 	}
 
 }

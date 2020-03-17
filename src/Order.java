@@ -1,11 +1,11 @@
 
 public class Order {
 	
-	String name;
-	Meal meal;
-	double orderedTime;
-	double deliveredTime;
-	DeliveryPoint deliveryPoint;
+	private String name;
+	private Meal meal;
+	private double orderedTime;
+	private double deliveredTime;
+	private DeliveryPoint deliveryPoint;
 	
 	/**
 	 * constructor

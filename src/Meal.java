@@ -2,8 +2,8 @@ import java.util.HashMap;
 
 public class Meal {
 	
-	HashMap<FoodItem, Integer> meal;
-	double percentage;
+	private HashMap<FoodItem, Integer> meal;
+	private double percentage;
 	
 	/**
 	 * constructor
@@ -62,7 +62,7 @@ public class Meal {
 	 * @return - returns the weight
 	 */
 	public double getMealWeight() {
-		
+		return 0.0;
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class Meal {
 	 * @return - returns the prep time
 	 */
 	public double getMealPrepTime() {
-		
+		return 0.0;
 	}
 	
 	/**
@@ -78,6 +78,6 @@ public class Meal {
 	 * their quantities and their percentages
 	 */
 	public String toString() {
-		
+		return "";
 	}
 }
