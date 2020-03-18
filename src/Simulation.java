@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 public class Simulation {
@@ -10,7 +12,7 @@ public class Simulation {
 	 * @param details the options for this simulation
 	 */
 	public Simulation(SimulationDetails details) {
-		
+		this.details = details;
 	}
 	
 	/**
@@ -21,6 +23,47 @@ public class Simulation {
 	 * @return array of results objects, one per packing algorithm
 	 */
 	public Results[] runSimulation(PackingAlgorithm[] packingAlgorithms, RoutingAlgorithm routingAlgorithm) {
+		
+		// create simulationResults[], one entry for each packing algorithm
+		
+		// for each packing algorithm
+		
+			// create results[] for this shift's results
+			
+			// for each shift
+		
+				// create orders queue
+		
+				// for each hour
+					
+					// add orders to queue
+	
+				/*
+				 * send orders queue to xml file
+				 * 
+				 * read orders queue from xml file
+				 * 
+				 */
+		
+				// process the orders into drone trips
+		
+				// for each drone trip
+					
+					// process the trip
+				
+				// generate results for this shift
+		
+				// add results to shift results[]
+	
+			// all shifts are done - this packing algorithm's simulation is done
+		
+			// aggregate all shift's results into one results object
+		
+			// add to simulationResults
+		
+		// return simulationResults
+				
+		
 		return null;
 	}
 	
@@ -51,16 +94,6 @@ public class Simulation {
 	}
 	
 	/**
-	 * Figure out how long the trip takes
-	 * Updates the delivered time of each order object in the drone trip
-	 * @param trip the trip to process
-	 * @return the time the trip takes
-	 */
-	public double processTrip(DroneTrip trip) {
-		return 0.0;
-	}
-	
-	/**
 	 * Given queue of orders, build drone trips from the orders
 	 * Use processTrip to figure out how long each trip took
 	 * @param orders
@@ -72,12 +105,35 @@ public class Simulation {
 	}
 	
 	/**
+	 * Figure out how long the trip takes
+	 * Updates the delivered time of each order object in the drone trip
+	 * @param trip the trip to process
+	 * @return the time the trip takes
+	 */
+	public double processTrip(DroneTrip trip) {
+		return 0.0;
+	}
+	
+	/**
 	 * Given one shift's trip sequence, aggregate the results for that shift
 	 * @param trips
 	 * @return results for an individual shift
 	 */
 	public Results generateResults(DroneTrip[] trips) {
-		return null;
+		Results shiftResults = new Results();
+		
+		List<Double> times = new ArrayList<>();
+		
+		// for each order in each trip, add the time that order took
+		for (DroneTrip trip : trips) {
+			for (Order order : trip.getStops()) {
+				times.add(order.getDeliveredTime() - order.getOrderedTime());
+			}
+		}
+		
+		shiftResults.addTimes(times);
+		
+		return shiftResults;
 	}
 	
 	/**
@@ -86,7 +142,14 @@ public class Simulation {
 	 * @return results for a whole simulation
 	 */
 	public Results generateResults(Results[] allShiftsResults) {
-		return null;
+		Results simulationResults = new Results();
+		
+		// for each shift's results, add the times that it took
+		for (Results shiftResults : allShiftsResults) {
+			simulationResults.addTimes(shiftResults.getTimes());
+		}
+		
+		return simulationResults;
 	}
 	
 	/**
