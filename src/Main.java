@@ -83,4 +83,20 @@ public class Main extends Application
 		stage.setMaximized(true);
 		stage.show();
 	}
+	
+	
+	
+	
+	public Location generateBogusLocation() {
+		Location location = new Location("Bogus");
+		
+		location.addPoint(new DeliveryPoint("HAL", 25, 0));
+		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));
+		location.addPoint(new DeliveryPoint("PLC", -25, 30));
+		location.addPoint(new DeliveryPoint("STEM", -40, 0));
+		location.addPoint(new DeliveryPoint("Rockwell", -50, 0));
+		location.addPoint(new DeliveryPoint("Crawford", -75, -30));
+		
+		return location;
+	}
 }
