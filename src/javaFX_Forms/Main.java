@@ -1,3 +1,4 @@
+package javaFX_Forms;
 
 import java.io.FileInputStream;
 
@@ -65,6 +66,7 @@ public class Main extends Application
 		BorderPane layout = new BorderPane();
 		layout.setBottom(bottom);
 		layout.setTop(top);
+		
 		layout.setCenter(mapView);
 
 
