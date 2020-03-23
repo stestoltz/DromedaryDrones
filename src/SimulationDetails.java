@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class SimulationDetails {
 		
@@ -82,7 +84,14 @@ public class SimulationDetails {
 	 * @return a delivery point
 	 */
 	public DeliveryPoint getRandomPoint() {
-		return null;
+		// get list of delivery points
+		List<DeliveryPoint> points = location.getDeliveryPoints();
+		
+		// get random index
+		Random rand = new Random();
+		int index = rand.nextInt(points.size());
+		
+		return points.get(index);
 	}
 	
 	/**
