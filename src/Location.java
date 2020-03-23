@@ -41,14 +41,6 @@ public class Location {
 	}
 	
 	/**
-	 * changes any updated values in the selected point
-	 * @param dp delivery point to edit
-	 */
-	public void editPoint(DeliveryPoint dp) {
-		
-	}
-	
-	/**
 	 * deletes a delivery point from the hashmap
 	 * @param dp delivery point to delete
 	 */

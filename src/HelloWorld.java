@@ -1,17 +1,14 @@
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Orientation;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
- 
+
 public class HelloWorld extends Application
 {
     // Declaring the TextArea for Logging
@@ -23,79 +20,43 @@ public class HelloWorld extends Application
     }
      
     @Override
-    public void start(Stage stage) 
+    public void start(Stage stage) throws Exception
     {
-        // Create the TextArea
-        logging = new TextArea();
-        logging.setMaxWidth(300);
-        logging.setMaxHeight(150);
- 
-        // Create the Labels
-        Label seasonLbl = new Label("Select Season: ");
-        Label fruitLbl = new Label("Select Fruit: ");
-                 
-        // Create the Lists for the ListViews
-        ObservableList<String> seasonList = FXCollections.<String>observableArrayList("Spring", "Summer", "Fall", "Winter");
-         
-        // Create the ListView for the seasons
-        ListView<String> seasons = new ListView<>(seasonList);
-        // Set the Orientation of the ListView
-        seasons.setOrientation(Orientation.VERTICAL);
-        // Set the Size of the ListView
-        seasons.setPrefSize(120, 100);
- 
-        // Update the TextArea when the selected season changes
-        seasons.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
-        {
-            public void changed(ObservableValue<? extends String> ov,
-                    final String oldvalue, final String newvalue) 
-            {
-                seasonChanged(ov, oldvalue, newvalue);
-        }});
- 
+      stage.setTitle("Main Form"); 
+      Button delete = new Button("Delete");
+        //button section on gui
+      
+        VBox vbox = new VBox();
+        vbox.setSpacing(10);
+        vbox.getChildren().addAll(delete);  //adds buttons to vbox
+        vbox.setPadding(new Insets(50, 10, 0, 0));  //above,right,below,left
+      //do stuff
         
-        // Create the Season VBox
-        VBox seasonSelection = new VBox();
-        // Set Spacing to 10 pixels
-        seasonSelection.setSpacing(10);
-        // Add the Label and the List to the VBox
-        seasonSelection.getChildren().addAll(seasonLbl,seasons);
- 
-         
-        // Create the GridPane
+      // Create the GridPane
         GridPane pane = new GridPane();
         // Set the horizontal and vertical gaps between children
         pane.setHgap(10);
-        pane.setVgap(5);        
-        // Add the Season List at position 0
-        pane.addColumn(0, seasonSelection);
-        // Add the TextArea at position 2
-        pane.addColumn(2, logging);
+        pane.setVgap(5);
+        // Add the two gui components
+        pane.addColumn(1, vbox);
+
+//        // Add the TextArea at position 2
+//        pane.addColumn(2, logging);
              
         // Set the Style-properties of the GridPane
-        pane.setStyle("-fx-padding: 10;" +
-            "-fx-border-style: solid inside;" +
+        /*pane.setStyle("-fx-padding: 10;" +
             "-fx-border-width: 2;" +
             "-fx-border-insets: 5;" +
-            "-fx-border-radius: 5;" +
-            "-fx-border-color: blue;");
-         
-        // Create the Scene
-        Scene scene = new Scene(pane);
+            "-fx-border-radius: 5;");*/
+      
+      
+      
+      Scene scene = new Scene(pane);
         // Add the Scene to the Stage
         stage.setScene(scene);
-        // Set the Title
-        stage.setTitle("A simple ListView Example");
         // Display the Stage
+        
+        stage.setMaximized(true);
         stage.show();
-    }
- 
-    // Method to display the Season, which has been changed
-    public void seasonChanged(ObservableValue<? extends String> observable,String oldValue,String newValue) 
-    {
-        String oldText = oldValue == null ? "null" : oldValue.toString();
-        String newText = newValue == null ? "null" : newValue.toString();
-         
-        logging.appendText("Season changed: old = " + oldText + ", new = " + newText + "\n");
-    }
+  }
 }
