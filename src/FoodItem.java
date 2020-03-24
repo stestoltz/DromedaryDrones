@@ -6,6 +6,12 @@ public class FoodItem {
 	private double prepTime;
 	
 	// constructor
+	public FoodItem(String name, double weight, double prepTime) {
+		this.name = name;
+		this.weight = weight;
+		this.prepTime = prepTime;
+		
+	}
 	
 	public double getWeight() {
 		return weight;
@@ -30,7 +36,4 @@ public class FoodItem {
 	public void setPrepTime(double prepTime) {
 		this.prepTime = prepTime;
 	}
-	
-	
-
 }

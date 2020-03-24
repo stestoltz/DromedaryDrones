@@ -33,11 +33,12 @@ public class Meal {
 	
 	
 	/**
-	 * adds a food to the hashmap of foods
-	 * @param f - takes in a FoodItem to add to the map
+	 * adds count number of foodItems to the hashmap of foods
+	 * @param f
+	 * @param count
 	 */
-	public void addFood(FoodItem f) {
-		
+	public void addFood(FoodItem f, int count) {
+		meal.put(f, count);
 	}
 	
 	/**
@@ -45,7 +46,7 @@ public class Meal {
 	 * @param f - takes in the FoodItem to delete
 	 */
 	public void deleteFood(FoodItem f) {
-		
+		meal.remove(f);
 	}
 	
 	/**
@@ -53,8 +54,9 @@ public class Meal {
 	 * @param f - the FoodItem who's quantity is being changed
 	 * @param amount - the new quantity
 	 */
-	public void editQuantity(FoodItem f, int amount) {
-		
+	public void editQuantity(FoodItem f, int count) {
+		meal.remove(f);
+		meal.put(f, count);
 	}
 	
 	/**
@@ -62,15 +64,30 @@ public class Meal {
 	 * @return - returns the weight
 	 */
 	public double getMealWeight() {
-		return 0.0;
+		double ret = 0;	//addition of each food's weight
+		for (HashMap.Entry element : meal.entrySet()) { 
+			//gets individual food's weight
+			ret +=  ((FoodItem) element.getKey()).getWeight();
+		}
+		return ret;
 	}
 	
 	/**
 	 * gets the prep time of the meal
+	 * (this would be the longest prep time of all the foods)
+	 * 
 	 * @return - returns the prep time
 	 */
 	public double getMealPrepTime() {
-		return 0.0;
+		double ret = 0;	//longest prepTime
+		for (HashMap.Entry element : meal.entrySet()) { 
+			//gets individual food's prep times
+			double foodPrepTime = ((FoodItem) element.getKey()).getPrepTime();
+			if(foodPrepTime > ret) {	//gets max prep time
+				ret =  foodPrepTime;
+			}
+		}
+		return ret;
 	}
 	
 	/**
@@ -78,6 +95,17 @@ public class Meal {
 	 * their quantities and their percentages
 	 */
 	public String toString() {
-		return "";
+		String ret = "";
+		for (HashMap.Entry element : meal.entrySet()) { 
+            FoodItem key =  (FoodItem) element.getKey(); 
+  
+            // Add some bonus marks 
+            // to all the students and print it 
+            int value = (int)element.getValue();
+  
+            ret += key.getName() + " ("+ value +")\n"; 
+        }
+		ret += "Order Chance: "+percentage + "%";
+		return ret;
 	}
 }
