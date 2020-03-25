@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class SimulationDetails {
 		
-	private ArrayList<Meal> meals;
-	private Location location;
+	private static ArrayList<Meal> meals;
+	private static Location location;
 	private ShiftDetails shift;
 	private Drone drone;
 	
@@ -21,7 +21,7 @@ public class SimulationDetails {
 		this.drone = drone;
 	}
 	
-	public ArrayList<Meal> getMeals() {
+	public static ArrayList<Meal> getMeals() {
 		return meals;
 	}
 	
@@ -29,7 +29,7 @@ public class SimulationDetails {
 		this.meals = meals;
 	}
 	
-	public Location getLocation() {
+	public static Location getLocation() {
 		return location;
 	}
 	

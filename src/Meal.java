@@ -103,9 +103,20 @@ public class Meal {
             // to all the students and print it 
             int value = (int)element.getValue();
   
-            ret += key.getName() + " ("+ value +")\n"; 
+            ret += key.getName() + "("+ value +") "; 
         }
-		ret += "Order Chance: "+percentage + "%";
+		//ret += "\nOrder Chance: "+percentage + "%";
 		return ret;
+	}
+	
+	/**
+	 * returns a readable string giving the FoodItems, 
+	 * their quantities and their percentages
+	 */
+	public boolean stringEquals(String meal2) {
+		if(meal.toString().equals(meal2)) {
+			return true;
+		}
+		return false;
 	}
 }
