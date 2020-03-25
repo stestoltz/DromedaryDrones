@@ -16,6 +16,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javaClasses.Location;
+import javaClasses.DeliveryPoint;
+
 
 public class Main extends Application
 {
@@ -84,5 +87,21 @@ public class Main extends Application
 		// maximize screen and display the Stage
 		stage.setMaximized(true);
 		stage.show();
+	}
+	
+	
+	
+	
+	public Location generateBogusLocation() {
+		Location location = new Location("Bogus");
+		
+		location.addPoint(new DeliveryPoint("HAL", 25, 0));
+		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));
+		location.addPoint(new DeliveryPoint("PLC", -25, 30));
+		location.addPoint(new DeliveryPoint("STEM", -40, 0));
+		location.addPoint(new DeliveryPoint("Rockwell", -50, 0));
+		location.addPoint(new DeliveryPoint("Crawford", -75, -30));
+		
+		return location;
 	}
 }

@@ -1,3 +1,4 @@
+package javaClasses;
 
 public class FoodItem {
 	
@@ -13,6 +14,18 @@ public class FoodItem {
 		
 	}
 	
+	
+	/**
+	 * constructor
+	 * @param weight
+	 * @param name
+	 * @param prepTime
+	 */
+	public FoodItem(double weight, String name, double prepTime) {
+		this.weight = weight;
+		this.name = name;
+		this.prepTime = prepTime;
+	}
 	public double getWeight() {
 		return weight;
 	}

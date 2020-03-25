@@ -1,4 +1,7 @@
+package javaClasses;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Results {
@@ -9,7 +12,14 @@ public class Results {
 	 * Initializes the times list
 	 */
 	public Results() {
-		
+		times = new ArrayList<>();
+	}
+	
+	/**
+	 * @return a copy of the internal times list
+	 */
+	public List<Double> getTimes() {
+		return new ArrayList<Double>(times);
 	}
 	
 	/**
@@ -17,7 +27,7 @@ public class Results {
 	 * @param time
 	 */
 	public void addTime(double time) {
-		
+		times.add(time);
 	}
 	
 	/**
@@ -25,7 +35,7 @@ public class Results {
 	 * @param newTimes
 	 */
 	public void addTimes(Collection<Double> times) {
-		
+		times.addAll(times);
 	}
 	
 	/**
@@ -34,7 +44,11 @@ public class Results {
 	 * @throws Exception if list is empty
 	 */
 	public double worstTime() throws Exception {
-		return 0.0;
+		if (times.size() == 0) {
+			throw new Exception("Attempted to min empty results");
+		}
+		
+		return Collections.min(times);
 	}
 	
 	/**
@@ -43,7 +57,17 @@ public class Results {
 	 * @throws Exception if list is empty
 	 */
 	public double averageTime() throws Exception {
-		return 0.0;
+		if (times.size() == 0) {
+			throw new Exception("Attempted to average empty results");
+		}
+		
+		double sum = 0;
+		
+		for (double time : times) {
+			sum += time;
+		}
+		
+		return sum / times.size();
 	}
 	
 }

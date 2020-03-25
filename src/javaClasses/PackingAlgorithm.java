@@ -1,3 +1,4 @@
+package javaClasses;
 import java.util.Queue;
 
 public abstract class PackingAlgorithm {

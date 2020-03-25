@@ -1,3 +1,4 @@
+package javaClasses;
 import java.util.HashMap;
 
 public class Meal {

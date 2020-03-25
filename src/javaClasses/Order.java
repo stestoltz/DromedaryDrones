@@ -1,3 +1,4 @@
+package javaClasses;
 
 public class Order {
 	
@@ -15,11 +16,14 @@ public class Order {
 	 * @param deliveredTime
 	 * @param deliveryPoint
 	 */
-	public Order(String name, Meal meal, double orderedTime, double deliveredTime,
-			DeliveryPoint deliveryPoint) {
-		
+	public Order(String name, Meal meal, double orderedTime, 
+			double deliveredTime, DeliveryPoint deliveryPoint) {
+		this.name = name;
+		this.meal = meal;
+		this.orderedTime = orderedTime;
+		this.deliveredTime = deliveredTime;
+		this.deliveryPoint = deliveryPoint;
 	}
-	
 	public String getName() {
 		return name;
 	}

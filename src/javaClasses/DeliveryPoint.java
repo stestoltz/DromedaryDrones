@@ -1,9 +1,10 @@
+package javaClasses;
 
 public class DeliveryPoint {
-	
+
+	private String name;
 	private int x;
 	private int y;
-	private String name;
 	
 	/**
 	 * constructor
@@ -11,10 +12,20 @@ public class DeliveryPoint {
 	 * @param y
 	 * @param name
 	 */
-	public DeliveryPoint(int x, int y, String name) {
+	public DeliveryPoint(String name, int x, int y) {
+		this.name = name;
 		this.x = x;
 		this.y = y;
-		this.name = name;
+	}
+	
+	/**
+	 * copy constructor
+	 * @param other
+	 */
+	public DeliveryPoint(DeliveryPoint other) {
+		this.x = other.x;
+		this.y = other.y;
+		this.name = other.name;
 	}
 	
 	public int getX() {
