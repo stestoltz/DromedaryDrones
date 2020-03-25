@@ -3,38 +3,31 @@ import java.io.FileInputStream;
 
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class Main extends Application
-{
-	// Declaring the TextArea for Logging
-	TextArea logging;
-
+public class Stephen_Testing_form extends Application {
+	
 	public static void main(String[] args) 
 	{
 		Application.launch(args);
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception
-	{
+	public void start(Stage stage) throws Exception {
 		//create logo
 		Image image = new Image(new FileInputStream("res/Temp_logo.jpg"));
 		ImageView imageView = new ImageView(image);
@@ -45,27 +38,26 @@ public class Main extends Application
 		Image map = new Image(new FileInputStream("res/map.jfif"));
 		ImageView mapView = new ImageView(map);
 		mapView.setPreserveRatio(true);
-		mapView.setFitHeight(500);
+		mapView.setFitWidth(900);
 		
-		//create a menubar for the hamburger menu
-		MenuBar menuBar = new MenuBar();
-		VBox vBox = new VBox(menuBar);
+		ComboBox<String> location = new ComboBox<>();
+		location.getItems().add("Grove City");
 		
-		Menu menu1 = new Menu("Drone Settings");
-		menuBar.getMenus().add(menu1);
+		ListView<DeliveryPoint> points = new ListView<>();
+		points.getItems().add(new DeliveryPoint("SAC", 0, 0));
 
 		//set title
-		stage.setTitle("Main Form"); 
+		stage.setTitle("Modify Mappings"); 
 
 		//create buttons and header
-		Button delete = new Button("Delete");
+		Button returnToMenu = new Button("Return to Menu");
 		Button saveChanges = new Button("Save Changes");
-		Label header = new Label("Dromedary Drones");
+		Label header = new Label("Modify Mappings");
 		header.setFont(new Font("Comic Sans", 30));
 
 		//create pane and add buttons to bottom corners
 		BorderPane bottom = new BorderPane();
-		bottom.setLeft(delete);
+		bottom.setLeft(returnToMenu);
 		bottom.setRight(saveChanges);
 		//do stuff
 
@@ -73,54 +65,47 @@ public class Main extends Application
 		BorderPane top = new BorderPane();
 		top.setLeft(imageView);
 		top.setCenter(header);
+		
+		HBox listButtons = new HBox();
+		Button edit = new Button("Edit");
+		Button delete = new Button("Delete");
+		listButtons.getChildren().add(edit);
+		listButtons.getChildren().add(delete);
+		
+		VBox left = new VBox();
+		left.getChildren().add(location);
+		left.getChildren().add(points);
+		left.getChildren().add(listButtons);
+		
 
 		// Create the pane and add the other panes
 		BorderPane layout = new BorderPane();
 		layout.setBottom(bottom);
 		layout.setTop(top);
 		layout.setCenter(mapView);
-
-
-		// Set the padding of the layout
-		layout.setStyle("-fx-padding: 10;" +
-				"-fx-border-width: 2;" +
-				"-fx-border-insets: 5;" +
-				"-fx-border-radius: 5;");
-
-
-
+		layout.setLeft(left);
+		
+		layout.setPadding(new Insets(10, 10, 10, 10));
+		left.setPadding(new Insets(10, 10, 10, 10));
+		left.setSpacing(10);
+		listButtons.setSpacing(10);
+		top.setPadding(new Insets(10, 10, 10, 10));
+		bottom.setPadding(new Insets(10, 10, 10, 10));
+		
+		
 		Scene scene = new Scene(layout);
-		//Scene menu = new Scene(vBox);
 		// Add the Scene to the Stage
 		stage.setScene(scene);
-		//stage.setScene(menu);
 		// maximize screen and display the Stage
 		stage.setMaximized(true);
 		stage.show();
 	}
 	
-	//pop up window
-		public void start1(final Stage primaryStage) {
-		    Button btn = new Button();
-		    btn.setText("Open Dialog");
-		    btn.setOnAction(
-		        new EventHandler<ActionEvent>() {
-		            @Override
-		            public void handle(ActionEvent event) {
-		                final Stage dialog = new Stage();
-		                dialog.initModality(Modality.APPLICATION_MODAL);
-		                dialog.initOwner(primaryStage);
-		                VBox dialogVbox = new VBox(20);
-		                dialogVbox.getChildren().add(new Text("This is a Dialog"));
-		                Scene dialogScene = new Scene(dialogVbox, 300, 200);
-		                dialog.setScene(dialogScene);
-		                dialog.show();
-		            }
-		         });
-		    }
+	
+	
 	
 	public Location generateBogusLocation() {
-		Location location = new Location("Bogus", "SAC");
+		Location location = new Location("Bogus");
 		
 		location.addPoint(new DeliveryPoint("HAL", 25, 0));
 		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));

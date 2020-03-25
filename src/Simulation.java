@@ -108,10 +108,65 @@ public class Simulation {
 	 * Figure out how long the trip takes
 	 * Updates the delivered time of each order object in the drone trip
 	 * @param trip the trip to process
+	 * @param the starting time of the trip
 	 * @return the time the trip takes
 	 */
-	public double processTrip(DroneTrip trip) {
-		return 0.0;
+	public double processTrip(DroneTrip trip, double startTime) {
+		
+		double time = startTime;
+		
+		// get from location class?
+		DeliveryPoint home = details.getLocation().getHome();
+		
+		Order[] stops = trip.getStops();
+		// each iteration calculates the time from the previous stop to the current one
+		for (int i = 0; i <= stops.length; i++) {
+			
+			// calculate time to get to point
+			
+			// home to first stop
+			if (i == 0) {
+				time += calcTime(home, stops[i].getDeliveryPoint());
+				
+			// last stop back to home
+			} else if (i == stops.length) {
+				time += calcTime(stops[i - 1].getDeliveryPoint(), home);
+			
+			// normal stop
+			} else {
+				time += calcTime(stops[i - 1].getDeliveryPoint(), stops[i].getDeliveryPoint());
+			}
+			
+			
+			// deliver order if not on trip back home
+			if (i < stops.length) {
+				
+				stops[i].setDeliveredTime(time);
+				
+				// add delivery time
+				time += details.getDrone().getDefaultDeliveryTime();
+			}
+		}
+		
+		return time;
+	}
+	
+	/**
+	 * Calculates the time it takes for the drone to travel from point a to point b
+	 * @param origin
+	 * @param destination
+	 * @return
+	 */
+	private double calcTime(DeliveryPoint origin, DeliveryPoint destination) {
+		double distance = distance(origin, destination);
+		
+		// D = RT, so T = D / R
+		return distance / details.getDrone().getAverageCruisingSpeedFeetPerSecond();
+	}
+	
+	private double distance(DeliveryPoint a, DeliveryPoint b) {
+		return Math.sqrt(((a.getX() - b.getX()) * (a.getX() - b.getX())) + 
+				((a.getY() - b.getY()) * (a.getY() - b.getY())));
 	}
 	
 	/**
