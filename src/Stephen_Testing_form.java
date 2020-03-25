@@ -1,4 +1,5 @@
 
+import java.awt.Event;
 import java.io.FileInputStream;
 
 
@@ -12,6 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -35,16 +37,26 @@ public class Stephen_Testing_form extends Application {
 		imageView.setFitWidth(150);
 
 		//create map
-		Image map = new Image(new FileInputStream("res/map.jfif"));
+		Image map = new Image(new FileInputStream("res/map2.jpg"));
 		ImageView mapView = new ImageView(map);
 		mapView.setPreserveRatio(true);
 		mapView.setFitWidth(900);
 		
-		ComboBox<String> location = new ComboBox<>();
-		location.getItems().add("Grove City");
+		mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+			System.out.println(event.getX() + " " + event.getY());
+		});
+		
+		Location bogus = generateBogusLocation();
+		
+		ComboBox<Location> locations = new ComboBox<>();
+		locations.getItems().add(bogus);
+		locations.setValue(bogus);
 		
 		ListView<DeliveryPoint> points = new ListView<>();
-		points.getItems().add(new DeliveryPoint("SAC", 0, 0));
+		
+		for (DeliveryPoint dp : bogus.getDeliveryPoints()) {
+			points.getItems().add(dp);
+		}
 
 		//set title
 		stage.setTitle("Modify Mappings"); 
@@ -72,8 +84,19 @@ public class Stephen_Testing_form extends Application {
 		listButtons.getChildren().add(edit);
 		listButtons.getChildren().add(delete);
 		
+		delete.setOnAction((event) -> {
+			DeliveryPoint selectedPoint = points.getSelectionModel().getSelectedItem();
+			Location selectedLocation = locations.getSelectionModel().getSelectedItem();
+			
+			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
+			if (selectedPoint != null) {
+				selectedLocation.deletePoint(selectedPoint);
+				points.getItems().remove(selectedPoint);
+			}
+		});
+		
 		VBox left = new VBox();
-		left.getChildren().add(location);
+		left.getChildren().add(locations);
 		left.getChildren().add(points);
 		left.getChildren().add(listButtons);
 		
@@ -94,6 +117,7 @@ public class Stephen_Testing_form extends Application {
 		
 		
 		Scene scene = new Scene(layout);
+
 		// Add the Scene to the Stage
 		stage.setScene(scene);
 		// maximize screen and display the Stage
@@ -105,7 +129,7 @@ public class Stephen_Testing_form extends Application {
 	
 	
 	public Location generateBogusLocation() {
-		Location location = new Location("Bogus");
+		Location location = new Location("Bogus", "SAC");
 		
 		location.addPoint(new DeliveryPoint("HAL", 25, 0));
 		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));
