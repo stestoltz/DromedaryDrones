@@ -3,10 +3,15 @@ import java.io.FileInputStream;
 
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +19,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Main extends Application
@@ -56,10 +63,28 @@ public class Main extends Application
 		bottom.setRight(saveChanges);
 		//do stuff
 
+		//create a menubar for the hamburger menu
+				MenuBar menuBar = new MenuBar();
+				VBox vBox = new VBox(menuBar);
+				
+				Menu menu1 = new Menu("Simulation Settings");
+				menuBar.getMenus().add(menu1);
+				MenuItem menuItem1 = new MenuItem("Modify Mapping");
+				MenuItem menuItem2 = new MenuItem("Food Settings");
+				MenuItem menuItem3 = new MenuItem("Order Settings");
+				MenuItem menuItem4 = new MenuItem("Shift Settings");
+				MenuItem menuItem5 = new MenuItem("Drone Settings");
+
+				menu1.getItems().add(menuItem1);
+				menu1.getItems().add(menuItem2);
+				menu1.getItems().add(menuItem3);
+				menu1.getItems().add(menuItem4);
+				menu1.getItems().add(menuItem5);
 		//create pane and add images
 		BorderPane top = new BorderPane();
 		top.setLeft(imageView);
 		top.setCenter(header);
+		top.setRight(menuBar);
 
 		// Create the pane and add the other panes
 		BorderPane layout = new BorderPane();
@@ -77,6 +102,7 @@ public class Main extends Application
 
 
 		Scene scene = new Scene(layout);
+		Scene menu = new Scene(vBox);
 		// Add the Scene to the Stage
 		stage.setScene(scene);
 		// maximize screen and display the Stage
@@ -84,11 +110,28 @@ public class Main extends Application
 		stage.show();
 	}
 	
-	
-	
+	//pop up window
+		public void start1(final Stage primaryStage) {
+		    Button btn = new Button();
+		    btn.setText("Open Dialog");
+		    btn.setOnAction(
+		        new EventHandler<ActionEvent>() {
+		            @Override
+		            public void handle(ActionEvent event) {
+		                final Stage dialog = new Stage();
+		                dialog.initModality(Modality.APPLICATION_MODAL);
+		                dialog.initOwner(primaryStage);
+		                VBox dialogVbox = new VBox(20);
+		                dialogVbox.getChildren().add(new Text("This is a Dialog"));
+		                Scene dialogScene = new Scene(dialogVbox, 300, 200);
+		                dialog.setScene(dialogScene);
+		                dialog.show();
+		            }
+		         });
+		    }
 	
 	public Location generateBogusLocation() {
-		Location location = new Location("Bogus");
+		Location location = new Location("Bogus", "SAC");
 		
 		location.addPoint(new DeliveryPoint("HAL", 25, 0));
 		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));
