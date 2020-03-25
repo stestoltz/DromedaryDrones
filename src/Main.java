@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,13 +47,6 @@ public class Main extends Application
 		ImageView mapView = new ImageView(map);
 		mapView.setPreserveRatio(true);
 		mapView.setFitHeight(500);
-		
-		//create a menubar for the hamburger menu
-		MenuBar menuBar = new MenuBar();
-		VBox vBox = new VBox(menuBar);
-		
-		Menu menu1 = new Menu("Drone Settings");
-		menuBar.getMenus().add(menu1);
 
 		//set title
 		stage.setTitle("Main Form"); 
@@ -69,10 +63,28 @@ public class Main extends Application
 		bottom.setRight(saveChanges);
 		//do stuff
 
+		//create a menubar for the hamburger menu
+				MenuBar menuBar = new MenuBar();
+				VBox vBox = new VBox(menuBar);
+				
+				Menu menu1 = new Menu("Simulation Settings");
+				menuBar.getMenus().add(menu1);
+				MenuItem menuItem1 = new MenuItem("Modify Mapping");
+				MenuItem menuItem2 = new MenuItem("Food Settings");
+				MenuItem menuItem3 = new MenuItem("Order Settings");
+				MenuItem menuItem4 = new MenuItem("Shift Settings");
+				MenuItem menuItem5 = new MenuItem("Drone Settings");
+
+				menu1.getItems().add(menuItem1);
+				menu1.getItems().add(menuItem2);
+				menu1.getItems().add(menuItem3);
+				menu1.getItems().add(menuItem4);
+				menu1.getItems().add(menuItem5);
 		//create pane and add images
 		BorderPane top = new BorderPane();
 		top.setLeft(imageView);
 		top.setCenter(header);
+		top.setRight(menuBar);
 
 		// Create the pane and add the other panes
 		BorderPane layout = new BorderPane();
@@ -90,10 +102,9 @@ public class Main extends Application
 
 
 		Scene scene = new Scene(layout);
-		//Scene menu = new Scene(vBox);
+		Scene menu = new Scene(vBox);
 		// Add the Scene to the Stage
 		stage.setScene(scene);
-		//stage.setScene(menu);
 		// maximize screen and display the Stage
 		stage.setMaximized(true);
 		stage.show();
