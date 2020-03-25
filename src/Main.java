@@ -88,7 +88,7 @@ public class Main extends Application
 	
 	
 	public Location generateBogusLocation() {
-		Location location = new Location("Bogus");
+		Location location = new Location("Bogus", "SAC");
 		
 		location.addPoint(new DeliveryPoint("HAL", 25, 0));
 		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));

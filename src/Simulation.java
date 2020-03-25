@@ -116,7 +116,7 @@ public class Simulation {
 		double time = startTime;
 		
 		// get from location class?
-		DeliveryPoint home = new DeliveryPoint("", 0, 0);
+		DeliveryPoint home = details.getLocation().getHome();
 		
 		Order[] stops = trip.getStops();
 		// each iteration calculates the time from the previous stop to the current one
