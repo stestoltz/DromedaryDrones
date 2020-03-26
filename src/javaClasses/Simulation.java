@@ -138,7 +138,6 @@ public class Simulation {
 		Meal meal4Order = null;
 		String meal = "";
 		double orderedTime = 0;
-		double deliveredTime = 0;
 		int xPoint = 0;
 		int yPoint = 0;
 		DeliveryPoint deliveryPoint = null;		
@@ -205,7 +204,7 @@ public class Simulation {
 						}
 					}
 					//create order
-					Order order = new Order(name, meal4Order, orderedTime, deliveredTime,
+					Order order = new Order(name, meal4Order, orderedTime,
 							deliveryPoint);
 
 					//add order to queue
@@ -226,6 +225,7 @@ public class Simulation {
 	/**
 	 * Given queue of orders, build drone trips from the orders
 	 * Use processTrip to figure out how long each trip took
+	 * 		Factor in the turn around time of the drone
 	 * @param orders
 	 * @param routingAlgorithm routing algorithm used to generate drone trips
 	 * @return the sequence of trips the drone will take
@@ -239,7 +239,7 @@ public class Simulation {
 	 * Updates the delivered time of each order object in the drone trip
 	 * @param trip the trip to process
 	 * @param the starting time of the trip
-	 * @return the time the trip takes
+	 * @return the amount of time the drone was away from home
 	 */
 	public double processTrip(DroneTrip trip, double startTime) {
 		
@@ -278,7 +278,8 @@ public class Simulation {
 			}
 		}
 		
-		return time;
+		// return the total duration of the trip
+		return time - startTime;
 	}
 	
 	/**
@@ -361,7 +362,7 @@ public class Simulation {
 //		int num = rand.nextInt(location.getDeliveryPoints().size());
 //		dp = location.getDeliveryPoints().get(num);
 		
-		Order o = new Order(name, m, timestamp, 0.0, dp);
+		Order o = new Order(name, m, timestamp, dp);
 		
 		return o;
 	}
