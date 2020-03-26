@@ -15,7 +15,6 @@ public class Location {
 	private Drone drone;
 	private ArrayList<FoodItem> foods;		//list of all foods  (for this location)
 	
-	// constructor for already-created delivery points from data file
 	
 	/**
 	 * constructor for a brand new location
