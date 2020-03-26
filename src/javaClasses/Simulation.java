@@ -18,7 +18,7 @@ import javax.xml.stream.XMLStreamReader;
 
 public class Simulation {
 
-	private SimulationDetails details;
+	private Location location;
 	
 	private ArrayList<String> firstNames = new ArrayList<String>();
 	private ArrayList<String> lastNames = new ArrayList<String>();
@@ -28,8 +28,8 @@ public class Simulation {
 	 * Copy the details passed in to member details variable
 	 * @param details the options for this simulation
 	 */
-	public Simulation(SimulationDetails details) {
-		this.details = details;
+	public Simulation(Location location) {
+		this.location = location;
 		
 		firstNames.add("Alexander");
 		firstNames.add("Drew");
@@ -190,7 +190,7 @@ public class Simulation {
 			/*____here down cannot be tested since SimulationDetails isnt complete____*/
 					//get deliveryPoint object for order
 					for(DeliveryPoint d: 
-						SimulationDetails.getLocation().getDeliveryPoints()) {
+						location.getDeliveryPoints()) {
 						if(d.getX() == xPoint && d.getY() == yPoint) {
 							deliveryPoint = d;
 						}
@@ -199,7 +199,7 @@ public class Simulation {
 
 					//get meal object
 					for(Meal locElement: 
-						SimulationDetails.getMeals()) {
+						location.getMeals()) {
 						if(locElement.stringEquals(meal)) {
 							meal4Order = locElement;
 						}
@@ -246,7 +246,7 @@ public class Simulation {
 		double time = startTime;
 		
 		// get from location class?
-		DeliveryPoint home = details.getLocation().getHome();
+		DeliveryPoint home = location.getHome();
 		
 		Order[] stops = trip.getStops();
 		// each iteration calculates the time from the previous stop to the current one
@@ -274,7 +274,7 @@ public class Simulation {
 				stops[i].setDeliveredTime(time);
 				
 				// add delivery time
-				time += details.getDrone().getDefaultDeliveryTime();
+				time += location.getDrone().getDefaultDeliveryTime();
 			}
 		}
 		
@@ -291,7 +291,7 @@ public class Simulation {
 		double distance = distance(origin, destination);
 		
 		// D = RT, so T = D / R
-		return distance / details.getDrone().getAverageCruisingSpeedFeetPerSecond();
+		return distance / location.getDrone().getAverageCruisingSpeedFeetPerSecond();
 	}
 	
 	private double distance(DeliveryPoint a, DeliveryPoint b) {
@@ -345,21 +345,21 @@ public class Simulation {
 	public Order generateOrder(double timestamp) {
 		Random rand = new Random();
 		String name;
-		Meal m;
-		DeliveryPoint dp;
+		Meal m = location.getRandomMeal();
+		DeliveryPoint dp = location.getRandomPoint();
 		
 		//pull a random name
 		int first = rand.nextInt(firstNames.size());
 		int last = rand.nextInt(lastNames.size());
 		name = firstNames.get(first) + " " + lastNames.get(last);
 		
-		//get a random meal
-		int meal = rand.nextInt(details.getMeals().size());
-		m = details.getMeals().get(meal);
-		
-		//get a random delivery point
-		int num = rand.nextInt(details.getLocation().getDeliveryPoints().size());
-		dp = details.getLocation().getDeliveryPoints().get(num);
+//		//get a random meal
+//		int meal = rand.nextInt(location.getMeals().size());
+//		m = location.getMeals().get(meal);
+//		
+//		//get a random delivery point
+//		int num = rand.nextInt(location.getDeliveryPoints().size());
+//		dp = location.getDeliveryPoints().get(num);
 		
 		Order o = new Order(name, m, timestamp, 0.0, dp);
 		

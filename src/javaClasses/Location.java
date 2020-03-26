@@ -2,6 +2,7 @@ package javaClasses;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Location {
 	
@@ -10,16 +11,44 @@ public class Location {
 	private DeliveryPoint home;
 	private String name;
 	
+	private ArrayList<Meal> meals;	//list of all available meals (for this location)
+	private Drone drone;
+	private ArrayList<FoodItem> foods;		//list of all foods  (for this location)
+	
 	// constructor for already-created delivery points from data file
 	
 	/**
-	 * constructor
-	 * @param name
+	 * constructor for a brand new location
+	 * @param name - name of the location
+	 * @param homeName - name of the starting point/ origin
 	 */
 	public Location(String name, String homeName) {
 		deliveryPoints = new HashMap<>();
 		this.home = new DeliveryPoint(homeName, 0, 0);
 		this.name = name;
+		this.meals = new ArrayList<Meal>();
+		this.drone = new Drone(12, 20, 20, 3, 30);
+		this.foods = new ArrayList<FoodItem>();	
+	}
+	
+	/**
+	 * constructor for a previously existing location (loaded from saved file?)
+	 * @param name - name of the location
+	 * @param homeName - name of the starting point/ origin
+	 * @param deliveryPoints - list of all delivery points
+	 * @param meals - list of meals 
+	 * @param drone - drone options
+	 * @param foods - list of all available foods
+	 */
+	public Location(String name, String homeName, HashMap<DeliveryPoint, Boolean> deliveryPoints,
+			ArrayList<Meal> meals,Drone drone, ArrayList<FoodItem> foods) {
+		
+		this.deliveryPoints = deliveryPoints;
+		this.home = new DeliveryPoint(homeName, 0, 0);
+		this.name = name;
+		this.meals = meals;
+		this.drone = drone;
+		this.foods = foods;		
 	}
 
 	/**
@@ -94,5 +123,122 @@ public class Location {
 		/*if (removed == null) {
 			// did not exist
 		}*/
+	}
+	
+	
+	/*-------------------- End DeliveryPoint/ basic Location stuff ------------------------*/
+	
+	public ArrayList<Meal> getMeals() {
+		return meals;
+	}
+	
+	public void setMeals(ArrayList<Meal> meals) {
+		this.meals = meals;
+	}
+	
+	public Drone getDrone() {
+		return drone;
+	}
+	
+	public void setDrone(Drone drone) {
+		this.drone = drone;
+	}
+	
+	public ArrayList<FoodItem> getFoods(){
+		return foods;
+	}
+	
+	public void setFoods(ArrayList<FoodItem> foods){
+		this.foods = foods;
+	}
+	
+	/**
+	 * add a food to the arraylist
+	 * @param food to be added
+	 */
+	public void addFood(FoodItem f) {
+		foods.add(f);
+	}
+	
+	/**
+	 * delete a food from the arraylist
+	 * @param food to be deleted
+	 */
+	public void deleteFood(FoodItem f) {
+		//if I am checking a food to be equal to another does this work? 
+		//or would they be different references
+		for(int i = 0; i<foods.size(); i++) {
+			if (foods.get(i)==f) {
+				foods.remove(i);
+			}
+		}
+	}
+	
+	
+	/**
+	 * add a meal to the arraylist
+	 * @param m meal to be added
+	 */
+	public void addMeal(Meal m) {
+		meals.add(m);
+	}
+	
+	/**
+	 * delete a meal from the arraylist
+	 * @param m meal to delete
+	 */
+	public void deleteMeal(Meal m) {
+		//if I am checking a meal to be equal to another does this work? 
+		//or would they be different references
+		for(int i = 0; i<meals.size(); i++) {
+			if (meals.get(i)==m) {
+				meals.remove(i);
+			}
+		}
+	}
+	
+	/**
+	 * returns a random meal from the arraylist
+	 * @return the random meal
+	 */
+	public Meal getRandomMeal() {
+		Random rand = new Random();
+		int index = rand.nextInt(meals.size());
+		return meals.get(index);
+	}
+	
+	/**
+	 * returns a specific meal from the list
+	 * @param n the index of the meal to get
+	 * @return a meal from the arraylist
+	 */
+	public Meal getMeal(int n) { 
+		//returns the specified meal
+		if(n>=0 && n<meals.size())
+			return meals.get(n);
+		
+		//if the meal was out of bounds inform and return the 0th one
+		System.out.println("Index for Meal was Out of Bounds");
+		return meals.get(0);	
+	}
+	
+	/**
+	 * returns a random delivery point that is toggled on
+	 * @return a delivery point
+	 */
+	public DeliveryPoint getRandomPoint() {
+		//converts hashmap keys to a list (for random generation)
+		ArrayList<DeliveryPoint> availablePoints = null;
+		for (HashMap.Entry<DeliveryPoint,Boolean> element : deliveryPoints.entrySet()) { 
+			//if the deliverypoint is turned on add it to the list
+			if(element.getValue()) {
+				availablePoints.add(element.getKey()); 
+			}
+		}
+		// get random index
+		Random rand = new Random();
+		int index = rand.nextInt(availablePoints.size());
+		
+		return availablePoints.get(index);
 	}
 }
