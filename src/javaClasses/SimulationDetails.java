@@ -1,11 +1,12 @@
+package javaClasses;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class SimulationDetails {
 		
-	private ArrayList<Meal> meals;
-	private Location location;
+	private static ArrayList<Meal> meals;
+	private static Location location;
 	private ShiftDetails shift;
 	private Drone drone;
 	
@@ -23,7 +24,7 @@ public class SimulationDetails {
 		this.drone = drone;
 	}
 	
-	public ArrayList<Meal> getMeals() {
+	public static ArrayList<Meal> getMeals() {
 		return meals;
 	}
 	
@@ -31,7 +32,7 @@ public class SimulationDetails {
 		this.meals = meals;
 	}
 	
-	public Location getLocation() {
+	public static Location getLocation() {
 		return location;
 	}
 	
@@ -60,7 +61,7 @@ public class SimulationDetails {
 	 * @param m meal to be added
 	 */
 	public void addMeal(Meal m) {
-		
+		meals.add(m);
 	}
 	
 	/**
@@ -68,7 +69,13 @@ public class SimulationDetails {
 	 * @param m meal to delete
 	 */
 	public void deleteMeal(Meal m) {
-	
+		//if I am checking a meal to be equal to another does this work? 
+		//or would they be different references
+		for(int i = 0; i<meals.size(); i++) {
+			if (meals.get(i)==m) {
+				meals.remove(i);
+			}
+		}
 	}
 	
 	/**
@@ -76,7 +83,9 @@ public class SimulationDetails {
 	 * @return the random meal
 	 */
 	public Meal getRandomMeal() {
-		return null;
+		Random rand = new Random();
+		int index = rand.nextInt(meals.size());
+		return meals.get(index);
 	}
 	
 	/**
@@ -95,11 +104,17 @@ public class SimulationDetails {
 	}
 	
 	/**
-	 * returns a specific list
+	 * returns a specific meal from the list
 	 * @param n the index of the meal to get
 	 * @return a meal from the arraylist
 	 */
 	public Meal getMeal(int n) { 
-		return null;
+		//returns the specified meal
+		if(n>=0 && n<meals.size())
+			return meals.get(n);
+		
+		//if the meal was out of bounds inform and return the 0th one
+		System.out.println("Index for Meal was Out of Bounds");
+		return meals.get(0);	
 	}
 }

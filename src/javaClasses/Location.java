@@ -1,3 +1,4 @@
+package javaClasses;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -6,6 +7,7 @@ public class Location {
 	
 	// hashmap of delivery points, each with a boolean value for active/not active
 	private HashMap<DeliveryPoint, Boolean> deliveryPoints;
+	private DeliveryPoint home;
 	private String name;
 	
 	// constructor for already-created delivery points from data file
@@ -14,8 +16,9 @@ public class Location {
 	 * constructor
 	 * @param name
 	 */
-	public Location(String name) {
+	public Location(String name, String homeName) {
 		deliveryPoints = new HashMap<>();
+		this.home = new DeliveryPoint(homeName, 0, 0);
 		this.name = name;
 	}
 
@@ -44,6 +47,10 @@ public class Location {
 		return name;
 	}
 	
+	public DeliveryPoint getHome() {
+		return new DeliveryPoint(home);
+	}
+	
 	/**
 	 * method adds a point to the hashmap
 	 * assume that points added are automatically turned on
@@ -68,6 +75,11 @@ public class Location {
 		} else {	
 			deliveryPoints.put(dp, true);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 	
 	/**

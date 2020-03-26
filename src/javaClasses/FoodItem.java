@@ -1,3 +1,4 @@
+package javaClasses;
 
 public class FoodItem {
 	
@@ -6,6 +7,12 @@ public class FoodItem {
 	private double prepTime;
 	
 	// constructor
+	public FoodItem(String name, double weight, double prepTime) {
+		this.name = name;
+		this.weight = weight;
+		this.prepTime = prepTime;
+		
+	}
 	
 	
 	/**
@@ -42,7 +49,4 @@ public class FoodItem {
 	public void setPrepTime(double prepTime) {
 		this.prepTime = prepTime;
 	}
-	
-	
-
 }

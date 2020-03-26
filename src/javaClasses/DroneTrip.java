@@ -1,3 +1,4 @@
+package javaClasses;
 import java.util.List;
 
 public class DroneTrip {
@@ -9,7 +10,7 @@ public class DroneTrip {
 	 * @param stops the ordered array of stops created by RoutingAlgorithm
 	 */
 	public DroneTrip(Order[] stops) {
-		
+		this.stops = stops.clone();
 	}
 	
 	/**
@@ -19,7 +20,7 @@ public class DroneTrip {
 	 * @return shallow copy of stops[]
 	 */
 	public Order[] getStops() {
-		return null;
+		return stops.clone();
 	}
 	
 	
