@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Queue;
+import java.util.Random;
+
+import javax.lang.model.element.Element;
+import javax.swing.text.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -13,6 +19,9 @@ import javax.xml.stream.XMLStreamReader;
 public class Simulation {
 
 	private SimulationDetails details;
+	
+	private ArrayList<String> firstNames = new ArrayList<String>();
+	private ArrayList<String> lastNames = new ArrayList<String>();
 
 	/**
 	 * Constructor for simulation
@@ -21,6 +30,22 @@ public class Simulation {
 	 */
 	public Simulation(SimulationDetails details) {
 		this.details = details;
+		
+		firstNames.add("Alexander");
+		firstNames.add("Drew");
+		firstNames.add("Mark");
+		firstNames.add("Alice");
+		firstNames.add("Julie");
+		firstNames.add("Andrew");
+		firstNames.add("Grace");
+		
+		lastNames.add("Smith");
+		lastNames.add("Johnson");
+		lastNames.add("Williams");
+		lastNames.add("Jones");
+		lastNames.add("Brown");
+		lastNames.add("Hall");
+		lastNames.add("Young");
 	}
 
 	/**
@@ -89,6 +114,14 @@ public class Simulation {
 	 * @return file path to XML file
 	 */
 	public String generateXML(Queue<Order> orders) {
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+	    //DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+	    //Document doc = docBuilder.newDocument();
+	    //Element rootElement = doc.createElement("Orders");
+	    
+	    
+		
+		//
 		return "";
 	}
 
@@ -310,7 +343,27 @@ public class Simulation {
 	 * @return a randomly generated order
 	 */
 	public Order generateOrder(double timestamp) {
-		return null;
+		Random rand = new Random();
+		String name;
+		Meal m;
+		DeliveryPoint dp;
+		
+		//pull a random name
+		int first = rand.nextInt(firstNames.size());
+		int last = rand.nextInt(lastNames.size());
+		name = firstNames.get(first) + " " + lastNames.get(last);
+		
+		//get a random meal
+		int meal = rand.nextInt(details.getMeals().size());
+		m = details.getMeals().get(meal);
+		
+		//get a random delivery point
+		int num = rand.nextInt(details.getLocation().getDeliveryPoints().size());
+		dp = details.getLocation().getDeliveryPoints().get(num);
+		
+		Order o = new Order(name, m, timestamp, 0.0, dp);
+		
+		return o;
 	}
 
 }
