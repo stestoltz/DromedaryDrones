@@ -2,7 +2,8 @@
 import java.awt.Event;
 import java.io.FileInputStream;
 
-
+import javaClasses.DeliveryPoint;
+import javaClasses.Location;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
