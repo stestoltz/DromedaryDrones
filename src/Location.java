@@ -71,23 +71,6 @@ public class Location {
 	}
 	
 	/**
-	 * changes any updated values in the selected point
-<<<<<<< HEAD
-	* @param dp delivery point to edit
-	*/
-	public void editPoint(DeliveryPoint dp) {
-		// they can use the delivery point's getters and setters
-	}
-		
-=======
-	 * @param dp delivery point to edit
-	 */
-	/*public void editPoint(DeliveryPoint dp) {
-		// they can use the delivery point's getters and setters
-	}*/
-	
->>>>>>> master
-	/**
 	 * deletes a delivery point from the hashmap
 	 * @param dp delivery point to delete
 	 */
