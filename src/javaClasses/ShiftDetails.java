@@ -6,6 +6,16 @@ public class ShiftDetails {
 	private int hoursInShift;
 	private int ordersPerHour[]; //size of hoursInShift
 	
+	public ShiftDetails() {
+		this.numberOfShifts = 50;
+		this.hoursInShift = 4;
+		this.ordersPerHour = new int[4];
+		this.ordersPerHour[0] = 15;
+		this.ordersPerHour[1] = 13;
+		this.ordersPerHour[2] = 14;
+		this.ordersPerHour[3] = 17;
+	}
+	
 	/**
 	 * constructor
 	 * @param numberOfShifts
