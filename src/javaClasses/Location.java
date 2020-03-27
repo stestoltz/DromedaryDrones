@@ -26,11 +26,35 @@ public class Location {
 		deliveryPoints = new HashMap<>();
 		this.home = new DeliveryPoint(homeName, 0, 0);
 		this.name = name;
+		
+		// add fake points
+		addPoint(new DeliveryPoint("HAL", 25, 0));
+		addPoint(new DeliveryPoint("Hoyt", -25, -30));
+		addPoint(new DeliveryPoint("PLC", -25, 30));
+		addPoint(new DeliveryPoint("STEM", -40, 0));
+		addPoint(new DeliveryPoint("Rockwell", -50, 0));
+		addPoint(new DeliveryPoint("Crawford", -75, -30));
+
+		this.foods = new ArrayList<FoodItem>();	
+		// add default foods
+		FoodItem burger = new FoodItem("Burger", 6.0 / 16.0, 0);
+		FoodItem fries = new FoodItem("Fries", 4.0 / 16.0, 0);
+		FoodItem drink = new FoodItem("Drink", 14.0 / 16.0, 0);
+		
+		foods.add(burger);
+		foods.add(fries);
+		foods.add(drink);
+
 		this.meals = new ArrayList<Meal>();
+		// add default meals
+		HashMap<FoodItem, Integer> typical = new HashMap<>();
+		typical.put(burger, 1);
+		typical.put(fries, 1);
+		typical.put(drink, 1);
+		meals.add(new Meal(typical, 100));
 
 		// create default drone and default shift details
-		this.drone = new Drone();		
-		this.foods = new ArrayList<FoodItem>();	
+		this.drone = new Drone();
 		this.shiftDetails = new ShiftDetails();
 	}
 	
