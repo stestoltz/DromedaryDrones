@@ -264,7 +264,7 @@ public class Location {
 	 */
 	public DeliveryPoint getRandomPoint() {
 		//converts hashmap keys to a list (for random generation)
-		ArrayList<DeliveryPoint> availablePoints = null;
+		ArrayList<DeliveryPoint> availablePoints = new ArrayList<>();
 		for (HashMap.Entry<DeliveryPoint,Boolean> element : deliveryPoints.entrySet()) { 
 			//if the deliverypoint is turned on add it to the list
 			if(element.getValue()) {

@@ -79,6 +79,17 @@ public class Main extends Application
 			
 			RoutingAlgorithm ra = new GreedyAlgorithm();
 			Results[] simResults = sim.runSimulation(ra);
+			
+			System.out.println(simResults[0].getTimes());
+			System.out.println("Number of orders: " + simResults[0].getTimes().size());
+			
+			try {
+				System.out.println("Worst (s): " + simResults[0].worstTime());
+				System.out.println("Average (s): " + simResults[0].averageTime());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		});
 
 		//create a menubar for the hamburger menu

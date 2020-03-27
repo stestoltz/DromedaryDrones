@@ -86,7 +86,7 @@ public class Simulation {
 				//		packingAlgorithmsOrders, location.getDrone());
 				
 				PackingAlgorithm packingAlgorithm;
-				if (i == 0) {
+				if (p == 0) {
 					packingAlgorithm = new FIFOPacking(packingAlgorithmsOrders, location.getDrone());
 				} else {
 					packingAlgorithm = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone());
@@ -297,12 +297,15 @@ public class Simulation {
 	 */
 	public double processTrip(DroneTrip trip, double startTime) {
 		
+		// DOES NOT TAKING INTO ACCOUNT SAME LOCATION
+		
 		double time = startTime;
 		
 		// get from location class?
 		DeliveryPoint home = location.getHome();
 		
 		Order[] stops = trip.getStops();
+		
 		// each iteration calculates the time from the previous stop to the current one
 		for (int i = 0; i <= stops.length; i++) {
 			

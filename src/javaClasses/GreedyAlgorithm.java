@@ -34,7 +34,7 @@ public class GreedyAlgorithm implements RoutingAlgorithm{
 			orders.remove(closest);
 			previous = closest.getDeliveryPoint();
 		}
-		return new DroneTrip((Order[]) tripList.toArray());
+		return new DroneTrip(tripList.toArray(new Order[tripList.size()]));
 	}
 
 }
