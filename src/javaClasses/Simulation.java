@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.Random;
@@ -55,21 +56,38 @@ public class Simulation {
 	 * @param routingAlgorithm which routing algorithm to use
 	 * @return array of results objects, one per packing algorithm
 	 */
-	public Results[] runSimulation(PackingAlgorithm[] packingAlgorithms, RoutingAlgorithm routingAlgorithm) {
+	public Results[] runSimulation(Class<? extends PackingAlgorithm>[] packingAlgorithms, RoutingAlgorithm routingAlgorithm) {
 		
 		// create simulationResults[], one entry for each packing algorithm
+		Results[] simulationResults = new Results[packingAlgorithms.length];
 		
 		// for each packing algorithm
+		for (int p = 0; p < packingAlgorithms.length; p++) {
+			
+			//Class<? extends PackingAlgorithm> packingType = packingAlgorithms[p];
 		
 			// create results[] for this shift's results
+			Results[] shiftResults = new Results[location.getShiftDetails().getNumberOfShifts()];
 			
 			// for each shift
+			for (int i = 0; i < shiftResults.length; i++) {
 		
-				// create orders queue
-		
-				// for each hour
-					
-					// add orders to queue
+				// generate all orders for this shift
+				Queue<Order> orders = generateOrders();
+				
+				// MUST BE A SHALLOW COPY so that the delivered times are changed
+				Queue<Order> packingAlgorithmsOrders = new LinkedList<Order>(orders);
+				
+				// instantiate a packing algorithm of the type in the array passed from the UI
+				//PackingAlgorithm pa = (PackingAlgorithm) packingType.getConstructors()[0].newInstance(
+				//		packingAlgorithmsOrders, location.getDrone());
+				
+				PackingAlgorithm pa;
+				if (i == 0) {
+					pa = new FIFOPacking(packingAlgorithmsOrders, location.getDrone());
+				} else {
+					pa = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone());
+				}
 	
 				/*
 				 * send orders queue to xml file
@@ -79,25 +97,55 @@ public class Simulation {
 				 */
 		
 				// process the orders into drone trips
-		
-				// for each drone trip
-					
-					// process the trip
 				
-				// generate results for this shift
+				
+				//DroneTrip[] trips = processOrders(orders, routingAlgorithm);
 		
-				// add results to shift results[]
+				// start at time of first order
+				double time = pa.nextOrderTime();
+				
+				List<DroneTrip> trips = new ArrayList<>();
+				
+				// DOES NOT FIX NO ORDERS AT CURRENT TIME
+				
+				// for each drone trip
+				while (pa.hasNextOrder()) {
+					
+					// wait until we have an order
+					if (time < pa.nextOrderTime()) {
+						time = pa.nextOrderTime();
+					}
+					
+					// ASSUMPTION: IF WE HAVE AN ORDER, SHIP IT
+					
+					// find a drone's worth of orders available now
+					List<Order> nextTripOrders = pa.nextOrder(time);
+					
+					// route the drone for this trip
+					DroneTrip trip = routingAlgorithm.createTrip(nextTripOrders, location.getHome());
+					
+					// add time of drone trip
+					//  this updates the delivered times of all of the orders in the trip
+					time += processTrip(trip, time);
+					trips.add(trip);
+					
+					// add turn around time
+					time += location.getDrone().getTurnAroundTimeSeconds();
+				}
+				
+				// generate results for this shift and them to shift results[]
+				shiftResults[i] = generateResults(trips);
 	
+			}
+				
 			// all shifts are done - this packing algorithm's simulation is done
 		
-			// aggregate all shift's results into one results object
+			// aggregate all shift's results into one results object and add it to simulationResults
+			simulationResults[p] = generateResults(shiftResults);
 		
-			// add to simulationResults
-		
-		// return simulationResults
-				
-		
-		return null;
+		}
+			
+		return simulationResults;
 	}
 
 	/**
@@ -279,7 +327,7 @@ public class Simulation {
 				stops[i].setDeliveredTime(time);
 				
 				// add delivery time
-				time += location.getDrone().getDefaultDeliveryTime();
+				time += location.getDrone().getDeliveryTime();
 			}
 		}
 		
@@ -310,7 +358,7 @@ public class Simulation {
 	 * @param trips
 	 * @return results for an individual shift
 	 */
-	public Results generateResults(DroneTrip[] trips) {
+	public Results generateResults(List<DroneTrip> trips) {
 		Results shiftResults = new Results();
 		
 		ArrayList<Double> times = new ArrayList<>();
