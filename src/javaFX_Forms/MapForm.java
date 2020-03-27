@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class Stephen_Testing_form extends Application {
+public class MapForm extends Application {
 	
 	public static void main(String[] args) 
 	{
