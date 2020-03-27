@@ -1,9 +1,10 @@
 package javaClasses;
+import java.util.List;
 import java.util.Queue;
 
 public class KnapsackPacking extends PackingAlgorithm {
 
-	private Queue<Meal> skippedMeals;
+	private Queue<Order> skippedOrders;
 	
 	/**
 	 * constructor
@@ -11,12 +12,12 @@ public class KnapsackPacking extends PackingAlgorithm {
 	 * @param drone
 	 * @param skippedMeals
 	 */
-	public KnapsackPacking(Queue<Meal> meals, Drone drone, Queue<Meal> skippedMeals) {
+	public KnapsackPacking(Queue<Order> orders, Drone drone) {
 		
 	}
 	
 	@Override
-	public Order nextOrder() {
+	public List<Order> nextOrder(double time) {
 		// TODO Auto-generated method stub
 		return null;
 	}
