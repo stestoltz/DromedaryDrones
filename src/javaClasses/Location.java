@@ -14,6 +14,7 @@ public class Location {
 	private ArrayList<Meal> meals;	//list of all available meals (for this location)
 	private Drone drone;
 	private ArrayList<FoodItem> foods;		//list of all foods  (for this location)
+	private ShiftDetails shiftDetails;
 	
 	
 	/**
@@ -28,6 +29,7 @@ public class Location {
 		this.meals = new ArrayList<Meal>();
 		this.drone = new Drone(12, 20, 20, 3, 30);
 		this.foods = new ArrayList<FoodItem>();	
+		this.shiftDetails = new ShiftDetails();
 	}
 	
 	/**
@@ -40,7 +42,7 @@ public class Location {
 	 * @param foods - list of all available foods
 	 */
 	public Location(String name, String homeName, HashMap<DeliveryPoint, Boolean> deliveryPoints,
-			ArrayList<Meal> meals,Drone drone, ArrayList<FoodItem> foods) {
+			ArrayList<Meal> meals,Drone drone, ArrayList<FoodItem> foods, ShiftDetails shiftDetails) {
 		
 		this.deliveryPoints = deliveryPoints;
 		this.home = new DeliveryPoint(homeName, 0, 0);
@@ -48,6 +50,7 @@ public class Location {
 		this.meals = meals;
 		this.drone = drone;
 		this.foods = foods;		
+		this.shiftDetails = shiftDetails;
 	}
 
 	/**
@@ -149,6 +152,14 @@ public class Location {
 	
 	public void setFoods(ArrayList<FoodItem> foods){
 		this.foods = foods;
+	}
+	
+	public ShiftDetails getShiftDetails() {
+		return this.shiftDetails;
+	}
+	
+	public void setShiftDetails(ShiftDetails shiftDetails) {
+		this.shiftDetails = shiftDetails;
 	}
 	
 	/**
