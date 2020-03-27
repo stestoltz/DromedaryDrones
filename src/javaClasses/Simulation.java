@@ -18,7 +18,7 @@ import javax.xml.stream.XMLStreamReader;
 
 public class Simulation {
 
-	private SimulationDetails details;
+	private Location location;
 	
 	private ArrayList<String> firstNames = new ArrayList<String>();
 	private ArrayList<String> lastNames = new ArrayList<String>();
@@ -28,8 +28,8 @@ public class Simulation {
 	 * Copy the details passed in to member details variable
 	 * @param details the options for this simulation
 	 */
-	public Simulation(SimulationDetails details) {
-		this.details = details;
+	public Simulation(Location location) {
+		this.location = location;
 		
 		firstNames.add("Alexander");
 		firstNames.add("Drew");
@@ -105,8 +105,26 @@ public class Simulation {
 	 * @param packingAlgorithm the packing algorithm to use
 	 * @return the queue
 	 */
-	public Queue<Order> generateOrders(PackingAlgorithm packingAlgorithm) {
-		return null;
+	//NEEDS TO BE FIXED: to put orders in the hour randomly, not evenly spaced out
+	public Queue<Order> generateOrders() {
+		Queue<Order> q = new LinkedList<Order>();
+		double timeStamp, timeIncrease;
+		//generate orders for each hour of the shift
+		for (int i=0; i<location.getShiftDetails().getHoursInShift(); i++) {
+			int numOrders = location.getShiftDetails().getOrdersPerHour()[i];
+			timeStamp = i*3600;
+			timeIncrease = 3600/numOrders;
+			
+			//generate the number of orders for that order
+			for (int j=0; j<numOrders; j++) {
+				//calculate the timestamp for the order
+				timeStamp += timeIncrease;
+			
+				//add the order to the queue
+				q.add(generateOrder(timeStamp));
+			}
+		}
+		return q;
 	}
 
 	/**
@@ -138,7 +156,6 @@ public class Simulation {
 		Meal meal4Order = null;
 		String meal = "";
 		double orderedTime = 0;
-		double deliveredTime = 0;
 		int xPoint = 0;
 		int yPoint = 0;
 		DeliveryPoint deliveryPoint = null;		
@@ -190,7 +207,7 @@ public class Simulation {
 			/*____here down cannot be tested since SimulationDetails isnt complete____*/
 					//get deliveryPoint object for order
 					for(DeliveryPoint d: 
-						SimulationDetails.getLocation().getDeliveryPoints()) {
+						location.getDeliveryPoints()) {
 						if(d.getX() == xPoint && d.getY() == yPoint) {
 							deliveryPoint = d;
 						}
@@ -199,13 +216,13 @@ public class Simulation {
 
 					//get meal object
 					for(Meal locElement: 
-						SimulationDetails.getMeals()) {
+						location.getMeals()) {
 						if(locElement.stringEquals(meal)) {
 							meal4Order = locElement;
 						}
 					}
 					//create order
-					Order order = new Order(name, meal4Order, orderedTime, deliveredTime,
+					Order order = new Order(name, meal4Order, orderedTime,
 							deliveryPoint);
 
 					//add order to queue
@@ -222,31 +239,19 @@ public class Simulation {
 		return orders;
 	}
 
-
-	/**
-	 * Given queue of orders, build drone trips from the orders
-	 * Use processTrip to figure out how long each trip took
-	 * @param orders
-	 * @param routingAlgorithm routing algorithm used to generate drone trips
-	 * @return the sequence of trips the drone will take
-	 */
-	public DroneTrip[] processOrders(Queue<Order> orders, RoutingAlgorithm routingAlgorithm) {
-		return null;
-	}
-
 	/**
 	 * Figure out how long the trip takes
 	 * Updates the delivered time of each order object in the drone trip
 	 * @param trip the trip to process
 	 * @param the starting time of the trip
-	 * @return the time the trip takes
+	 * @return the amount of time the drone was away from home
 	 */
 	public double processTrip(DroneTrip trip, double startTime) {
 		
 		double time = startTime;
 		
 		// get from location class?
-		DeliveryPoint home = details.getLocation().getHome();
+		DeliveryPoint home = location.getHome();
 		
 		Order[] stops = trip.getStops();
 		// each iteration calculates the time from the previous stop to the current one
@@ -274,11 +279,12 @@ public class Simulation {
 				stops[i].setDeliveredTime(time);
 				
 				// add delivery time
-				time += details.getDrone().getDefaultDeliveryTime();
+				time += location.getDrone().getDefaultDeliveryTime();
 			}
 		}
 		
-		return time;
+		// return the total duration of the trip
+		return time - startTime;
 	}
 	
 	/**
@@ -291,7 +297,7 @@ public class Simulation {
 		double distance = distance(origin, destination);
 		
 		// D = RT, so T = D / R
-		return distance / details.getDrone().getAverageCruisingSpeedFeetPerSecond();
+		return distance / location.getDrone().getAverageCruisingSpeedFeetPerSecond();
 	}
 	
 	private double distance(DeliveryPoint a, DeliveryPoint b) {
@@ -345,25 +351,15 @@ public class Simulation {
 	public Order generateOrder(double timestamp) {
 		Random rand = new Random();
 		String name;
-		Meal m;
-		DeliveryPoint dp;
+		Meal m = location.getRandomMeal();
+		DeliveryPoint dp = location.getRandomPoint();
 		
 		//pull a random name
 		int first = rand.nextInt(firstNames.size());
 		int last = rand.nextInt(lastNames.size());
 		name = firstNames.get(first) + " " + lastNames.get(last);
 		
-		//get a random meal
-		int meal = rand.nextInt(details.getMeals().size());
-		m = details.getMeals().get(meal);
-		
-		//get a random delivery point
-		int num = rand.nextInt(details.getLocation().getDeliveryPoints().size());
-		dp = details.getLocation().getDeliveryPoints().get(num);
-		
-		Order o = new Order(name, m, timestamp, 0.0, dp);
-		
-		return o;
+		return new Order(name, m, timestamp, dp);
 	}
 
 }

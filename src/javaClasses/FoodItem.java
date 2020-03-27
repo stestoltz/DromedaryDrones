@@ -49,4 +49,9 @@ public class FoodItem {
 	public void setPrepTime(double prepTime) {
 		this.prepTime = prepTime;
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 }
