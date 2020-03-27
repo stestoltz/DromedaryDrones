@@ -105,8 +105,26 @@ public class Simulation {
 	 * @param packingAlgorithm the packing algorithm to use
 	 * @return the queue
 	 */
-	public Queue<Order> generateOrders(PackingAlgorithm packingAlgorithm) {
-		return null;
+	//NEEDS TO BE FIXED: to put orders in the hour randomly, not evenly spaced out
+	public Queue<Order> generateOrders() {
+		Queue<Order> q = new LinkedList<Order>();
+		double timeStamp, timeIncrease;
+		//generate orders for each hour of the shift
+		for (int i=0; i<location.getShiftDetails().getHoursInShift(); i++) {
+			int numOrders = location.getShiftDetails().getOrdersPerHour()[i];
+			timeStamp = i*3600;
+			timeIncrease = 3600/numOrders;
+			
+			//generate the number of orders for that order
+			for (int j=0; j<numOrders; j++) {
+				//calculate the timestamp for the order
+				timeStamp += timeIncrease;
+			
+				//add the order to the queue
+				q.add(generateOrder(timeStamp));
+			}
+		}
+		return q;
 	}
 
 	/**
@@ -219,19 +237,6 @@ public class Simulation {
 			e.printStackTrace();
 		}
 		return orders;
-	}
-
-
-	/**
-	 * Given queue of orders, build drone trips from the orders
-	 * Use processTrip to figure out how long each trip took
-	 * 		Factor in the turn around time of the drone
-	 * @param orders
-	 * @param routingAlgorithm routing algorithm used to generate drone trips
-	 * @return the sequence of trips the drone will take
-	 */
-	public DroneTrip[] processOrders(Queue<Order> orders, RoutingAlgorithm routingAlgorithm) {
-		return null;
 	}
 
 	/**
@@ -354,17 +359,7 @@ public class Simulation {
 		int last = rand.nextInt(lastNames.size());
 		name = firstNames.get(first) + " " + lastNames.get(last);
 		
-//		//get a random meal
-//		int meal = rand.nextInt(location.getMeals().size());
-//		m = location.getMeals().get(meal);
-//		
-//		//get a random delivery point
-//		int num = rand.nextInt(location.getDeliveryPoints().size());
-//		dp = location.getDeliveryPoints().get(num);
-		
-		Order o = new Order(name, m, timestamp, dp);
-		
-		return o;
+		return new Order(name, m, timestamp, dp);
 	}
 
 }
