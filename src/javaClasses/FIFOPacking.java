@@ -21,10 +21,15 @@ public class FIFOPacking extends PackingAlgorithm {
 		double weight = 0.0;
 		
 		// if the queue has another order and if the new order will not overfill the drone
-		// then run until the next order overfills the drone
+		//		and if the next order was ordered before now
+		// then run until the next order overfills the drone or was ordered later than now
 		// returns the orders that were removed from the queue
-		while(hasNextOrder() && (shiftOrders.peek().getMeal().getMealWeight() + weight) <= drone.getCargoWeight()) {
+		while(hasNextOrder() && 
+				(shiftOrders.peek().getMeal().getMealWeight() + weight) <= drone.getCargoWeight() &&
+				shiftOrders.peek().getOrderedTime() <= time
+				) {
 			Order justRemoved = shiftOrders.remove();
+			weight += justRemoved.getMeal().getMealWeight();
 			orders.add(justRemoved);
 		}
 		return orders;

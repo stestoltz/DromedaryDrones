@@ -56,13 +56,16 @@ public class Simulation {
 	 * @param routingAlgorithm which routing algorithm to use
 	 * @return array of results objects, one per packing algorithm
 	 */
-	public Results[] runSimulation(Class<? extends PackingAlgorithm>[] packingAlgorithms, RoutingAlgorithm routingAlgorithm) {
-		
+	//public Results[] runSimulation(Class<? extends PackingAlgorithm>[] packingAlgorithms, RoutingAlgorithm routingAlgorithm) {
+	public Results[] runSimulation(RoutingAlgorithm routingAlgorithm) {
+	
 		// create simulationResults[], one entry for each packing algorithm
-		Results[] simulationResults = new Results[packingAlgorithms.length];
+		//Results[] simulationResults = new Results[packingAlgorithms.length];
+		Results[] simulationResults = new Results[1];
 		
 		// for each packing algorithm
-		for (int p = 0; p < packingAlgorithms.length; p++) {
+		//for (int p = 0; p < packingAlgorithms.length; p++) {
+		for (int p = 0; p < 1; p++) {
 			
 			//Class<? extends PackingAlgorithm> packingType = packingAlgorithms[p];
 		
@@ -82,11 +85,11 @@ public class Simulation {
 				//PackingAlgorithm pa = (PackingAlgorithm) packingType.getConstructors()[0].newInstance(
 				//		packingAlgorithmsOrders, location.getDrone());
 				
-				PackingAlgorithm pa;
-				if (i == 0) {
-					pa = new FIFOPacking(packingAlgorithmsOrders, location.getDrone());
+				PackingAlgorithm packingAlgorithm;
+				if (p == 0) {
+					packingAlgorithm = new FIFOPacking(packingAlgorithmsOrders, location.getDrone());
 				} else {
-					pa = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone());
+					packingAlgorithm = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone());
 				}
 	
 				/*
@@ -102,24 +105,22 @@ public class Simulation {
 				//DroneTrip[] trips = processOrders(orders, routingAlgorithm);
 		
 				// start at time of first order
-				double time = pa.nextOrderTime();
+				double time = packingAlgorithm.nextOrderTime();
 				
 				List<DroneTrip> trips = new ArrayList<>();
 				
-				// DOES NOT FIX NO ORDERS AT CURRENT TIME
-				
 				// for each drone trip
-				while (pa.hasNextOrder()) {
+				while (packingAlgorithm.hasNextOrder()) {
 					
 					// wait until we have an order
-					if (time < pa.nextOrderTime()) {
-						time = pa.nextOrderTime();
+					if (time < packingAlgorithm.nextOrderTime()) {
+						time = packingAlgorithm.nextOrderTime();
 					}
 					
 					// ASSUMPTION: IF WE HAVE AN ORDER, SHIP IT
 					
 					// find a drone's worth of orders available now
-					List<Order> nextTripOrders = pa.nextOrder(time);
+					List<Order> nextTripOrders = packingAlgorithm.nextOrder(time);
 					
 					// route the drone for this trip
 					DroneTrip trip = routingAlgorithm.createTrip(nextTripOrders, location.getHome());
@@ -296,12 +297,15 @@ public class Simulation {
 	 */
 	public double processTrip(DroneTrip trip, double startTime) {
 		
+		// DOES NOT TAKING INTO ACCOUNT SAME LOCATION
+		
 		double time = startTime;
 		
 		// get from location class?
 		DeliveryPoint home = location.getHome();
 		
 		Order[] stops = trip.getStops();
+		
 		// each iteration calculates the time from the previous stop to the current one
 		for (int i = 0; i <= stops.length; i++) {
 			

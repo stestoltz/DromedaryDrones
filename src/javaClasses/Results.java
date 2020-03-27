@@ -35,7 +35,7 @@ public class Results {
 	 * @param newTimes
 	 */
 	public void addTimes(Collection<Double> times) {
-		times.addAll(times);
+		this.times.addAll(times);
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class Results {
 			throw new Exception("Attempted to min empty results");
 		}
 		
-		return Collections.min(times);
+		return Collections.max(times);
 	}
 	
 	/**
