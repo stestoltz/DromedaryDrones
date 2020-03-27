@@ -26,7 +26,9 @@ public class Location {
 		this.home = new DeliveryPoint(homeName, 0, 0);
 		this.name = name;
 		this.meals = new ArrayList<Meal>();
-		this.drone = new Drone(12, 20, 20, 3, 30);
+
+		// create default drone and default shift details
+		this.drone = new Drone();		
 		this.foods = new ArrayList<FoodItem>();	
 	}
 	
