@@ -27,6 +27,7 @@ import javaClasses.Location;
 import javaClasses.Results;
 import javaClasses.RoutingAlgorithm;
 import javaClasses.Simulation;
+import javaClasses.BacktrackingSearch;
 import javaClasses.DeliveryPoint;
 import javaClasses.GreedyAlgorithm;
 
@@ -77,7 +78,8 @@ public class Main extends Application
 			Location groveCity = new Location("Grove City", "SAC");
 			Simulation sim = new Simulation(groveCity);
 			
-			RoutingAlgorithm ra = new GreedyAlgorithm();
+			//RoutingAlgorithm ra = new GreedyAlgorithm();
+			RoutingAlgorithm ra = new BacktrackingSearch();
 			Results[] simResults = sim.runSimulation(ra);
 			
 			System.out.println(simResults[0].getTimes());

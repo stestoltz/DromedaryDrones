@@ -28,12 +28,12 @@ public class Location {
 		this.name = name;
 		
 		// add fake points
-		addPoint(new DeliveryPoint("HAL", 25, 0));
-		addPoint(new DeliveryPoint("Hoyt", -25, -30));
-		addPoint(new DeliveryPoint("PLC", -25, 30));
-		addPoint(new DeliveryPoint("STEM", -40, 0));
-		addPoint(new DeliveryPoint("Rockwell", -50, 0));
-		addPoint(new DeliveryPoint("Crawford", -75, -30));
+		addPoint(new DeliveryPoint("HAL", 250, 0));
+		addPoint(new DeliveryPoint("Hoyt", -250, -300));
+		addPoint(new DeliveryPoint("PLC", -250, 300));
+		addPoint(new DeliveryPoint("STEM", -400, 0));
+		addPoint(new DeliveryPoint("Rockwell", -500, 0));
+		addPoint(new DeliveryPoint("Crawford", -750, -300));
 
 		this.foods = new ArrayList<FoodItem>();	
 		// add default foods
