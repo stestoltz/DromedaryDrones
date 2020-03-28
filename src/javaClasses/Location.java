@@ -210,13 +210,32 @@ public class Location {
 	}
 	
 	/**
-	 * returns a random meal from the arraylist
+	 * returns a random meal from the arraylist based off percentages
 	 * @return the random meal
 	 */
 	public Meal getRandomMeal() {
+		double lowerBound = 0;
+		double upperBound = 0;
+		double indexDecimal;
+		
+		//gets random integer from 1-100
 		Random rand = new Random();
-		int index = rand.nextInt(meals.size());
-		return meals.get(index);
+		int index = rand.nextInt(100);
+		//converts index to a double (between 0 and 1)
+		indexDecimal = index/100;
+		
+		//goes through list of meals
+		for(Meal m : meals) {
+			//sets upper bound val to the lowerbound + the meals percent chance
+			upperBound = lowerBound + m.getPercentage();
+			//checks if the random double was in the range for this meal
+			if(indexDecimal>=lowerBound && indexDecimal<upperBound) {
+				return m;
+			}
+			//sets lowerBound to upperBound for next iteration through loop
+			lowerBound = upperBound;
+		}
+		return null;	//returns null if no meal is found
 	}
 	
 	/**
