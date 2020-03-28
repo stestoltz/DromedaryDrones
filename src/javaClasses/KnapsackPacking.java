@@ -1,4 +1,5 @@
 package javaClasses;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -13,7 +14,8 @@ public class KnapsackPacking extends PackingAlgorithm {
 	 * @param skippedMeals
 	 */
 	public KnapsackPacking(Queue<Order> orders, Drone drone) {
-		
+		super(orders, drone);
+		this.skippedOrders = new LinkedList<>();
 	}
 	
 	@Override

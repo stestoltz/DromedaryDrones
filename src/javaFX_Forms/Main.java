@@ -24,7 +24,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javaClasses.Location;
+import javaClasses.Results;
+import javaClasses.RoutingAlgorithm;
+import javaClasses.Simulation;
 import javaClasses.DeliveryPoint;
+import javaClasses.GreedyAlgorithm;
 
 
 public class Main extends Application
@@ -58,6 +62,7 @@ public class Main extends Application
 		//create buttons and header
 		Button delete = new Button("Delete");
 		Button saveChanges = new Button("Save Changes");
+		Button startSimulation = new Button("Start Simulation");
 		Label header = new Label("Dromedary Drones");
 		header.setFont(new Font("Comic Sans", 30));
 
@@ -65,7 +70,27 @@ public class Main extends Application
 		BorderPane bottom = new BorderPane();
 		bottom.setLeft(delete);
 		bottom.setRight(saveChanges);
+		bottom.setCenter(startSimulation);
 		//do stuff
+		
+		startSimulation.setOnAction((event) -> {
+			Location groveCity = new Location("Grove City", "SAC");
+			Simulation sim = new Simulation(groveCity);
+			
+			RoutingAlgorithm ra = new GreedyAlgorithm();
+			Results[] simResults = sim.runSimulation(ra);
+			
+			System.out.println(simResults[0].getTimes());
+			System.out.println("Number of orders: " + simResults[0].getTimes().size());
+			
+			try {
+				System.out.println("Worst (s): " + simResults[0].worstTime());
+				System.out.println("Average (s): " + simResults[0].averageTime());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
 		//create a menubar for the hamburger menu
 				MenuBar menuBar = new MenuBar();
