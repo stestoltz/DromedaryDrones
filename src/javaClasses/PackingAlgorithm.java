@@ -26,6 +26,6 @@ public abstract class PackingAlgorithm {
 	}
 	
 	public double nextOrderTime() {
-		return shiftOrders.peek().getOrderedTime();
+		return shiftOrders.peek().getReadyTime();
 	}
 }
