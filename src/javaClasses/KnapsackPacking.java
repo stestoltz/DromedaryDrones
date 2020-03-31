@@ -1,5 +1,7 @@
 package javaClasses;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -26,6 +28,8 @@ public class KnapsackPacking extends PackingAlgorithm {
 		List<Order> sendOut = new LinkedList<>();
 		//the list of orders that are ready and could go out
 		ArrayList<Order> readyOrders = readyOrders(time);
+		//amount of weight packed into the drone currently
+		double currentWeight = 0;
 		
 		//base case - no skipped meals and no orders ready yet
 		if (skippedOrders.isEmpty() && readyOrders.isEmpty()) {
@@ -34,14 +38,59 @@ public class KnapsackPacking extends PackingAlgorithm {
 		
 		//check if there are skipped meals to consider first
 		if (!skippedOrders.isEmpty()) {
+			//sort from biggest to smallest
+			Collections.sort(skippedOrders);
 			
+			//fill the knapsack as much as possible
+			Iterator<Order> itr = skippedOrders.iterator();
+			while (itr.hasNext()) {
+				Order o = itr.next();
+				if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
+					sendOut.add(o);
+					currentWeight += o.getMeal().getMealWeight();
+					skippedOrders.remove(o);
+				}
+			}
+			
+			//if there is room left then check to fill with other orders
+			if (currentWeight < drone.getCargoWeight() && !readyOrders.isEmpty()) {
+				Iterator<Order> itr2 = readyOrders.iterator();
+				while (itr2.hasNext()) {
+					Order o = itr2.next();
+					if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
+						sendOut.add(o);
+						currentWeight += o.getMeal().getMealWeight();
+						readyOrders.remove(o);
+					} 
+					//if the item isn't packed then it moves to skipped orders
+					else {
+						skippedOrders.add(o);
+						readyOrders.remove(o);
+					}
+				}
+			}
+			
+			return sendOut;
 		} 
 		//if there are no skipped orders then we can pack from the ready order list
 		else {
+			Iterator<Order> itr3 = readyOrders.iterator();
+			while (itr3.hasNext()) {
+				Order o = itr3.next();
+				if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
+					sendOut.add(o);
+					currentWeight += o.getMeal().getMealWeight();
+					readyOrders.remove(o);
+				} 
+				//if the item isn't packed then it moves to skipped orders
+				else {
+					skippedOrders.add(o);
+					readyOrders.remove(o);
+				}
+			}
 			
+			return sendOut;
 		}
-		
-		return sendOut;
 	}
 	
 	/**
@@ -61,41 +110,6 @@ public class KnapsackPacking extends PackingAlgorithm {
 		}
 		
 		return ready;
-	}
-	
-	/**
-	 * method to find the indices of orders that fill the knapsack the most
-	 * @param orders - list of orders to pick from
-	 * @param currentWeight - the amount the knapsack is already filled
-	 * @param maxWeight - the max amount the knapsack can hold
-	 * @param index - the index of the next order to look at
-	 * @param ordersUsed - List object to store all of the orders we pick
-	 * @return the list object of orders that fill the knapsack the most
-	 */
-	private List<Integer> orderIndices(List<Order> orders, double currentWeight, double maxWeight, int index, List<Integer> ordersUsed, boolean indexAdded) {
-		//base case - the knapsack is perfectly full
-		if (currentWeight == maxWeight) {
-			return ordersUsed;
-		}
-		
-		//if we have reached the end of our list of orders
-		if (index == orders.size()) {
-			return ordersUsed;
-		}
-		
-		//otherwise look at the next order
-		double nextWeight = currentWeight + orders.get(index).getMeal().getMealWeight();
-		
-		//if the order does not overfill the knapsack and has not been added, then add it to the list
-		if (nextWeight <= maxWeight && !indexAdded) {
-			ordersUsed.add(index);
-			return orderIndices(orders, nextWeight, maxWeight, index, ordersUsed, true);
-		}
-		//if the order has been added in a previous check or would overflow the knapsack, then move to the next item
-		else {
-			return orderIndices(orders, currentWeight, maxWeight, index + 1, ordersUsed, false);
-		}
-		
 	}
 
 }
