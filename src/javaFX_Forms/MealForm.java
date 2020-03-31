@@ -55,24 +55,24 @@ public class MealForm extends Application
 		meal1List.put(burger, 1);
 		meal1List.put(fries, 1);
 		meal1List.put(drink, 1);
-		Meal meal1 = new Meal(meal1List, .15);
+		Meal meal1 = new Meal(meal1List, 15);
 
 		HashMap<FoodItem, Integer> meal2List = new HashMap<>();
 		meal2List.put(burger, 2);
 		meal2List.put(fries, 2);
 		meal2List.put(drink, 2);
-		Meal meal2 = new Meal(meal2List, .35);
+		Meal meal2 = new Meal(meal2List, 35);
 
 		HashMap<FoodItem, Integer> meal3List = new HashMap<>();
 		meal3List.put(burger, 2);
 		meal3List.put(fries, 3);
 		meal3List.put(drink, 4);
 		meal3List.put(pie, 1);
-		Meal meal3 = new Meal(meal3List, .25);
+		Meal meal3 = new Meal(meal3List, 25);
 
 		HashMap<FoodItem, Integer> meal4List = new HashMap<>();
 		meal4List.put(fries, 18);
-		Meal meal4 = new Meal(meal4List, .25);
+		Meal meal4 = new Meal(meal4List, 25);
 
 		location.addMeal(meal1);
 		location.addMeal(meal2);
@@ -161,6 +161,7 @@ public class MealForm extends Application
 		// Add the Label and the List to the VBox
 		foodSelection.getChildren().addAll(newMealLabel,foodView);
 		foodSelection.setPrefWidth(200);	//prevents a smooshed display
+		
 		/***************************finished new order list**************************/
 
 		/****************************set up add area***************************/
@@ -195,6 +196,12 @@ public class MealForm extends Application
 				location.deleteMeal(selectedMeal);
 				mealView.getItems().remove(selectedBox);
 			}
+		});
+		
+		edit.setOnAction((event) -> {
+			System.out.println("Randomly threw this in to check "
+					+ "percentage total:" +percentsValid(mealView));
+			System.out.println("edit food");
 		});
 		/***************************finished add area**************************/
 
@@ -273,6 +280,48 @@ public class MealForm extends Application
 			System.out.println("meal added!");
 		}
 		//should alert user and/or clear out textboxes
+	}
+	
+	/**
+	 * Method for checking if the percents add up to 100
+	 * (run upon exiting the program)
+	 * @return
+	 */
+	public boolean percentsValid(ListView<HBox> mealView) {
+		double pTotal = 0.0;
+		for(HBox selectedBox : mealView.getItems()) {
+			TextField temp = (TextField)(selectedBox.getChildren().get(1));
+			String stringP = temp.getText();
+			
+			try{
+				pTotal += Double.parseDouble(stringP);
+			}
+			//not a valid double for percentage
+			catch(Exception e) {
+				System.out.println("The value " + stringP +" is not a valid number.");
+				e.getMessage();
+			}
+			
+		}
+		if (pTotal != 100) {
+			System.out.println("The percentages do not add up to 100");
+			return false;
+		}
+		//add correct (possibly new) percentages to each meal
+		for(HBox selectedBox : mealView.getItems()) {
+			TextField temp = (TextField)(selectedBox.getChildren().get(1));
+			String stringP = temp.getText();
+			
+			try{
+				double percent = Double.parseDouble(stringP);
+			}
+			//not a valid double for percentage
+			catch(Exception e) {
+				System.out.println("The value " + stringP +" is not a valid percentage.");
+				e.getMessage();
+			}
+		}
+		return true;
 	}
 
 }
