@@ -5,6 +5,7 @@ public class Order {
 	private String name;
 	private Meal meal;
 	private double orderedTime;
+	private double readyTime;
 	private double deliveredTime;
 	private DeliveryPoint deliveryPoint;
 	
@@ -20,6 +21,7 @@ public class Order {
 		this.name = name;
 		this.meal = meal;
 		this.orderedTime = orderedTime;
+		this.readyTime = orderedTime + meal.getMealPrepTime();
 		//this.deliveredTime; // we do not set delivered time when we init it
 		this.deliveryPoint = deliveryPoint;
 	}
@@ -55,6 +57,10 @@ public class Order {
 	
 	public void setDeliveredTime(double deliveredTime) {
 		this.deliveredTime = deliveredTime;
+	}
+	
+	public double getReadyTime() {
+		return readyTime;
 	}
 	
 	/**
