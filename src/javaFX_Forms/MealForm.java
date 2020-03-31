@@ -2,29 +2,22 @@ package javaFX_Forms;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javaClasses.DeliveryPoint;
-import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
-import javaClasses.ShiftDetails;
 
 import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -86,12 +79,23 @@ public class MealForm extends Application
 		location.addMeal(meal3);
 		location.addMeal(meal4);
 
+		
+		ArrayList<HBox> mealElements = new ArrayList<>();
+		for(int i=0; i<location.getMeals().size(); i++) {
+			TextField inputVal = new TextField();	//creates the textField
+			
+			HBox hbox = new HBox();
+			//gets the food item as text
+			Text temp = new Text(location.getMeals().get(i).toString());
+			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
+			mealElements.add(hbox);	//adds the hbox to the arraylist
+			hbox.setPrefWidth(20);
+		}
 
-
-		ObservableList<Meal> mealList = FXCollections.<Meal>observableArrayList(location.getMeals());
+		ObservableList<HBox> mealList = FXCollections.<HBox>observableArrayList(mealElements);
 
 		// Create the ListView for the seasons
-		ListView<Meal> mealView = new ListView<>(mealList);
+		ListView<HBox> mealView = new ListView<>(mealList);
 		// Set the Orientation of the ListView
 		mealView.setOrientation(Orientation.VERTICAL);
 		// Set the Size of the ListView
@@ -170,12 +174,21 @@ public class MealForm extends Application
 		addingEvent(foodView,mealView));
 
 		delete.setOnAction((event) -> {
-			Meal selectedMeal = (Meal) mealView.getSelectionModel().getSelectedItem();
+			HBox selectedBox = (HBox) mealView.getSelectionModel().getSelectedItem();
+			
+			Text temp = (Text)(selectedBox.getChildren().get(0));
+			String meal = temp.getText();
 
+			Meal selectedMeal = null;
+			for(Meal m : location.getMeals()) {
+				if(m.toString().equals(meal)) {
+					selectedMeal = m;
+				}
+			}
 			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
 			if (selectedMeal != null) {
 				location.deleteMeal(selectedMeal);
-				mealView.getItems().remove(selectedMeal);
+				mealView.getItems().remove(selectedBox);
 			}
 		});
 		/***************************finished add area**************************/
@@ -206,7 +219,7 @@ public class MealForm extends Application
 		// Display the Stage
 		stage.show();
 	}
-	public void addingEvent(ListView<HBox> foodView, ListView<Meal> mealView) {
+	public void addingEvent(ListView<HBox> foodView, ListView<HBox> mealView) {
 		HashMap<FoodItem,Integer> foodList = new HashMap<>();
 		boolean foundFood = false;
 		for(HBox hbox : foodView.getItems()) {
@@ -238,9 +251,20 @@ public class MealForm extends Application
 		if(!foundFood) {
 			System.out.println("Could not find any foods to make a meal");
 		}
-		Meal meal = new Meal(foodList,0);
-		location.addMeal(meal);
-		mealView.getItems().add(meal);
+		else {
+			//create meal
+			Meal meal = new Meal(foodList,0);
+			location.addMeal(meal);	//add new meal to location's list
+			
+			//add new meal to display
+			TextField inputVal = new TextField();	//creates the textField
+			HBox hbox = new HBox();
+			//gets the food item as text
+			Text temp = new Text(meal.toString());
+			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
+			mealView.getItems().add(hbox);	//adds the hbox to the arraylist
+			hbox.setPrefWidth(20);
+		}
 		//should alert user and/or clear out textboxes
 	}
 
