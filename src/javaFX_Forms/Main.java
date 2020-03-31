@@ -1,13 +1,17 @@
 package javaFX_Forms;
 
 import java.io.FileInputStream;
-
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -74,25 +78,7 @@ public class Main extends Application
 		bottom.setCenter(startSimulation);
 		//do stuff
 		
-		startSimulation.setOnAction((event) -> {
-			Location groveCity = new Location("Grove City", "SAC");
-			Simulation sim = new Simulation(groveCity);
-			
-			//RoutingAlgorithm ra = new GreedyAlgorithm();
-			RoutingAlgorithm ra = new BacktrackingSearch();
-			Results[] simResults = sim.runSimulation(ra);
-			
-			System.out.println(simResults[0].getTimes());
-			System.out.println("Number of orders: " + simResults[0].getTimes().size());
-			
-			try {
-				System.out.println("Worst (s): " + simResults[0].worstTime());
-				System.out.println("Average (s): " + simResults[0].averageTime());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+		
 
 		//create a menubar for the hamburger menu
 				MenuBar menuBar = new MenuBar();
@@ -132,6 +118,62 @@ public class Main extends Application
 				"-fx-border-radius: 5;");
 
 
+		startSimulation.setOnAction((event) -> {
+			Location groveCity = new Location("Grove City", "SAC");
+			Simulation sim = new Simulation(groveCity);
+			
+			//RoutingAlgorithm ra = new GreedyAlgorithm();
+			RoutingAlgorithm ra = new BacktrackingSearch();
+			Results[] simResults = sim.runSimulation(ra);
+			
+			System.out.println(simResults[0].getTimes());
+			System.out.println("Number of orders: " + simResults[0].getTimes().size());
+			
+			try {
+				System.out.println("Worst (s): " + simResults[0].worstTime());
+				System.out.println("Average (s): " + simResults[0].averageTime());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			/*
+			System.out.println(simResults[1].getTimes());
+			System.out.println("Number of orders: " + simResults[1].getTimes().size());
+			
+			try {
+				System.out.println("Worst (s): " + simResults[1].worstTime());
+				System.out.println("Average (s): " + simResults[1].averageTime());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			
+			NumberAxis xAxis = new NumberAxis();
+			NumberAxis yAxis = new NumberAxis();
+			
+			xAxis.setLabel("Order Number");
+			yAxis.setLabel("Order Time (s)");
+			
+			LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+			
+			lineChart.setTitle("Simulation Results");
+			
+			Series<Number, Number> series = new XYChart.Series<>();
+			
+			List<Double> times = simResults[0].getTimes();
+			
+			for (int i = 0; i < times.size(); i++) {
+				series.getData().add(new XYChart.Data<Number, Number>(i + 1, times.get(i)));
+			}
+			
+			lineChart.getData().addAll(series);
+			
+			
+			layout.setCenter(lineChart);
+		});
+		
 
 		Scene scene = new Scene(layout);
 		Scene menu = new Scene(vBox);
