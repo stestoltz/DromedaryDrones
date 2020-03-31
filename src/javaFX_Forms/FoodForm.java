@@ -187,7 +187,7 @@ public class FoodForm extends Application
 		try{
 			time = Double.parseDouble(prepTime);
 		}
-		//not a valid integer for preptime
+		//not a valid double for preptime
 		catch(Exception e) {
 			errorFound = true;
 			System.out.println("Prep time was not a recognizable number.");
