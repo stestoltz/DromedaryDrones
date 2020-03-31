@@ -82,11 +82,12 @@ public class MealForm extends Application
 		
 		ArrayList<HBox> mealElements = new ArrayList<>();
 		for(int i=0; i<location.getMeals().size(); i++) {
-			TextField inputVal = new TextField();	//creates the textField
+			//creates the textField
+			TextField inputVal = new TextField(""+location.getMeal(i).getPercentage());	
 			
 			HBox hbox = new HBox();
 			//gets the food item as text
-			Text temp = new Text(location.getMeals().get(i).toString());
+			Text temp = new Text(location.getMeal(i).toString());
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 			mealElements.add(hbox);	//adds the hbox to the arraylist
 			hbox.setPrefWidth(20);
@@ -175,15 +176,19 @@ public class MealForm extends Application
 
 		delete.setOnAction((event) -> {
 			HBox selectedBox = (HBox) mealView.getSelectionModel().getSelectedItem();
-			
-			Text temp = (Text)(selectedBox.getChildren().get(0));
-			String meal = temp.getText();
-
 			Meal selectedMeal = null;
-			for(Meal m : location.getMeals()) {
-				if(m.toString().equals(meal)) {
-					selectedMeal = m;
+			try {
+				Text temp = (Text)(selectedBox.getChildren().get(0));
+				String meal = temp.getText();
+	
+				for(Meal m : location.getMeals()) {
+					if(m.toString().equals(meal)) {
+						selectedMeal = m;
+					}
 				}
+			}
+			catch(NullPointerException e) {
+				System.out.println("no meal selected");
 			}
 			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
 			if (selectedMeal != null) {
@@ -228,6 +233,7 @@ public class MealForm extends Application
 
 			TextField temp2 = (TextField)(hbox.getChildren().get(1));
 			String stringNum = temp2.getText();
+			temp2.setText("");
 			if (!stringNum.equals("") && !stringNum.equals("0")) {
 				foundFood = true;
 				//convert to integer
@@ -257,13 +263,14 @@ public class MealForm extends Application
 			location.addMeal(meal);	//add new meal to location's list
 			
 			//add new meal to display
-			TextField inputVal = new TextField();	//creates the textField
+			TextField inputVal = new TextField("0");	//creates the textField
 			HBox hbox = new HBox();
 			//gets the food item as text
 			Text temp = new Text(meal.toString());
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 			mealView.getItems().add(hbox);	//adds the hbox to the arraylist
 			hbox.setPrefWidth(20);
+			System.out.println("meal added!");
 		}
 		//should alert user and/or clear out textboxes
 	}
