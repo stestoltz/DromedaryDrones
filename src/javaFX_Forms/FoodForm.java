@@ -45,15 +45,15 @@ public class FoodForm extends Application
 		//create food label
 		Label foodLabel = new Label("Current Foods:");
 
-		FoodItem burger = new FoodItem("Burger", 2, 2);
-		location.addFood(burger);
-		FoodItem fries = new FoodItem("Fries", .5, 1);
-		location.addFood(fries);
-		FoodItem drink = new FoodItem("Drink", 2, 0);
-		location.addFood(drink);
-		FoodItem pie = new FoodItem("Pie", 2.5, 8);
-		location.addFood(pie);
-		location.getFoods();
+//		FoodItem burger = new FoodItem("Burger", 2, 2);
+//		location.addFood(burger);
+//		FoodItem fries = new FoodItem("Fries", .5, 1);
+//		location.addFood(fries);
+//		FoodItem drink = new FoodItem("Drink", 2, 0);
+//		location.addFood(drink);
+//		FoodItem pie = new FoodItem("Pie", 2.5, 8);
+//		location.addFood(pie);
+//		location.getFoods();
 		
 
 		ObservableList<FoodItem> foodList = FXCollections.<FoodItem>observableArrayList(location.getFoods());
@@ -210,9 +210,11 @@ public class FoodForm extends Application
 		//if there were no errors
 		else if(!errorFound){
 			FoodItem newFood = new FoodItem(inputName, w, time);
-			location.addFood(newFood);
-			foodView.getItems().add(newFood);
-			System.out.println("added " + inputName);
+			//display the newly added food if it was added correctly
+			if(location.addFood(newFood)) {
+				foodView.getItems().add(newFood);
+				System.out.println("added " + inputName);
+			}
 		}
 	}
 }
