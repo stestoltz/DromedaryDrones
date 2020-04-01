@@ -1,6 +1,7 @@
 package javaFX_Forms;
 
 import java.io.FileInputStream;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.application.Application;
@@ -54,7 +55,13 @@ public class Main extends Application
 		ImageView imageView = new ImageView(image);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(150);
+		
+		
+		// create drone pane
+		BorderPane layout = new BorderPane();
+		DroneScene droneScene = new DroneScene(image, new BorderPane(layout));
 
+		
 		//create map
 		Image map = new Image(new FileInputStream("res/map.jfif"));
 		ImageView mapView = new ImageView(map);
@@ -81,22 +88,23 @@ public class Main extends Application
 		
 
 		//create a menubar for the hamburger menu
-				MenuBar menuBar = new MenuBar();
-				VBox vBox = new VBox(menuBar);
-				
-				Menu menu1 = new Menu("Simulation Settings");
-				menuBar.getMenus().add(menu1);
-				MenuItem menuItem1 = new MenuItem("Modify Mapping");
-				MenuItem menuItem2 = new MenuItem("Food Settings");
-				MenuItem menuItem3 = new MenuItem("Order Settings");
-				MenuItem menuItem4 = new MenuItem("Shift Settings");
-				MenuItem menuItem5 = new MenuItem("Drone Settings");
+		MenuBar menuBar = new MenuBar();
+		VBox vBox = new VBox(menuBar);
+		
+		Menu menu1 = new Menu("Simulation Settings");
+		menuBar.getMenus().add(menu1);
+		MenuItem menuItem1 = new MenuItem("Modify Mapping");
+		MenuItem menuItem2 = new MenuItem("Food Settings");
+		MenuItem menuItem3 = new MenuItem("Order Settings");
+		MenuItem menuItem4 = new MenuItem("Shift Settings");
+		MenuItem menuItem5 = new MenuItem("Drone Settings");
 
-				menu1.getItems().add(menuItem1);
-				menu1.getItems().add(menuItem2);
-				menu1.getItems().add(menuItem3);
-				menu1.getItems().add(menuItem4);
-				menu1.getItems().add(menuItem5);
+		menu1.getItems().add(menuItem1);
+		menu1.getItems().add(menuItem2);
+		menu1.getItems().add(menuItem3);
+		menu1.getItems().add(menuItem4);
+		menu1.getItems().add(menuItem5);
+		
 		//create pane and add images
 		BorderPane top = new BorderPane();
 		top.setLeft(imageView);
@@ -163,6 +171,7 @@ public class Main extends Application
 			Series<Number, Number> series = new XYChart.Series<>();
 			
 			List<Double> times = simResults[0].getTimes();
+			Collections.sort(times);
 			
 			for (int i = 0; i < times.size(); i++) {
 				series.getData().add(new XYChart.Data<Number, Number>(i + 1, times.get(i)));
@@ -185,35 +194,22 @@ public class Main extends Application
 	}
 	
 	//pop up window
-		public void start1(final Stage primaryStage) {
-		    Button btn = new Button();
-		    btn.setText("Open Dialog");
-		    btn.setOnAction(
-		        new EventHandler<ActionEvent>() {
-		            @Override
-		            public void handle(ActionEvent event) {
-		                final Stage dialog = new Stage();
-		                dialog.initModality(Modality.APPLICATION_MODAL);
-		                dialog.initOwner(primaryStage);
-		                VBox dialogVbox = new VBox(20);
-		                dialogVbox.getChildren().add(new Text("This is a Dialog"));
-		                Scene dialogScene = new Scene(dialogVbox, 300, 200);
-		                dialog.setScene(dialogScene);
-		                dialog.show();
-		            }
-		         });
-		    }
-	
-	public Location generateBogusLocation() {
-		Location location = new Location("Bogus", "SAC");
-		
-		location.addPoint(new DeliveryPoint("HAL", 25, 0));
-		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));
-		location.addPoint(new DeliveryPoint("PLC", -25, 30));
-		location.addPoint(new DeliveryPoint("STEM", -40, 0));
-		location.addPoint(new DeliveryPoint("Rockwell", -50, 0));
-		location.addPoint(new DeliveryPoint("Crawford", -75, -30));
-		
-		return location;
-	}
+	public void start1(final Stage primaryStage) {
+	    Button btn = new Button();
+	    btn.setText("Open Dialog");
+	    
+	    btn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(primaryStage);
+                VBox dialogVbox = new VBox(20);
+                dialogVbox.getChildren().add(new Text("This is a Dialog"));
+                Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                dialog.setScene(dialogScene);
+                dialog.show();
+            }
+         });
+    }
 }
