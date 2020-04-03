@@ -1,5 +1,7 @@
 package javaFX_Forms;
 
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -17,13 +20,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class ShiftSettingsForm {
+public class ShiftSettingsForm extends Application {
+	public static void main(String[] args) 
+	{
+		Application.launch(args);
+	}
 	
 	public void start(Stage stage) {
 		
@@ -31,7 +39,7 @@ public class ShiftSettingsForm {
 		
 		// create a pane
 		GridPane pane = new GridPane();
-		pane.setAlignment(Pos.CENTER);
+		pane.setAlignment(Pos.CENTER_LEFT);
 		pane.setHgap(10);
 		pane.setVgap(10);
 		pane.setPadding(new Insets(25,25,25,25));
@@ -55,9 +63,29 @@ public class ShiftSettingsForm {
 		pane.add(hrsinShiftField, 1, 2);
 		
 		
+		//Orders per hour list
+		Label ordersPerHour = new Label("Orders Per Hour");
+		pane.add(ordersPerHour, 4,1);
+		
+		ListView listView = new ListView();
+		HBox hbox = new HBox();
+		listView.add(hbox);	//adds the hbox to the arraylist
+		hbox.setPrefWidth(20);
+
+        listView.getItems().addAll("Hour 1",hbox);
+        listView.getItems().addAll("Hour 2", hbox);
+        listView.getItems().addAll("Hour 3", hbox);
+        listView.getItems().addAll("Hour 4", hbox);
+        listView.getItems().addAll("Hour 5", hbox);
+        listView.getItems().addAll("Hour 6", hbox);
+        listView.getItems().addAll("Hour 7", hbox);
+        listView.getItems().addAll("Hour 8", hbox);
+        listView.getItems().addAll("Hour 9", hbox);
+
+        pane.add(listView, 4, 2);
 		
 		
-		Scene scene = new Scene(pane, 300, 275);
+		Scene scene = new Scene(pane, 600, 300);
 		
 		stage.setScene(scene);
 		
