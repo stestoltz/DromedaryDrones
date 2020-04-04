@@ -11,12 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
-public class HomeScene extends Scene {
+public class HomePane extends BorderPane {
 	
 	private SceneController sc;
 	
-	public HomeScene(SceneController sc, BorderPane layout) throws FileNotFoundException {
-		super(layout);
+	public HomePane(SceneController sc) throws FileNotFoundException {
+		super();
 		
 		this.sc = sc;
 		
@@ -26,9 +26,9 @@ public class HomeScene extends Scene {
 		mapView.setPreserveRatio(true);
 		mapView.setFitHeight(500);
 		
-		layout.setCenter(mapView);
+		this.setCenter(mapView);
 		
-		BorderPane top = (BorderPane) layout.getTop();
+		BorderPane top = (BorderPane) this.getTop();
 		MenuBar menuBar = (MenuBar) top.getRight();
 		Menu menu = menuBar.getMenus().get(0);
 		MenuItem droneItem = menu.getItems().get(4);

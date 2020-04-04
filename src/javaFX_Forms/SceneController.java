@@ -3,6 +3,8 @@ package javaFX_Forms;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import javaClasses.Drone;
+import javaClasses.Location;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,24 +20,30 @@ import javafx.stage.Stage;
 
 public class SceneController {
 	
+	private Location location;
+	
 	private Stage stage;
 
 	private Image logo;
 	
-	private Scene homeScene;
-	private Scene droneScene;
+	private HomePane homePane;
+	private DronePane dronePane;
 	/*
 	private Scene foodScene;
 	private Scene mealScene;
 	 */
 	
 	public SceneController(Stage stage) throws FileNotFoundException {
+		location = new Location("Grove City", "SAC");
+		
 		this.stage = stage;
 		
 		logo = new Image(new FileInputStream("res/Temp_logo.jpg"));
 		
-		homeScene = new HomeScene(this, buildHomeBorderPane());
-		droneScene = new DroneScene(this, buildSettingsBorderPane("Drone Settings"));
+		homePane = new HomePane(this, buildHomeBorderPane());
+		dronePane = new DronePane(this, buildSettingsBorderPane("Drone Settings"));
+		
+		stage.setScene(homeScene);
 	}
 	
 	public Scene getHomeScene() {
@@ -47,13 +55,18 @@ public class SceneController {
 	}
 	
 	public void switchToHome() {
-		stage.setScene(homeScene);
-		stage.setMaximized(true);
+		stage.getScene().setRoot(homeScene.getRoot());
+		stage.show();
 	}
 	
 	public void switchToDrone() {
-		stage.setScene(droneScene);
-		stage.setMaximized(true);
+		droneScene.loadDrone(location.getDrone());
+		stage.getScene().setRoot(droneScene.getRoot());
+		stage.show();
+	}
+	
+	public void replaceDrone(Drone d) {
+		this.location.setDrone(d);
 	}
 	
 	/**

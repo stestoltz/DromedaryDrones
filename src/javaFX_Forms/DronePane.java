@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class DroneScene extends Scene {
+public class DronePane extends BorderPane {
 	
 	private SceneController sc;
 	
@@ -22,8 +22,8 @@ public class DroneScene extends Scene {
 	private TextArea txtTurnAroundTime;
 	private TextArea txtDeliveryTime;
 	
-	public DroneScene(SceneController sc, BorderPane layout) {
-		super(layout);
+	public DronePane(SceneController sc, BorderPane layout) {
+		super();
 		
 		this.sc = sc;
 		
@@ -54,7 +54,33 @@ public class DroneScene extends Scene {
 		
 		VBox form = new VBox(line1, line2, line3, line4, line5);
 		
-		layout.setCenter(form);
+		this.setCenter(form);
+		
+		// get buttons and set event handlers
+		
+		BorderPane bottom = ((BorderPane) this.getBottom());
+		Button delete = ((Button) bottom.getLeft());
+		Button save = ((Button) bottom.getRight());
+		
+		delete.setOnAction((event) -> {
+			sc.switchToHome();
+		});
+		
+		save.setOnAction((event) -> {
+			
+			Drone d = getFormData();
+			
+			if (d != null) {
+				
+				sc.replaceDrone(d);
+				
+				sc.switchToHome();
+				
+			} else {
+				System.out.println("User validation error on drone form");
+			}
+		});
+		
 	}
 	
 	public void loadDrone(Drone d) {
@@ -63,6 +89,16 @@ public class DroneScene extends Scene {
 		txtMaxFlightTime.setText(Double.toString(d.getMaxFlightTime()));
 		txtTurnAroundTime.setText(Double.toString(d.getTurnAroundTime()));
 		txtDeliveryTime.setText(Double.toString(d.getDeliveryTime()));
+	}
+	
+	public Drone getFormData() {
+		double cargoWeight = Double.parseDouble(txtCargoWeight.getText());
+		double cruisingSpeed = Double.parseDouble(txtCruisingSpeed.getText());
+		double maxFlightTime = Double.parseDouble(txtMaxFlightTime.getText());
+		double turnAroundTime = Double.parseDouble(txtTurnAroundTime.getText());
+		double deliveryTime = Double.parseDouble(txtDeliveryTime.getText());
+		
+		return new Drone(cargoWeight, cruisingSpeed, maxFlightTime, turnAroundTime, deliveryTime);
 	}
 
 }
