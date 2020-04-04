@@ -1,88 +1,71 @@
 package javaFX_Forms;
-import java.util.ArrayList;
+import java.util.List;
 
-import javaClasses.DeliveryPoint;
-import javaClasses.Drone;
 import javaClasses.FoodItem;
-import javaClasses.Location;
-import javaClasses.Meal;
-import javaClasses.ShiftDetails;
 
-import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.scene.control.Button; 
 
-public class FoodForm extends Application
+public class FoodForm extends Form
 {
-	// Declaring the TextArea for Logging
-	TextArea logging;
-	ArrayList<String> foods = new ArrayList<>();
-	Location location = new Location("test", "home");
+
+	//ArrayList<String> foods = new ArrayList<>();
+	//Location location = new Location("test", "home");
 	
-	public static void main(String[] args) 
-	{
-		Application.launch(args);
-	}
-
-	@Override
-	public void start(Stage stage) throws Exception
-	{
-		/****************************set up food list***************************/
-		//create food label
-		Label foodLabel = new Label("Current Foods:");
-
-		FoodItem burger = new FoodItem("Burger", 2, 2);
-		location.addFood(burger);
-		FoodItem fries = new FoodItem("Fries", .5, 1);
-		location.addFood(fries);
-		FoodItem drink = new FoodItem("Drink", 2, 0);
-		location.addFood(drink);
-		FoodItem pie = new FoodItem("Pie", 2.5, 8);
-		location.addFood(pie);
-		location.getFoods();
+	private SceneController sc;
+	private BorderPane layout;
+	
+	private ListView<FoodItem> foodView;
+	
+	public FoodForm(SceneController sc, BorderPane layout) {
+		this.sc = sc;
+		this.layout = layout;
 		
+		/****************************setup the food list***************************/
+		this.foodView = new ListView<>();
 
-		ObservableList<FoodItem> foodList = FXCollections.<FoodItem>observableArrayList(location.getFoods());
-
-		// Create the ListView for the seasons
-		ListView<FoodItem> foodView = new ListView<>(foodList);
 		// Set the Orientation of the ListView
 		foodView.setOrientation(Orientation.VERTICAL);
 		// Set the Size of the ListView
 		foodView.setPrefSize(120, 100);
-
-		// Create the Season VBox
+		
 		VBox foodSelection = new VBox();
+	
+		//create food label
+		Label foodLabel = new Label("Current Foods:");
+
 		// Set Spacing to 10 pixels
 		foodSelection.setSpacing(10);
 		// Add the Label and the List to the VBox
 		foodSelection.getChildren().addAll(foodLabel,foodView);
 		foodSelection.setPrefWidth(200);	//prevents a smooshed display
-		/****************************finished food list***************************/
 
 		/****************************set up edit list buttons***************************/
 		// create a button 
 		Button edit = new Button("Edit"); 
 		Button delete = new Button("Delete");
 
-		edit.setOnAction(event->
-		System.out.println("edit: " + foodView.getSelectionModel().getSelectedItem()));
-		delete.setOnAction(event->
-		System.out.println("delete: " + foodView.getSelectionModel().getSelectedItem()));
+		
+		edit.setOnAction(event-> {
+			System.out.println("edit: " + foodView.getSelectionModel().getSelectedItem());
+		});
+		
+		delete.setOnAction(event-> {
+			System.out.println("delete: " + foodView.getSelectionModel().getSelectedItem());
+		});
+		
+		
 		//button section on gui
 		VBox buttons = new VBox();
 		buttons.setSpacing(10);
@@ -116,10 +99,10 @@ public class FoodForm extends Application
 		//calls function to check if adding stuff is valid
 		//need to check for duplicates
 		//need to refresh the list
-		addFood.setOnAction(event->
-		addingEvent(inputName.getText(),inputWeight.getText(),
-				inputPrepTime.getText(),foodView)
-				);
+		addFood.setOnAction(event->{
+			addingEvent(inputName.getText(),inputWeight.getText(),
+				inputPrepTime.getText(),foodView);
+		});
 
 		delete.setOnAction((event) -> {
 			FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
@@ -127,7 +110,7 @@ public class FoodForm extends Application
 			
 			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
 			if (selectedFood != null) {
-				location.deleteFood(selectedFood);
+				//location.deleteFood(selectedFood);
 				foodView.getItems().remove(selectedFood);
 			}
 		});
@@ -156,26 +139,40 @@ public class FoodForm extends Application
 
 		// Set the Style-properties of the GridPane
 		pane.setPadding(new Insets(25,25,25,25));
-
-		// Create the Scene
-		Scene scene = new Scene(pane, 400, 200);
-		// Add the Scene to the Stage
-		stage.setScene(scene);
-		// Set the Title
-		stage.setTitle("Food Settings");
-		// Display the Stage
-		stage.show();
+		
+		layout.setCenter(pane);
+		
+		
+		// get buttons and set event handlers
+		
+		BorderPane bottom = ((BorderPane) layout.getBottom());
+		Button cancel = ((Button) bottom.getLeft());
+		Button save = ((Button) bottom.getRight());
+		
+		cancel.setOnAction((event) -> {
+			this.sc.switchToHome();
+		});
+		
+		save.setOnAction((event) -> {
+			
+			// if form is valid
+				
+			//this.sc.replaceFoods(List<FoodItem>);
+			//this.sc.switchToHome();
+		});
 	}
+	
+	public void loadFoods(List<FoodItem> foods) {
+		
+		// given a list of foods, load it into the form
+		
+		ObservableList<FoodItem> foodList = FXCollections.<FoodItem>observableArrayList(foods);
 
-	// Method to display the Season, which has been changed
-	public void foodSelectChanged(ObservableValue<? extends String> observable,String oldValue,String newValue) 
-	{
-		String oldText = oldValue == null ? "null" : oldValue.toString();
-		String newText = newValue == null ? "null" : newValue.toString();
-
-		logging.appendText("food selection changed: old = " + oldText + ", new = " + newText + "\n");
+		// reset the items in the foodView
+		foodView.getItems().clear();
+		foodView.getItems().addAll(foodList);
 	}
-
+	
 	public void addingEvent(String inputName, String weight, 
 			String prepTime, ListView<FoodItem> foodView) {
 		
@@ -210,9 +207,16 @@ public class FoodForm extends Application
 		//if there were no errors
 		else if(!errorFound){
 			FoodItem newFood = new FoodItem(inputName, w, time);
-			location.addFood(newFood);
+			//display the newly added food if it was added correctly
+			//if(location.addFood(newFood)) {
 			foodView.getItems().add(newFood);
 			System.out.println("added " + inputName);
+			//}
 		}
+	}
+
+	@Override
+	public BorderPane getLayout() {
+		return layout;
 	}
 }

@@ -15,6 +15,22 @@ public class Meal {
 		this.meal = meal;
 		this.percentage = percentage;
 	}
+	/**
+	 * copy constructor
+	 * @param meal
+	 * @param percentage
+	 */
+	public Meal(Meal m) {
+		HashMap<FoodItem, Integer> mCopy = new HashMap<FoodItem, Integer>();
+		for (HashMap.Entry<FoodItem,Integer> element : m.getMeal().entrySet()) { 
+			FoodItem key =  element.getKey(); //get food item
+            int value = element.getValue();	//get number of foods
+            
+            mCopy.put(key, value);	//add food to meal
+        }
+		this.meal = mCopy;
+		this.percentage = m.percentage;
+	}
 
 	public HashMap<FoodItem, Integer> getMeal() {
 		return meal;
@@ -66,9 +82,9 @@ public class Meal {
 	 */
 	public double getMealWeight() {
 		double ret = 0;	//addition of each food's weight
-		for (HashMap.Entry element : meal.entrySet()) { 
+		for (HashMap.Entry<FoodItem,Integer> element : meal.entrySet()) { 
 			//gets individual food's weight
-			ret +=  ((FoodItem) element.getKey()).getWeight();
+			ret +=  (element.getKey()).getWeight();
 		}
 		return ret;
 	}
@@ -81,9 +97,9 @@ public class Meal {
 	 */
 	public double getMealPrepTime() {
 		double ret = 0;	//longest prepTime
-		for (HashMap.Entry element : meal.entrySet()) { 
+		for (HashMap.Entry<FoodItem,Integer> element : meal.entrySet()) { 
 			//gets individual food's prep times
-			double foodPrepTime = ((FoodItem) element.getKey()).getPrepTime();
+			double foodPrepTime = (element.getKey()).getPrepTime();
 			if(foodPrepTime > ret) {	//gets max prep time
 				ret =  foodPrepTime;
 			}
@@ -97,16 +113,12 @@ public class Meal {
 	 */
 	public String toString() {
 		String ret = "";
-		for (HashMap.Entry element : meal.entrySet()) { 
-            FoodItem key =  (FoodItem) element.getKey(); 
-  
-            // Add some bonus marks 
-            // to all the students and print it 
-            int value = (int)element.getValue();
+		for (HashMap.Entry<FoodItem,Integer> element : meal.entrySet()) { 
+            FoodItem key =  element.getKey(); //get food item
+            int value = element.getValue();	//get number of foods
   
             ret += key.getName() + "("+ value +") "; 
         }
-		//ret += "\nOrder Chance: "+percentage + "%";
 		return ret;
 	}
 	

@@ -2,15 +2,30 @@ package javaClasses;
 
 public class FoodItem {
 	
-	private double weight;
-	private String name;
-	private double prepTime;
+	private double weight;	//weight of food
+	private String name;	//name of food
+	private double prepTime;//preptime food takes
 	
-	// constructor
+	/**
+	 * Constructor
+	 * @param name - name of food
+	 * @param weight - weight of food
+	 * @param prepTime -preptime food takes
+	 */
 	public FoodItem(String name, double weight, double prepTime) {
 		this.name = name;
 		this.weight = weight;
 		this.prepTime = prepTime;
+	}
+	
+	/**
+	 * copy constructor
+	 * @param f
+	 */
+	public FoodItem(FoodItem f) {
+		this.name = f.name;
+		this.weight = f.weight;
+		this.prepTime = f.prepTime;
 		
 	}
 	

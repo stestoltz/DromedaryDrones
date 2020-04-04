@@ -128,9 +128,6 @@ public class MapForm extends Application {
 		stage.show();
 	}
 	
-	
-	
-	
 	public Location generateBogusLocation() {
 		Location location = new Location("Bogus", "SAC");
 		
