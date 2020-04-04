@@ -1,7 +1,10 @@
 package javaFX_Forms;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javafx.application.Application;
@@ -55,11 +58,6 @@ public class Main extends Application
 		ImageView imageView = new ImageView(image);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(150);
-		
-		
-		// create drone pane
-		BorderPane layout = new BorderPane();
-		DroneScene droneScene = new DroneScene(image, new BorderPane(layout));
 
 		
 		//create map
@@ -161,8 +159,8 @@ public class Main extends Application
 			NumberAxis xAxis = new NumberAxis();
 			NumberAxis yAxis = new NumberAxis();
 			
-			xAxis.setLabel("Order Number");
-			yAxis.setLabel("Order Time (s)");
+			xAxis.setLabel("Order Time (s)");
+			yAxis.setLabel("Percentage of Orders");
 			
 			LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 			
@@ -170,11 +168,47 @@ public class Main extends Application
 			
 			Series<Number, Number> series = new XYChart.Series<>();
 			
+			int numBuckets = 25;
+			double[] buckets = new double[numBuckets + 1];
+			int[] counts = new int[numBuckets];
+			
 			List<Double> times = simResults[0].getTimes();
 			Collections.sort(times);
 			
-			for (int i = 0; i < times.size(); i++) {
-				series.getData().add(new XYChart.Data<Number, Number>(i + 1, times.get(i)));
+			double largestTime = times.get(times.size() - 1);
+			
+			for (int i = 0; i <= numBuckets; i++) {
+				buckets[i] = i * (largestTime / numBuckets);
+			}
+			
+			System.out.println(Arrays.asList(buckets));
+			
+			// build histogram
+			Iterator<Double> itr = times.iterator();
+			
+			int currentBucket = 0;
+			
+			while (itr.hasNext()) {
+				double next = itr.next();
+				
+				// if in bucket
+				if (buckets[currentBucket] <= next && next <= buckets[currentBucket + 1]) {
+					counts[currentBucket]++;
+				} else {
+					
+					// not in bucket - find right bucket
+					while (!(buckets[currentBucket] <= next && next <= buckets[currentBucket + 1])) {
+						currentBucket++;
+					}
+					
+					counts[currentBucket]++;
+				}
+			}
+			
+			System.out.println(Arrays.asList(counts));
+			
+			for (int i = 0; i < numBuckets; i++) {
+				series.getData().add(new XYChart.Data<Number, Number>((buckets[i] + buckets[i + 1]) / 2, ((double)counts[i] / times.size()) * 100));
 			}
 			
 			lineChart.getData().addAll(series);
