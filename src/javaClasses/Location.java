@@ -191,9 +191,17 @@ public class Location {
 	/**
 	 * add a food to the arraylist
 	 * @param food to be added
+	 * @return - a boolean to alert form if it was added or not
 	 */
-	public void addFood(FoodItem f) {
+	public boolean addFood(FoodItem f) {
+		for(FoodItem food : foods) {
+			if(f.toString().equals(food.toString())) {
+				System.out.println("There is already a food with that name");
+				return false;
+			}
+		}
 		foods.add(f);
+		return true;
 	}
 	
 	/**
@@ -214,9 +222,17 @@ public class Location {
 	/**
 	 * add a meal to the arraylist
 	 * @param m meal to be added
+	 * @return - a boolean to tell the fx form not to display the meal
 	 */
-	public void addMeal(Meal m) {
+	public boolean addMeal(Meal m) {
+		for(Meal meal : meals) {
+			if(m.toString().equals(meal.toString())) {
+				System.out.println("This is already a meal");
+				return false;
+			}
+		}
 		meals.add(m);
+		return true;
 	}
 	
 	/**
