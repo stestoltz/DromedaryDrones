@@ -66,6 +66,7 @@ public class KnapsackPacking extends PackingAlgorithm {
 					//if the item isn't packed then it moves to skipped orders
 					else {
 						skippedOrders.add(o);
+						shiftOrders.remove(o);
 					}
 				}
 			}
@@ -80,6 +81,7 @@ public class KnapsackPacking extends PackingAlgorithm {
 				if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
 					sendOut.add(o);
 					currentWeight += o.getMeal().getMealWeight();
+					shiftOrders.remove(o);
 				} 
 				//if the item isn't packed then it moves to skipped orders
 				else {
