@@ -1,6 +1,7 @@
 package javaFX_Forms;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javaClasses.FoodItem;
 import javaClasses.Location;
@@ -16,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,16 +25,20 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.Button; 
 
-public class MealForm extends Application
+public class MealForm extends Form
 {
+
+	private SceneController sc;
+	private BorderPane layout;
+
 	// Declaring the TextArea for Logging
 	TextArea logging;
 	ArrayList<String> foods = new ArrayList<>();
 	Location location = new Location("test", "home");
 
-	public static void main(String[] args) 
-	{
-		Application.launch(args);
+	public MealForm(SceneController sc, BorderPane layout) {
+		this.sc = sc;
+		this.layout = layout;
 	}
 
 	@Override
@@ -42,49 +48,49 @@ public class MealForm extends Application
 		//create food label
 		Label mealLabel = new Label("Meals:");
 
-//		FoodItem burger = new FoodItem("Burger", 2, 2);
-//		location.addFood(burger);
-//		FoodItem fries = new FoodItem("Fries", .5, 1);
-//		location.addFood(fries);
-//		FoodItem drink = new FoodItem("Drink", 2, 0);
-//		location.addFood(drink);
-//		FoodItem pie = new FoodItem("Pie", 2.5, 8);
-//		location.addFood(pie);
-//
-//		HashMap<FoodItem, Integer> meal1List = new HashMap<>();
-//		meal1List.put(burger, 1);
-//		meal1List.put(fries, 1);
-//		meal1List.put(drink, 1);
-//		Meal meal1 = new Meal(meal1List, 15);
-//
-//		HashMap<FoodItem, Integer> meal2List = new HashMap<>();
-//		meal2List.put(burger, 2);
-//		meal2List.put(fries, 2);
-//		meal2List.put(drink, 2);
-//		Meal meal2 = new Meal(meal2List, 35);
-//
-//		HashMap<FoodItem, Integer> meal3List = new HashMap<>();
-//		meal3List.put(burger, 2);
-//		meal3List.put(fries, 3);
-//		meal3List.put(drink, 4);
-//		meal3List.put(pie, 1);
-//		Meal meal3 = new Meal(meal3List, 25);
-//
-//		HashMap<FoodItem, Integer> meal4List = new HashMap<>();
-//		meal4List.put(fries, 18);
-//		Meal meal4 = new Meal(meal4List, 25);
-//
-//		location.addMeal(meal1);
-//		location.addMeal(meal2);
-//		location.addMeal(meal3);
-//		location.addMeal(meal4);
+		//		FoodItem burger = new FoodItem("Burger", 2, 2);
+		//		location.addFood(burger);
+		//		FoodItem fries = new FoodItem("Fries", .5, 1);
+		//		location.addFood(fries);
+		//		FoodItem drink = new FoodItem("Drink", 2, 0);
+		//		location.addFood(drink);
+		//		FoodItem pie = new FoodItem("Pie", 2.5, 8);
+		//		location.addFood(pie);
+		//
+		//		HashMap<FoodItem, Integer> meal1List = new HashMap<>();
+		//		meal1List.put(burger, 1);
+		//		meal1List.put(fries, 1);
+		//		meal1List.put(drink, 1);
+		//		Meal meal1 = new Meal(meal1List, 15);
+		//
+		//		HashMap<FoodItem, Integer> meal2List = new HashMap<>();
+		//		meal2List.put(burger, 2);
+		//		meal2List.put(fries, 2);
+		//		meal2List.put(drink, 2);
+		//		Meal meal2 = new Meal(meal2List, 35);
+		//
+		//		HashMap<FoodItem, Integer> meal3List = new HashMap<>();
+		//		meal3List.put(burger, 2);
+		//		meal3List.put(fries, 3);
+		//		meal3List.put(drink, 4);
+		//		meal3List.put(pie, 1);
+		//		Meal meal3 = new Meal(meal3List, 25);
+		//
+		//		HashMap<FoodItem, Integer> meal4List = new HashMap<>();
+		//		meal4List.put(fries, 18);
+		//		Meal meal4 = new Meal(meal4List, 25);
+		//
+		//		location.addMeal(meal1);
+		//		location.addMeal(meal2);
+		//		location.addMeal(meal3);
+		//		location.addMeal(meal4);
 
-		
+
 		ArrayList<HBox> mealElements = new ArrayList<>();
 		for(int i=0; i<location.getMeals().size(); i++) {
 			//creates the textField
 			TextField inputVal = new TextField(""+location.getMeal(i).getPercentage());	
-			
+
 			HBox hbox = new HBox();
 			//gets the food item as text
 			Text temp = new Text(location.getMeal(i).toString());
@@ -129,39 +135,8 @@ public class MealForm extends Application
 		/***************************finished list buttons**************************/
 
 		/****************************set up new order list***************************/
-		//create food label
-		Label newMealLabel = new Label("New Meal");		
 
-		//creates arraylist to store all hboxes going into the listview
-		ArrayList<HBox> foodElements = new ArrayList<>();
-		for(int i=0; i<location.getFoods().size(); i++) {
-			TextField inputVal = new TextField();	//creates the textField
-			
-			HBox hbox = new HBox();
-			//gets the food item as text
-			Text temp = new Text(location.getFoods().get(i).toString());
-			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
-			foodElements.add(hbox);	//adds the hbox to the arraylist
-			hbox.setPrefWidth(20);
-		}
 
-		//makes the arraylist of hboxes an observable list
-		ObservableList<HBox> foods = FXCollections.<HBox>observableArrayList(foodElements);
-		//makes the observable list a listview to be displayed
-		ListView<HBox> foodView = new ListView<>(foods);
-		//makes the list be displayed vertically
-		foodView.setOrientation(Orientation.VERTICAL);
-		// Set the Size of the ListView
-		foodView.setPrefSize(120, 100);
-
-		// Create the Season VBox
-		VBox foodSelection = new VBox();
-		// Set Spacing to 10 pixels
-		foodSelection.setSpacing(10);
-		// Add the Label and the List to the VBox
-		foodSelection.getChildren().addAll(newMealLabel,foodView);
-		foodSelection.setPrefWidth(200);	//prevents a smooshed display
-		
 		/***************************finished new order list**************************/
 
 		/****************************set up add area***************************/
@@ -181,7 +156,7 @@ public class MealForm extends Application
 			try {
 				Text temp = (Text)(selectedBox.getChildren().get(0));
 				String meal = temp.getText();
-	
+
 				for(Meal m : location.getMeals()) {
 					if(m.toString().equals(meal)) {
 						selectedMeal = m;
@@ -197,7 +172,7 @@ public class MealForm extends Application
 				mealView.getItems().remove(selectedBox);
 			}
 		});
-		
+
 		edit.setOnAction((event) -> {
 			System.out.println("Temporarily threw this in to check "
 					+ "percentage total: (" +percentsValid(mealView)+")");
@@ -254,7 +229,7 @@ public class MealForm extends Application
 							break;
 						}
 					}
-					
+
 				}
 				//not a valid integer for preptime
 				catch(Exception e) {
@@ -287,7 +262,7 @@ public class MealForm extends Application
 		}
 		//should alert user and/or clear out textboxes
 	}
-	
+
 	/**
 	 * Method for checking if the percents add up to 100
 	 * (run upon exiting the program)
@@ -298,7 +273,7 @@ public class MealForm extends Application
 		for(HBox selectedBox : mealView.getItems()) {
 			TextField temp = (TextField)(selectedBox.getChildren().get(1));
 			String stringP = temp.getText();
-			
+
 			try{
 				pTotal += Double.parseDouble(stringP);
 			}
@@ -307,7 +282,7 @@ public class MealForm extends Application
 				System.out.println("The value " + stringP +" is not a valid number.");
 				e.getMessage();
 			}
-			
+
 		}
 		if (pTotal != 100) {
 			System.out.println("The percentages do not add up to 100");
@@ -317,7 +292,7 @@ public class MealForm extends Application
 		for(HBox selectedBox : mealView.getItems()) {
 			TextField temp = (TextField)(selectedBox.getChildren().get(1));
 			String stringP = temp.getText();
-			
+
 			try{
 				double percent = Double.parseDouble(stringP);
 			}
@@ -328,6 +303,47 @@ public class MealForm extends Application
 			}
 		}
 		return true;
+	}
+
+	public void loadMeals(List<Meal> meals, List<FoodItem> foods) {
+		
+		//create food label
+		Label newMealLabel = new Label("New Meal");		
+
+		//creates arraylist to store all hboxes going into the listview
+		ArrayList<HBox> foodElements = new ArrayList<>();
+		for(int i=0; i<location.getFoods().size(); i++) {
+			TextField inputVal = new TextField();	//creates the textField
+
+			HBox hbox = new HBox();
+			//gets the food item as text
+			Text temp = new Text(location.getFoods().get(i).toString());
+			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
+			foodElements.add(hbox);	//adds the hbox to the arraylist
+			hbox.setPrefWidth(20);
+		}
+
+		//makes the arraylist of hboxes an observable list
+		ObservableList<HBox> foods = FXCollections.<HBox>observableArrayList(foodElements);
+		//makes the observable list a listview to be displayed
+		ListView<HBox> foodView = new ListView<>(foods);
+		//makes the list be displayed vertically
+		foodView.setOrientation(Orientation.VERTICAL);
+		// Set the Size of the ListView
+		foodView.setPrefSize(120, 100);
+
+		// Create the Season VBox
+		VBox foodSelection = new VBox();
+		// Set Spacing to 10 pixels
+		foodSelection.setSpacing(10);
+		// Add the Label and the List to the VBox
+		foodSelection.getChildren().addAll(newMealLabel,foodView);
+		foodSelection.setPrefWidth(200);	//prevents a smooshed display
+	}
+
+	@Override
+	public BorderPane getLayout() {
+		return layout;
 	}
 
 }

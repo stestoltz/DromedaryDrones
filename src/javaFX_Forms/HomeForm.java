@@ -3,7 +3,6 @@ package javaFX_Forms;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -11,13 +10,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
-public class HomePane extends BorderPane {
+public class HomeForm extends Form {
 	
 	private SceneController sc;
+	private BorderPane layout;
 	
-	public HomePane(SceneController sc) throws FileNotFoundException {
-		super();
-		
+	public HomeForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
+		this.layout = layout;
 		this.sc = sc;
 		
 		//create map
@@ -26,16 +25,34 @@ public class HomePane extends BorderPane {
 		mapView.setPreserveRatio(true);
 		mapView.setFitHeight(500);
 		
-		this.setCenter(mapView);
+		layout.setCenter(mapView);
 		
-		BorderPane top = (BorderPane) this.getTop();
+		BorderPane top = (BorderPane) layout.getTop();
 		MenuBar menuBar = (MenuBar) top.getRight();
 		Menu menu = menuBar.getMenus().get(0);
+		
+		MenuItem foodItem = menu.getItems().get(1);
+		
+		foodItem.setOnAction((event)->{
+			this.sc.switchToFood();
+		});
+		
+		MenuItem mealItem = menu.getItems().get(2);
+		
+		mealItem.setOnAction((event)->{
+			this.sc.switchToMeal();
+		});
+		
 		MenuItem droneItem = menu.getItems().get(4);
 		
 		droneItem.setOnAction((event)->{
-			sc.switchToDrone();
+			this.sc.switchToDrone();
 		});
+	}
+
+	@Override
+	public BorderPane getLayout() {
+		return layout;
 	}
 
 }

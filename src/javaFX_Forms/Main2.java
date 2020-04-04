@@ -1,8 +1,6 @@
 package javaFX_Forms;
 
-import javaClasses.Location;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main2 extends Application {

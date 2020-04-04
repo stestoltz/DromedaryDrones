@@ -1,20 +1,17 @@
 package javaFX_Forms;
 
 import javaClasses.Drone;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
-public class DronePane extends BorderPane {
+public class DroneForm extends Form {
 	
 	private SceneController sc;
+	private BorderPane layout;
 	
 	private TextArea txtCargoWeight;
 	private TextArea txtCruisingSpeed;
@@ -22,9 +19,8 @@ public class DronePane extends BorderPane {
 	private TextArea txtTurnAroundTime;
 	private TextArea txtDeliveryTime;
 	
-	public DronePane(SceneController sc, BorderPane layout) {
-		super();
-		
+	public DroneForm(SceneController sc, BorderPane layout) {
+		this.layout = layout;
 		this.sc = sc;
 		
 		Label label1 = new Label("Cargo weight (lb): ");
@@ -54,16 +50,16 @@ public class DronePane extends BorderPane {
 		
 		VBox form = new VBox(line1, line2, line3, line4, line5);
 		
-		this.setCenter(form);
+		layout.setCenter(form);
 		
 		// get buttons and set event handlers
 		
-		BorderPane bottom = ((BorderPane) this.getBottom());
-		Button delete = ((Button) bottom.getLeft());
+		BorderPane bottom = ((BorderPane) layout.getBottom());
+		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
 		
-		delete.setOnAction((event) -> {
-			sc.switchToHome();
+		cancel.setOnAction((event) -> {
+			this.sc.switchToHome();
 		});
 		
 		save.setOnAction((event) -> {
@@ -72,15 +68,20 @@ public class DronePane extends BorderPane {
 			
 			if (d != null) {
 				
-				sc.replaceDrone(d);
+				this.sc.replaceDrone(d);
 				
-				sc.switchToHome();
+				this.sc.switchToHome();
 				
 			} else {
 				System.out.println("User validation error on drone form");
 			}
 		});
 		
+	}
+	
+	@Override
+	public BorderPane getLayout() {
+		return layout;
 	}
 	
 	public void loadDrone(Drone d) {

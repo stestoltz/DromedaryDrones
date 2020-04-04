@@ -156,8 +156,14 @@ public class Location {
 	
 	/*-------------------- End DeliveryPoint/ basic Location stuff ------------------------*/
 	
-	public ArrayList<Meal> getMeals() {
-		return meals;
+	public List<Meal> getMeals() {
+		List<Meal> mealsCopy = new ArrayList<Meal>();
+		
+		for (Meal m : meals) {
+			mealsCopy.add(new Meal(m));
+		}
+		
+		return mealsCopy;
 	}
 	
 	public void setMeals(ArrayList<Meal> meals) {
@@ -172,8 +178,13 @@ public class Location {
 		this.drone = drone;
 	}
 	
-	public ArrayList<FoodItem> getFoods(){
-		return foods;
+	public List<FoodItem> getFoods(){
+		List<FoodItem> foodsCopy = new ArrayList<FoodItem>();
+		
+		for (FoodItem f : foods) {
+			foodsCopy.add(new FoodItem(f));
+		}
+		return foodsCopy;
 	}
 	
 	public void setFoods(ArrayList<FoodItem> foods){

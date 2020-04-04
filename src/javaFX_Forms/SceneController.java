@@ -2,9 +2,13 @@ package javaFX_Forms;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javaClasses.Drone;
+import javaClasses.FoodItem;
 import javaClasses.Location;
+import javaClasses.Meal;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,7 +18,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -26,12 +29,10 @@ public class SceneController {
 
 	private Image logo;
 	
-	private HomePane homePane;
-	private DronePane dronePane;
-	/*
-	private Scene foodScene;
-	private Scene mealScene;
-	 */
+	private HomeForm homeForm;
+	private DroneForm droneForm;
+	private FoodForm foodForm;
+	private MealForm mealForm;
 	
 	public SceneController(Stage stage) throws FileNotFoundException {
 		location = new Location("Grove City", "SAC");
@@ -40,33 +41,59 @@ public class SceneController {
 		
 		logo = new Image(new FileInputStream("res/Temp_logo.jpg"));
 		
-		homePane = new HomePane(this, buildHomeBorderPane());
-		dronePane = new DronePane(this, buildSettingsBorderPane("Drone Settings"));
+		homeForm = new HomeForm(this, buildHomeBorderPane());
+		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
+		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		
-		stage.setScene(homeScene);
+		Scene scene = new Scene(homeForm.getLayout());
+		stage.setScene(scene);
 	}
 	
-	public Scene getHomeScene() {
-		return homeScene;
+	public BorderPane getHomeLayout() {
+		return homeForm.getLayout();
 	}
 	
-	public Scene getDroneScene() {
-		return droneScene;
+	public BorderPane getDroneLayout() {
+		return droneForm.getLayout();
+	}
+	
+	public BorderPane getFoodLayout() {
+		return foodForm.getLayout();
+	}
+	
+	public BorderPane getMealLayout() {
+		return mealForm.getLayout();
 	}
 	
 	public void switchToHome() {
-		stage.getScene().setRoot(homeScene.getRoot());
-		stage.show();
+		stage.getScene().setRoot(getHomeLayout());
 	}
 	
 	public void switchToDrone() {
-		droneScene.loadDrone(location.getDrone());
-		stage.getScene().setRoot(droneScene.getRoot());
-		stage.show();
+		droneForm.loadDrone(location.getDrone());
+		stage.getScene().setRoot(getDroneLayout());
+	}
+	
+	public void switchToFood() {
+		foodForm.loadFoods(location.getFoods());
+		stage.getScene().setRoot(getFoodLayout());
+	}
+	
+	public void switchToMeal() {
+		mealForm.loadMeals(location.getMeals(), location.getFoods()));
+		stage.getScene().setRoot(getMealLayout());
 	}
 	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
+	}
+	
+	public void replaceFoods(ArrayList<FoodItem> foods) {
+		this.location.setFoods(foods);
+	}
+	
+	public void replaceMeals(ArrayList<Meal> meals) {
+		this.location.setMeals(meals);
 	}
 	
 	/**
@@ -77,11 +104,11 @@ public class SceneController {
 	public BorderPane buildSettingsBorderPane(String headerText) {
 		BorderPane layout = buildBaseBorderPane(headerText);
 		
-		Button delete = new Button("Delete");
+		Button cancel = new Button("Cancel and Return");
 		Button saveChanges = new Button("Save Changes");
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
-		bottom.setLeft(delete);
+		bottom.setLeft(cancel);
 		bottom.setRight(saveChanges);
 		
 		return layout;
@@ -106,7 +133,7 @@ public class SceneController {
 		menuBar.getMenus().add(menu1);
 		MenuItem menuItem1 = new MenuItem("Modify Mapping");
 		MenuItem menuItem2 = new MenuItem("Food Settings");
-		MenuItem menuItem3 = new MenuItem("Order Settings");
+		MenuItem menuItem3 = new MenuItem("Meal Settings");
 		MenuItem menuItem4 = new MenuItem("Shift Settings");
 		MenuItem menuItem5 = new MenuItem("Drone Settings");
 
