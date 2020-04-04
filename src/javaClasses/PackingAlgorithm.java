@@ -21,11 +21,13 @@ public abstract class PackingAlgorithm {
 	 */
 	public abstract List<Order> nextOrder(double time);
 	
-	public boolean hasNextOrder() {
-		return !shiftOrders.isEmpty();
-	}
+	public abstract boolean hasNextOrder();
 	
 	public double nextOrderTime() {
 		return shiftOrders.peek().getReadyTime();
+	}
+	
+	public int orderNum() {
+		return shiftOrders.size();
 	}
 }

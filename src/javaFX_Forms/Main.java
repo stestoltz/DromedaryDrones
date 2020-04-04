@@ -82,16 +82,21 @@ public class Main extends Application
 			RoutingAlgorithm ra = new BacktrackingSearch();
 			Results[] simResults = sim.runSimulation(ra);
 			
-			System.out.println(simResults[0].getTimes());
-			System.out.println("Number of orders: " + simResults[0].getTimes().size());
-			
-			try {
-				System.out.println("Worst (s): " + simResults[0].worstTime());
-				System.out.println("Average (s): " + simResults[0].averageTime());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			for (Results r : simResults) {
+				System.out.println(r.getTimes());
+				System.out.println("Number of orders: " + r.getTimes().size());
+				
+				try {
+					System.out.println("Worst (s): " + r.worstTime());
+					System.out.println("Average (s): " + r.averageTime());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				System.out.println("\n");
 			}
+			
 		});
 
 		//create a menubar for the hamburger menu

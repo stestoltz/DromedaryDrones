@@ -138,7 +138,7 @@ public class Simulation {
 				shiftResults[i] = generateResults(trips);
 	
 			}
-				
+			
 			// all shifts are done - this packing algorithm's simulation is done
 		
 			// aggregate all shift's results into one results object and add it to simulationResults

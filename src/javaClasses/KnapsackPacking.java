@@ -48,9 +48,10 @@ public class KnapsackPacking extends PackingAlgorithm {
 				if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
 					sendOut.add(o);
 					currentWeight += o.getMeal().getMealWeight();
-					skippedOrders.remove(o);
 				}
 			}
+			
+			skippedOrders.removeAll(sendOut);
 			
 			//if there is room left then check to fill with other orders
 			if (currentWeight < drone.getCargoWeight() && !readyOrders.isEmpty()) {
@@ -60,12 +61,11 @@ public class KnapsackPacking extends PackingAlgorithm {
 					if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
 						sendOut.add(o);
 						currentWeight += o.getMeal().getMealWeight();
-						readyOrders.remove(o);
+						shiftOrders.remove(o);
 					} 
 					//if the item isn't packed then it moves to skipped orders
 					else {
 						skippedOrders.add(o);
-						readyOrders.remove(o);
 					}
 				}
 			}
@@ -80,12 +80,11 @@ public class KnapsackPacking extends PackingAlgorithm {
 				if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
 					sendOut.add(o);
 					currentWeight += o.getMeal().getMealWeight();
-					readyOrders.remove(o);
 				} 
 				//if the item isn't packed then it moves to skipped orders
 				else {
 					skippedOrders.add(o);
-					readyOrders.remove(o);
+					shiftOrders.remove(o);
 				}
 			}
 			
@@ -102,14 +101,32 @@ public class KnapsackPacking extends PackingAlgorithm {
 	private ArrayList<Order> readyOrders(double time) {
 		ArrayList<Order> ready = new ArrayList<Order>();
 		
-		//see which orders are ready and add them to the list
 		for (Order o : shiftOrders) {
 			if (o.getReadyTime() <= time) {
 				ready.add(o);
 			}
 		}
+		/*//first order in the queue
+		Order o = shiftOrders.peek();
 		
+		Iterator<Order> itr = shiftOrders.iterator();
+		
+		//keep looking until the orders are after the time or the list is empty
+		while (itr.hasNext() && o.getOrderedTime() < time) {
+			//if the order is ready, add it to the list
+			if (o.getReadyTime() < time) {
+				ready.add(o);
+			}
+		}
+		*/
 		return ready;
+	}
+	
+	public boolean hasNextOrder() {
+		if (shiftOrders.isEmpty() && skippedOrders.isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 
 }
