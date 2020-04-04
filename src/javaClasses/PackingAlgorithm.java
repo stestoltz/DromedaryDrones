@@ -21,11 +21,14 @@ public abstract class PackingAlgorithm {
 	 */
 	public abstract List<Order> nextOrder(double time);
 	
-	public boolean hasNextOrder() {
-		return !shiftOrders.isEmpty();
-	}
+	public abstract boolean hasNextOrder();
 	
 	public double nextOrderTime() {
+		//in this case it might just have skipped orders to send out
+		if (shiftOrders.isEmpty()) {
+			return Double.MAX_VALUE;
+		}
 		return shiftOrders.peek().getReadyTime();
 	}
+
 }

@@ -42,42 +42,42 @@ public class MealForm extends Application
 		//create food label
 		Label mealLabel = new Label("Meals:");
 
-		FoodItem burger = new FoodItem("Burger", 2, 2);
-		location.addFood(burger);
-		FoodItem fries = new FoodItem("Fries", .5, 1);
-		location.addFood(fries);
-		FoodItem drink = new FoodItem("Drink", 2, 0);
-		location.addFood(drink);
-		FoodItem pie = new FoodItem("Pie", 2.5, 8);
-		location.addFood(pie);
-
-		HashMap<FoodItem, Integer> meal1List = new HashMap<>();
-		meal1List.put(burger, 1);
-		meal1List.put(fries, 1);
-		meal1List.put(drink, 1);
-		Meal meal1 = new Meal(meal1List, 15);
-
-		HashMap<FoodItem, Integer> meal2List = new HashMap<>();
-		meal2List.put(burger, 2);
-		meal2List.put(fries, 2);
-		meal2List.put(drink, 2);
-		Meal meal2 = new Meal(meal2List, 35);
-
-		HashMap<FoodItem, Integer> meal3List = new HashMap<>();
-		meal3List.put(burger, 2);
-		meal3List.put(fries, 3);
-		meal3List.put(drink, 4);
-		meal3List.put(pie, 1);
-		Meal meal3 = new Meal(meal3List, 25);
-
-		HashMap<FoodItem, Integer> meal4List = new HashMap<>();
-		meal4List.put(fries, 18);
-		Meal meal4 = new Meal(meal4List, 25);
-
-		location.addMeal(meal1);
-		location.addMeal(meal2);
-		location.addMeal(meal3);
-		location.addMeal(meal4);
+//		FoodItem burger = new FoodItem("Burger", 2, 2);
+//		location.addFood(burger);
+//		FoodItem fries = new FoodItem("Fries", .5, 1);
+//		location.addFood(fries);
+//		FoodItem drink = new FoodItem("Drink", 2, 0);
+//		location.addFood(drink);
+//		FoodItem pie = new FoodItem("Pie", 2.5, 8);
+//		location.addFood(pie);
+//
+//		HashMap<FoodItem, Integer> meal1List = new HashMap<>();
+//		meal1List.put(burger, 1);
+//		meal1List.put(fries, 1);
+//		meal1List.put(drink, 1);
+//		Meal meal1 = new Meal(meal1List, 15);
+//
+//		HashMap<FoodItem, Integer> meal2List = new HashMap<>();
+//		meal2List.put(burger, 2);
+//		meal2List.put(fries, 2);
+//		meal2List.put(drink, 2);
+//		Meal meal2 = new Meal(meal2List, 35);
+//
+//		HashMap<FoodItem, Integer> meal3List = new HashMap<>();
+//		meal3List.put(burger, 2);
+//		meal3List.put(fries, 3);
+//		meal3List.put(drink, 4);
+//		meal3List.put(pie, 1);
+//		Meal meal3 = new Meal(meal3List, 25);
+//
+//		HashMap<FoodItem, Integer> meal4List = new HashMap<>();
+//		meal4List.put(fries, 18);
+//		Meal meal4 = new Meal(meal4List, 25);
+//
+//		location.addMeal(meal1);
+//		location.addMeal(meal2);
+//		location.addMeal(meal3);
+//		location.addMeal(meal4);
 
 		
 		ArrayList<HBox> mealElements = new ArrayList<>();
@@ -199,8 +199,8 @@ public class MealForm extends Application
 		});
 		
 		edit.setOnAction((event) -> {
-			System.out.println("Randomly threw this in to check "
-					+ "percentage total:" +percentsValid(mealView));
+			System.out.println("Temporarily threw this in to check "
+					+ "percentage total: (" +percentsValid(mealView)+")");
 			System.out.println("edit food");
 		});
 		/***************************finished add area**************************/
@@ -233,6 +233,7 @@ public class MealForm extends Application
 	}
 	public void addingEvent(ListView<HBox> foodView, ListView<HBox> mealView) {
 		HashMap<FoodItem,Integer> foodList = new HashMap<>();
+		double mealWeight = 0.0;
 		boolean foundFood = false;
 		for(HBox hbox : foodView.getItems()) {
 			Text temp = (Text)(hbox.getChildren().get(0));
@@ -243,16 +244,17 @@ public class MealForm extends Application
 			temp2.setText("");
 			if (!stringNum.equals("") && !stringNum.equals("0")) {
 				foundFood = true;
-				//convert to integer
 				try{
-					int foodCount = Integer.parseInt(stringNum);
+					int foodCount = Integer.parseInt(stringNum);	//convert to integer
 					//loop through foods and add food matching the food string
 					for(FoodItem f : location.getFoods()) {
 						if (f.toString().equals(food)) {
 							foodList.put(f, foodCount);
+							mealWeight += foodCount * f.getWeight();
 							break;
 						}
 					}
+					
 				}
 				//not a valid integer for preptime
 				catch(Exception e) {
@@ -264,20 +266,24 @@ public class MealForm extends Application
 		if(!foundFood) {
 			System.out.println("Could not find any foods to make a meal");
 		}
+		else if (mealWeight > location.getDrone().getCargoWeight()) {
+			System.out.println("The meal being created is weighs too much");
+		}
 		else {
 			//create meal
 			Meal meal = new Meal(foodList,0);
-			location.addMeal(meal);	//add new meal to location's list
-			
-			//add new meal to display
-			TextField inputVal = new TextField("0");	//creates the textField
-			HBox hbox = new HBox();
-			//gets the food item as text
-			Text temp = new Text(meal.toString());
-			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
-			mealView.getItems().add(hbox);	//adds the hbox to the arraylist
-			hbox.setPrefWidth(20);
-			System.out.println("meal added!");
+			boolean mealAdded = location.addMeal(meal);	//add new meal to location's list
+			if(mealAdded){
+				//add new meal to display
+				TextField inputVal = new TextField("0");	//creates the textField
+				HBox hbox = new HBox();
+				//gets the food item as text
+				Text temp = new Text(meal.toString());
+				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
+				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
+				hbox.setPrefWidth(20);
+				System.out.println("meal added!");
+			}
 		}
 		//should alert user and/or clear out textboxes
 	}
