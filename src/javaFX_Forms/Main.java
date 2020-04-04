@@ -1,7 +1,6 @@
 package javaFX_Forms;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -10,7 +9,6 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -25,7 +23,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -36,7 +33,6 @@ import javaClasses.Results;
 import javaClasses.RoutingAlgorithm;
 import javaClasses.Simulation;
 import javaClasses.BacktrackingSearch;
-import javaClasses.DeliveryPoint;
 import javaClasses.GreedyAlgorithm;
 
 
@@ -131,7 +127,7 @@ public class Main extends Application
 			Results[] simResults = sim.runSimulation(ra);
 			
 			for (Results r : simResults) {
-				System.out.println(r.getTimes());
+				//System.out.println(r.getTimes());
 				System.out.println("Number of orders: " + r.getTimes().size());
 				
 				try {
@@ -155,52 +151,60 @@ public class Main extends Application
 			
 			lineChart.setTitle("Simulation Results");
 			
-			Series<Number, Number> series = new XYChart.Series<>();
-			
-			int numBuckets = 25;
-			double[] buckets = new double[numBuckets + 1];
-			int[] counts = new int[numBuckets];
-			
-			List<Double> times = simResults[0].getTimes();
-			Collections.sort(times);
-			
-			double largestTime = times.get(times.size() - 1);
-			
-			for (int i = 0; i <= numBuckets; i++) {
-				buckets[i] = i * (largestTime / numBuckets);
-			}
-			
-			System.out.println(Arrays.asList(buckets));
-			
-			// build histogram
-			Iterator<Double> itr = times.iterator();
-			
-			int currentBucket = 0;
-			
-			while (itr.hasNext()) {
-				double next = itr.next();
+			for (Results r : simResults) {
+				Series<Number, Number> series = new XYChart.Series<>();
 				
-				// if in bucket
-				if (buckets[currentBucket] <= next && next <= buckets[currentBucket + 1]) {
-					counts[currentBucket]++;
-				} else {
-					
-					// not in bucket - find right bucket
-					while (!(buckets[currentBucket] <= next && next <= buckets[currentBucket + 1])) {
-						currentBucket++;
+				int numBuckets = 25;
+				double[] buckets = new double[numBuckets + 1];
+				int[] counts = new int[numBuckets];
+				
+				List<Double> times = r.getTimes();
+				
+				for (int i = 0; i < times.size(); i++) {
+					if (times.get(i) > 100000) {
+						System.out.println("Giant time at index " + i + ": " + times.get(i));
+						times.set(i, 0.0);
 					}
-					
-					counts[currentBucket]++;
 				}
+				
+				Collections.sort(times);
+				
+				double largestTime = times.get(times.size() - 1);
+				
+				for (int i = 0; i <= numBuckets; i++) {
+					buckets[i] = i * (largestTime / numBuckets);
+				}
+				
+				System.out.println(Arrays.asList(buckets));
+				
+				// build histogram
+				Iterator<Double> itr = times.iterator();
+				
+				int currentBucket = 0;
+				
+				while (itr.hasNext()) {
+					double next = itr.next();
+					
+					// if in bucket
+					if (buckets[currentBucket] <= next && next <= buckets[currentBucket + 1]) {
+						counts[currentBucket]++;
+					} else {
+						
+						// not in bucket - find right bucket
+						while (!(buckets[currentBucket] <= next && next <= buckets[currentBucket + 1])) {
+							currentBucket++;
+						}
+						
+						counts[currentBucket]++;
+					}
+				}
+				
+				for (int i = 0; i < numBuckets; i++) {
+					series.getData().add(new XYChart.Data<Number, Number>((buckets[i] + buckets[i + 1]) / 2, ((double)counts[i] / times.size()) * 100));
+				}
+				
+				lineChart.getData().addAll(series);
 			}
-			
-			System.out.println(Arrays.asList(counts));
-			
-			for (int i = 0; i < numBuckets; i++) {
-				series.getData().add(new XYChart.Data<Number, Number>((buckets[i] + buckets[i + 1]) / 2, ((double)counts[i] / times.size()) * 100));
-			}
-			
-			lineChart.getData().addAll(series);
 			
 			
 			layout.setCenter(lineChart);

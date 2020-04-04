@@ -44,6 +44,7 @@ public class SceneController {
 		homeForm = new HomeForm(this, buildHomeBorderPane());
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
+		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
@@ -80,7 +81,7 @@ public class SceneController {
 	}
 	
 	public void switchToMeal() {
-		mealForm.loadMeals(location.getMeals(), location.getFoods()));
+		mealForm.loadMeals(location.getMeals(), location.getFoods(), location.getDrone());
 		stage.getScene().setRoot(getMealLayout());
 	}
 	
@@ -88,11 +89,11 @@ public class SceneController {
 		this.location.setDrone(d);
 	}
 	
-	public void replaceFoods(ArrayList<FoodItem> foods) {
+	public void replaceFoods(List<FoodItem> foods) {
 		this.location.setFoods(foods);
 	}
 	
-	public void replaceMeals(ArrayList<Meal> meals) {
+	public void replaceMeals(List<Meal> meals) {
 		this.location.setMeals(meals);
 	}
 	
