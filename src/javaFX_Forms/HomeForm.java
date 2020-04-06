@@ -26,12 +26,8 @@ import javafx.scene.layout.BorderPane;
 
 public class HomeForm extends Form {
 	
-	private SceneController sc;
-	private BorderPane layout;
-	
 	public HomeForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
-		this.layout = layout;
-		this.sc = sc;
+		super(sc, layout);
 		
 		//create map
 		Image map = new Image(new FileInputStream("res/map.jfif"));
@@ -44,6 +40,12 @@ public class HomeForm extends Form {
 		BorderPane top = (BorderPane) layout.getTop();
 		MenuBar menuBar = (MenuBar) top.getRight();
 		Menu menu = menuBar.getMenus().get(0);
+		
+		MenuItem mapItem = menu.getItems().get(0);
+		
+		mapItem.setOnAction((event)->{
+			this.sc.switchToMap();
+		});
 		
 		MenuItem foodItem = menu.getItems().get(1);
 		
@@ -151,11 +153,6 @@ public class HomeForm extends Form {
 			
 			layout.setCenter(lineChart);
 		});
-	}
-
-	@Override
-	public BorderPane getLayout() {
-		return layout;
 	}
 
 }
