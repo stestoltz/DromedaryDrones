@@ -2,12 +2,13 @@ package javaClasses;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Location {
 	
 	// hashmap of delivery points, each with a boolean value for active/not active
-	private HashMap<DeliveryPoint, Boolean> deliveryPoints;
+	private Map<DeliveryPoint, Boolean> deliveryPoints;
 	private DeliveryPoint home;
 	private String name;
 	
@@ -98,6 +99,22 @@ public class Location {
 		}
 		
 		return activePoints;
+	}
+	
+	public Map<DeliveryPoint, Boolean> getDeliveryPointsMap() {
+		HashMap<DeliveryPoint, Boolean> pointsCopy = new HashMap<>();
+		
+		for (DeliveryPoint dp : deliveryPoints.keySet()) {
+			
+			pointsCopy.put(new DeliveryPoint(dp), Boolean.valueOf(deliveryPoints.get(dp)));
+			
+		}
+		
+		return pointsCopy;
+	}
+	
+	public void setDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
+		this.deliveryPoints = points;
 	}
 
 	public String getName() {
