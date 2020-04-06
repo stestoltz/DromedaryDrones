@@ -130,5 +130,13 @@ public class KnapsackPacking extends PackingAlgorithm {
 		}
 		return true;
 	}
+	
+	public double nextOrderTime() {
+		//in this case it might just have skipped orders to send out
+		if (shiftOrders.isEmpty()) {
+			return skippedOrders.get(0).getReadyTime();
+		}
+		return shiftOrders.peek().getReadyTime();
+	}
 
 }
