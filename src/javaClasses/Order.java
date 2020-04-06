@@ -26,6 +26,17 @@ public class Order implements Comparable<Order> {
 		this.deliveryPoint = deliveryPoint;
 	}
 	
+	/**
+	 * copy constructor
+	 */
+	public Order(Order o) {
+		this.name = o.name;
+		this.meal = new Meal(o.meal);
+		this.orderedTime = o.orderedTime;
+		this.deliveryPoint = new DeliveryPoint(o.deliveryPoint);
+		this.readyTime = o.readyTime;
+	}
+	
 	public String getName() {
 		return name;
 	}
