@@ -2,9 +2,10 @@ package javaFX_Forms;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javaClasses.DeliveryPoint;
 import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Location;
@@ -33,6 +34,7 @@ public class SceneController {
 	private DroneForm droneForm;
 	private FoodForm foodForm;
 	private MealForm mealForm;
+	private MapForm mapForm;
 	
 	public SceneController(Stage stage) throws FileNotFoundException {
 		location = new Location("Grove City", "SAC");
@@ -45,6 +47,7 @@ public class SceneController {
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
+		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
@@ -66,6 +69,10 @@ public class SceneController {
 		return mealForm.getLayout();
 	}
 	
+	public BorderPane getMapLayout() {
+		return mapForm.getLayout();
+	}
+	
 	public void switchToHome() {
 		stage.getScene().setRoot(getHomeLayout());
 	}
@@ -85,6 +92,11 @@ public class SceneController {
 		stage.getScene().setRoot(getMealLayout());
 	}
 	
+	public void switchToMap() {
+		mapForm.loadPoints(location.getDeliveryPointsMap());
+		stage.getScene().setRoot(getMapLayout());
+	}
+	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
 	}
@@ -95,6 +107,10 @@ public class SceneController {
 	
 	public void replaceMeals(List<Meal> meals) {
 		this.location.setMeals(meals);
+	}
+	
+	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
+		this.location.setDeliveryPoints(points);
 	}
 	
 	/**
