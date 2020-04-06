@@ -2,18 +2,19 @@ package javaClasses;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Location {
 	
 	// hashmap of delivery points, each with a boolean value for active/not active
-	private HashMap<DeliveryPoint, Boolean> deliveryPoints;
+	private Map<DeliveryPoint, Boolean> deliveryPoints;
 	private DeliveryPoint home;
 	private String name;
 	
-	private ArrayList<Meal> meals;	//list of all available meals (for this location)
+	private List<Meal> meals;	//list of all available meals (for this location)
 	private Drone drone;
-	private ArrayList<FoodItem> foods;		//list of all foods  (for this location)
+	private List<FoodItem> foods;		//list of all foods  (for this location)
 	private ShiftDetails shiftDetails;
 	
 	
@@ -99,6 +100,22 @@ public class Location {
 		
 		return activePoints;
 	}
+	
+	public Map<DeliveryPoint, Boolean> getDeliveryPointsMap() {
+		HashMap<DeliveryPoint, Boolean> pointsCopy = new HashMap<>();
+		
+		for (DeliveryPoint dp : deliveryPoints.keySet()) {
+			
+			pointsCopy.put(new DeliveryPoint(dp), Boolean.valueOf(deliveryPoints.get(dp)));
+			
+		}
+		
+		return pointsCopy;
+	}
+	
+	public void setDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
+		this.deliveryPoints = points;
+	}
 
 	public String getName() {
 		return name;
@@ -156,11 +173,17 @@ public class Location {
 	
 	/*-------------------- End DeliveryPoint/ basic Location stuff ------------------------*/
 	
-	public ArrayList<Meal> getMeals() {
-		return meals;
+	public List<Meal> getMeals() {
+		List<Meal> mealsCopy = new ArrayList<Meal>();
+		
+		for (Meal m : meals) {
+			mealsCopy.add(new Meal(m));
+		}
+		
+		return mealsCopy;
 	}
 	
-	public void setMeals(ArrayList<Meal> meals) {
+	public void setMeals(List<Meal> meals) {
 		this.meals = meals;
 	}
 	
@@ -172,11 +195,16 @@ public class Location {
 		this.drone = drone;
 	}
 	
-	public ArrayList<FoodItem> getFoods(){
-		return foods;
+	public List<FoodItem> getFoods(){
+		List<FoodItem> foodsCopy = new ArrayList<FoodItem>();
+		
+		for (FoodItem f : foods) {
+			foodsCopy.add(new FoodItem(f));
+		}
+		return foodsCopy;
 	}
 	
-	public void setFoods(ArrayList<FoodItem> foods){
+	public void setFoods(List<FoodItem> foods){
 		this.foods = foods;
 	}
 	
@@ -193,7 +221,7 @@ public class Location {
 	 * @param food to be added
 	 * @return - a boolean to alert form if it was added or not
 	 */
-	public boolean addFood(FoodItem f) {
+	/*public boolean addFood(FoodItem f) {
 		for(FoodItem food : foods) {
 			if(f.toString().equals(food.toString())) {
 				System.out.println("There is already a food with that name");
@@ -202,13 +230,13 @@ public class Location {
 		}
 		foods.add(f);
 		return true;
-	}
+	}*/
 	
 	/**
 	 * delete a food from the arraylist
 	 * @param food to be deleted
 	 */
-	public void deleteFood(FoodItem f) {
+	/*public void deleteFood(FoodItem f) {
 		//if I am checking a food to be equal to another does this work? 
 		//or would they be different references
 		for(int i = 0; i<foods.size(); i++) {
@@ -216,7 +244,7 @@ public class Location {
 				foods.remove(i);
 			}
 		}
-	}
+	}*/
 	
 	
 	/**
@@ -224,7 +252,7 @@ public class Location {
 	 * @param m meal to be added
 	 * @return - a boolean to tell the fx form not to display the meal
 	 */
-	public boolean addMeal(Meal m) {
+	/*public boolean addMeal(Meal m) {
 		for(Meal meal : meals) {
 			if(m.toString().equals(meal.toString())) {
 				System.out.println("This is already a meal");
@@ -233,13 +261,13 @@ public class Location {
 		}
 		meals.add(m);
 		return true;
-	}
+	}*/
 	
 	/**
 	 * delete a meal from the arraylist
 	 * @param m meal to delete
 	 */
-	public void deleteMeal(Meal m) {
+	/*public void deleteMeal(Meal m) {
 		//if I am checking a meal to be equal to another does this work? 
 		//or would they be different references
 		for(int i = 0; i<meals.size(); i++) {
@@ -247,7 +275,7 @@ public class Location {
 				meals.remove(i);
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * returns a random meal from the arraylist based off percentages

@@ -56,39 +56,51 @@ public class Simulation {
 	 * @param routingAlgorithm which routing algorithm to use
 	 * @return array of results objects, one per packing algorithm
 	 */
-	//public Results[] runSimulation(Class<? extends PackingAlgorithm>[] packingAlgorithms, RoutingAlgorithm routingAlgorithm) {
 	public Results[] runSimulation(RoutingAlgorithm routingAlgorithm) {
 	
-		// create simulationResults[], one entry for each packing algorithm
-		//Results[] simulationResults = new Results[packingAlgorithms.length];
-		Results[] simulationResults = new Results[1];
+		Results[] simulationResults = new Results[2];
+		
+		// generate all orders for this simulation
+		
+		int numShifts = location.getShiftDetails().getNumberOfShifts();
+		
+<<<<<<< HEAD
+		List<Queue<Order>> allOrders = new ArrayList<Queue<Order>>();
+		
+		for (int i = 0; i < numShifts; i++) {
+			allOrders.add(generateOrders());
+=======
+		List<List<Queue<Order>>> allOrders = new ArrayList<List<Queue<Order>>>();
+		
+		allOrders.add(new ArrayList<>());
+		allOrders.add(new ArrayList<>());
+		
+		for (int i = 0; i < numShifts; i++) {
+			Queue<Order> thisShiftOrders = generateOrders();
+			
+			//allOrders.add(generateOrders());
+>>>>>>> master
+		}
 		
 		// for each packing algorithm
 		//for (int p = 0; p < packingAlgorithms.length; p++) {
-		for (int p = 0; p < 1; p++) {
-			
-			//Class<? extends PackingAlgorithm> packingType = packingAlgorithms[p];
+		for (int p = 0; p < 2; p++) {
 		
-			// create results[] for this shift's results
+			// create results[] for each shift's results
 			Results[] shiftResults = new Results[location.getShiftDetails().getNumberOfShifts()];
 			
 			// for each shift
 			for (int i = 0; i < shiftResults.length; i++) {
-		
-				// generate all orders for this shift
-				Queue<Order> orders = generateOrders();
 				
 				// MUST BE A SHALLOW COPY so that the delivered times are changed
-				Queue<Order> packingAlgorithmsOrders = new LinkedList<Order>(orders);
-				
-				// instantiate a packing algorithm of the type in the array passed from the UI
-				//PackingAlgorithm pa = (PackingAlgorithm) packingType.getConstructors()[0].newInstance(
-				//		packingAlgorithmsOrders, location.getDrone());
+				Queue<Order> packingAlgorithmsOrders = new LinkedList<Order>(allOrders.get(i));
 				
 				PackingAlgorithm packingAlgorithm;
 				if (p == 0) {
+					
 					packingAlgorithm = new FIFOPacking(packingAlgorithmsOrders, location.getDrone());
 				} else {
+					
 					packingAlgorithm = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone());
 				}
 	

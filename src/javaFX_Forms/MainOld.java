@@ -1,6 +1,5 @@
 package javaFX_Forms;
 
-<<<<<<< HEAD
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,20 +35,18 @@ import javaClasses.Simulation;
 import javaClasses.BacktrackingSearch;
 import javaClasses.GreedyAlgorithm;
 
-=======
-import javafx.application.Application;
-import javafx.stage.Stage;
->>>>>>> master
 
-public class Main extends Application {
+public class MainOld extends Application
+{
+	// Declaring the TextArea for Logging
+	TextArea logging;
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) 
+	{
 		Application.launch(args);
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void start(Stage stage) throws Exception
 	{
 		//create logo
@@ -121,126 +118,7 @@ public class Main extends Application {
 				"-fx-border-radius: 5;");
 
 
-		startSimulation.setOnAction((event) -> {
-			Location groveCity = new Location("Grove City", "SAC");
-			Simulation sim = new Simulation(groveCity);
-			
-			//RoutingAlgorithm ra = new GreedyAlgorithm();
-			RoutingAlgorithm ra = new BacktrackingSearch();
-			Results[] simResults = sim.runSimulation(ra);
-			
-			for (Results r : simResults) {
-				//System.out.println(r.getTimes());
-				System.out.println("Number of orders: " + r.getTimes().size());
-				
-				try {
-					System.out.println("Worst (s): " + r.worstTime());
-					System.out.println("Average (s): " + r.averageTime());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				System.out.println("\n");
-			}
-			
-			NumberAxis xAxis = new NumberAxis();
-			NumberAxis yAxis = new NumberAxis();
-			
-			xAxis.setLabel("Order Time (s)");
-			yAxis.setLabel("Percentage of Orders");
-			
-			LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
-			
-			lineChart.setTitle("Simulation Results");
-			
-			for (Results r : simResults) {
-				Series<Number, Number> series = new XYChart.Series<>();
-				
-				int numBuckets = 25;
-				double[] buckets = new double[numBuckets + 1];
-				int[] counts = new int[numBuckets];
-				
-				List<Double> times = r.getTimes();
-				
-				for (int i = 0; i < times.size(); i++) {
-					if (times.get(i) > 100000) {
-						System.out.println("Giant time at index " + i + ": " + times.get(i));
-						times.set(i, 0.0);
-					}
-				}
-				
-				Collections.sort(times);
-				
-				double largestTime = times.get(times.size() - 1);
-				
-				for (int i = 0; i <= numBuckets; i++) {
-					buckets[i] = i * (largestTime / numBuckets);
-				}
-				
-				System.out.println(Arrays.asList(buckets));
-				
-				// build histogram
-				Iterator<Double> itr = times.iterator();
-				
-				int currentBucket = 0;
-				
-				while (itr.hasNext()) {
-					double next = itr.next();
-					
-					// if in bucket
-					if (buckets[currentBucket] <= next && next <= buckets[currentBucket + 1]) {
-						counts[currentBucket]++;
-					} else {
-						
-						// not in bucket - find right bucket
-						while (!(buckets[currentBucket] <= next && next <= buckets[currentBucket + 1])) {
-							currentBucket++;
-						}
-						
-						counts[currentBucket]++;
-					}
-				}
-				
-				for (int i = 0; i < numBuckets; i++) {
-					series.getData().add(new XYChart.Data<Number, Number>((buckets[i] + buckets[i + 1]) / 2, ((double)counts[i] / times.size()) * 100));
-				}
-				
-				lineChart.getData().addAll(series);
-			}
-			
-			
-			layout.setCenter(lineChart);
-			
-///////////////////////////////
-			/*
-			//create pane and add max and average to it
-			BorderPane resultBottom = new BorderPane();
-			bottom.setLeft();
-			bottom.setRight();
-			bottom.setCenter();
-			//do stuff
-			
-			Label label = new Label("A label with custom font set.");
-
-			label.setFont(new Font("Arial", 24));
-			
-			    HBox hbox = new HBox();
-			    hbox.setPadding(new Insets(15, 12, 15, 12));
-			    hbox.setSpacing(10);
-			    hbox.setStyle("-fx-background-color: #336699;");
-
-			    
-			    Button buttonCurrent = new Button("Current");
-			    buttonCurrent.setPrefSize(100, 20);
-
-			    Button buttonProjected = new Button("Projected");
-			    buttonProjected.setPrefSize(100, 20);
-			    hbox.getChildren().addAll(buttonCurrent, buttonProjected);
-
-			*/
-//////////////////////////
-		});
+		
 		
 
 		Scene scene = new Scene(layout);
@@ -272,15 +150,3 @@ public class Main extends Application {
          });
     }
 }
-=======
-	public void start(Stage stage) throws Exception {
-		SceneController controller = new SceneController(stage);
-		
-		controller.switchToHome();
-
-		stage.setMaximized(true);
-		stage.show();
-		
-	}
-}
->>>>>>> master
