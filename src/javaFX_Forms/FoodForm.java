@@ -22,16 +22,17 @@ public class FoodForm extends Form
 
 	//ArrayList<String> foods = new ArrayList<>();
 	//Location location = new Location("test", "home");
-	
+
 	private SceneController sc;
 	private BorderPane layout;
-	
+
 	private ListView<FoodItem> foodView;
-	
+	private List<FoodItem> displayedFoods;
+
 	public FoodForm(SceneController sc, BorderPane layout) {
 		this.sc = sc;
 		this.layout = layout;
-		
+
 		/****************************setup the food list***************************/
 		this.foodView = new ListView<>();
 
@@ -39,9 +40,9 @@ public class FoodForm extends Form
 		foodView.setOrientation(Orientation.VERTICAL);
 		// Set the Size of the ListView
 		foodView.setPrefSize(120, 100);
-		
+
 		VBox foodSelection = new VBox();
-	
+
 		//create food label
 		Label foodLabel = new Label("Current Foods:");
 
@@ -51,28 +52,32 @@ public class FoodForm extends Form
 		foodSelection.getChildren().addAll(foodLabel,foodView);
 		foodSelection.setPrefWidth(200);	//prevents a smooshed display
 
-		/****************************set up edit list buttons***************************/
+		/****************************set up buttons***************************/
 		// create a button 
 		Button edit = new Button("Edit"); 
 		Button delete = new Button("Delete");
 
-		
 		edit.setOnAction(event-> {
 			System.out.println("edit: " + foodView.getSelectionModel().getSelectedItem());
 		});
-		
-		delete.setOnAction(event-> {
-			System.out.println("delete: " + foodView.getSelectionModel().getSelectedItem());
+
+		delete.setOnAction((event) -> {
+			FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
+			System.out.println("delete: " + selectedFood);
+
+			if (selectedFood != null) {
+				displayedFoods.remove(selectedFood);
+				foodView.getItems().remove(selectedFood);
+			}
 		});
-		
-		
+
 		//button section on gui
 		VBox buttons = new VBox();
 		buttons.setSpacing(10);
 		buttons.getChildren().addAll(edit,delete);	//adds buttons to vbox
 		buttons.setPadding(new Insets(50, 10, 0, 0));	//above,right,below,left
 		buttons.setPrefWidth(150);	//prevents buttons from showing up as "..."
-		/***************************finished list buttons**************************/
+		/***************************finished buttons**************************/
 
 		/****************************set up add area***************************/
 		Text nameTitle = new Text("Name: ");
@@ -100,21 +105,9 @@ public class FoodForm extends Form
 		//need to check for duplicates
 		//need to refresh the list
 		addFood.setOnAction(event->{
-			addingEvent(inputName.getText(),inputWeight.getText(),
-				inputPrepTime.getText(),foodView);
+			addingEvent(inputName,inputWeight,
+					inputPrepTime,foodView);
 		});
-
-		delete.setOnAction((event) -> {
-			FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
-			//Location selectedLocation = locations.getSelectionModel().getSelectedItem();
-			
-			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
-			if (selectedFood != null) {
-				//location.deleteFood(selectedFood);
-				foodView.getItems().remove(selectedFood);
-			}
-		});
-//		foodView.refresh();
 
 		VBox allFields = new VBox();
 		allFields.setSpacing(10);
@@ -139,48 +132,51 @@ public class FoodForm extends Form
 
 		// Set the Style-properties of the GridPane
 		pane.setPadding(new Insets(25,25,25,25));
-		
+
 		layout.setCenter(pane);
-		
-		
+
+
 		// get buttons and set event handlers
-		
+
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
-		
+
 		cancel.setOnAction((event) -> {
 			this.sc.switchToHome();
 		});
-		
+
 		save.setOnAction((event) -> {
-			
-			// if form is valid
-				
-			//this.sc.replaceFoods(List<FoodItem>);
-			//this.sc.switchToHome();
+
+
+			this.sc.replaceFoods(displayedFoods);
+			this.sc.switchToHome();
+
 		});
 	}
-	
+
 	public void loadFoods(List<FoodItem> foods) {
-		
+
 		// given a list of foods, load it into the form
-		
+
 		ObservableList<FoodItem> foodList = FXCollections.<FoodItem>observableArrayList(foods);
 
+		this.displayedFoods = foods;
 		// reset the items in the foodView
 		foodView.getItems().clear();
 		foodView.getItems().addAll(foodList);
 	}
-	
-	public void addingEvent(String inputName, String weight, 
-			String prepTime, ListView<FoodItem> foodView) {
-		
+
+	public void addingEvent(TextField inputName, TextField inputWeight, 
+			TextField inputPrepTime, ListView<FoodItem> foodView) {
+
 		boolean errorFound = false;
 		double time = 0;
 		double w = 0;
-		String name = "";
-		
+		String name = inputName.getText();
+		String prepTime = inputPrepTime.getText();
+		String weight = inputWeight.getText();
+
 		try{
 			time = Double.parseDouble(prepTime);
 		}
@@ -200,18 +196,30 @@ public class FoodForm extends Form
 			e.getMessage();
 		}
 		//empty name
-		if(inputName.isEmpty()) {
+		if(name.isEmpty()) {
 			System.out.println("Name for a new food cannot be empty.");
 			errorFound = true;
 		}
+		//check if the food already exists
+		for(FoodItem f : displayedFoods) {
+			if(name.toLowerCase().equals(f.toString().toLowerCase())) {
+				System.out.println("This food (" + name + ") already exists");
+				errorFound = true;
+			}
+		}
 		//if there were no errors
-		else if(!errorFound){
-			FoodItem newFood = new FoodItem(inputName, w, time);
-			//display the newly added food if it was added correctly
-			//if(location.addFood(newFood)) {
+		if(!errorFound){
+
+			FoodItem newFood = new FoodItem(name, w, time);
+			//display the newly added food 
 			foodView.getItems().add(newFood);
-			System.out.println("added " + inputName);
-			//}
+			displayedFoods.add(newFood);
+			System.out.println("added " + name);
+
+			//clear out the text boxes
+			inputName.setText("");
+			inputWeight.setText("");
+			inputPrepTime.setText("");
 		}
 	}
 
