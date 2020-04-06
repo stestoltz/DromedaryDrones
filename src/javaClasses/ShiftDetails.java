@@ -14,7 +14,7 @@ public class ShiftDetails {
 		this.ordersPerHour[1] = 17;
 		this.ordersPerHour[2] = 22;
 		this.ordersPerHour[3] = 15;
-		//this.ordersPerHour = new int[] {100, 100, 100, 100};
+		//this.ordersPerHour = new int[] {200, 200, 200, 200};
 	}
 	
 	/**
