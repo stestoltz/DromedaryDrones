@@ -10,6 +10,7 @@ import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
+import javaClasses.ShiftDetails;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,6 +36,7 @@ public class SceneController {
 	private FoodForm foodForm;
 	private MealForm mealForm;
 	private MapForm mapForm;
+	private ShiftSettingsForm shiftForm;
 	
 	public SceneController(Stage stage) throws FileNotFoundException {
 		location = new Location("Grove City", "SAC");
@@ -48,6 +50,7 @@ public class SceneController {
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
 		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
+		shiftForm = new ShiftSettingsForm(this, buildSettingsBorderPane("Shift Settings"));
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
@@ -71,6 +74,10 @@ public class SceneController {
 	
 	public BorderPane getMapLayout() {
 		return mapForm.getLayout();
+	}
+	
+	public BorderPane getShiftLayout() {
+		return shiftForm.getLayout();
 	}
 	
 	public void switchToHome() {
@@ -97,6 +104,11 @@ public class SceneController {
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
+	public void switchToShifts() {
+		shiftForm.loadShift(location.getShiftDetails());
+		stage.getScene().setRoot(getShiftLayout());
+	}
+	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
 	}
@@ -111,6 +123,10 @@ public class SceneController {
 	
 	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
 		this.location.setDeliveryPoints(points);
+	}
+	
+	public void replaceShift(ShiftDetails shift) {
+		this.location.setShiftDetails(shift);
 	}
 	
 	/**
@@ -199,5 +215,7 @@ public class SceneController {
 		return layout;
 		
 	}
+
+	
 	
 }

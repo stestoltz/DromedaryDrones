@@ -209,7 +209,7 @@ public class Location {
 	}
 	
 	public ShiftDetails getShiftDetails() {
-		return this.shiftDetails;
+		return new ShiftDetails(shiftDetails);
 	}
 	
 	public void setShiftDetails(ShiftDetails shiftDetails) {
