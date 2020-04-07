@@ -72,7 +72,6 @@ public class HomeForm extends Form {
 		startSimulation.setOnAction((event) -> {
 			this.sc.switchToResults();
 		});
-		
 	}
 
 }
