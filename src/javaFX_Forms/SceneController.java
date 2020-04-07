@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class SceneController {
@@ -147,9 +148,18 @@ public class SceneController {
 		BorderPane layout = buildBaseBorderPane("Dromedary Drones");
 		
 		Button startSimulation = new Button("Start Simulation");
+		Label loc = new Label("Location: " + location.getName());
+		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
+		Button changeLocation = new Button("Change Location");
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setCenter(startSimulation);
+		bottom.setLeft(loc);
+		bottom.setRight(changeLocation);
+		
+		changeLocation.setOnAction((event) -> {
+			changeLocation();
+		});
 		
 		//create a menubar for the hamburger menu
 		MenuBar menuBar = new MenuBar();
@@ -241,5 +251,18 @@ public class SceneController {
 		
 	}
 	
+	/**
+	 * this method lets the user upload a file to change the location object
+	 * then the location object details are all updated to match the file
+	 */
+	private void changeLocation() {
+		
+	}
 	
+	/**
+	 * this method saves the location to an object file
+	 */
+	private void saveLocation() {
+		
+	}
 }
