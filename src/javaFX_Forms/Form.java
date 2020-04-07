@@ -3,10 +3,6 @@ package javaFX_Forms;
 import javafx.scene.layout.BorderPane;
 
 public abstract class Form {
-<<<<<<< HEAD
-
-	public abstract BorderPane getLayout();
-=======
 	
 	protected SceneController sc;
 	protected BorderPane layout;
@@ -19,5 +15,4 @@ public abstract class Form {
 	public BorderPane getLayout() {
 		return layout;
 	}
->>>>>>> master
 }

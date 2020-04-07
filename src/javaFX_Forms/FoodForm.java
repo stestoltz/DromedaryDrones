@@ -23,21 +23,10 @@ public class FoodForm extends Form
 	//ArrayList<String> foods = new ArrayList<>();
 	//Location location = new Location("test", "home");
 	
-<<<<<<< HEAD
-	private SceneController sc;
-	private BorderPane layout;
-	
-	private ListView<FoodItem> foodView;
-	
-	public FoodForm(SceneController sc, BorderPane layout) {
-		this.sc = sc;
-		this.layout = layout;
-=======
 	private ListView<FoodItem> foodView;
 	
 	public FoodForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
->>>>>>> master
 		
 		/****************************setup the food list***************************/
 		this.foodView = new ListView<>();
@@ -220,10 +209,5 @@ public class FoodForm extends Form
 			System.out.println("added " + inputName);
 			//}
 		}
-	}
-
-	@Override
-	public BorderPane getLayout() {
-		return layout;
 	}
 }

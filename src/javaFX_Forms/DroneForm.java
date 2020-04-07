@@ -3,10 +3,6 @@ package javaFX_Forms;
 import javaClasses.Drone;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-<<<<<<< HEAD
-import javafx.scene.control.TextArea;
-=======
->>>>>>> master
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -14,12 +10,6 @@ import javafx.scene.layout.VBox;
 
 public class DroneForm extends Form {
 	
-<<<<<<< HEAD
-	private SceneController sc;
-	private BorderPane layout;
-	
-=======
->>>>>>> master
 	private TextField txtCargoWeight;
 	private TextField txtCruisingSpeed;
 	private TextField txtMaxFlightTime;
@@ -27,12 +17,7 @@ public class DroneForm extends Form {
 	private TextField txtDeliveryTime;
 	
 	public DroneForm(SceneController sc, BorderPane layout) {
-<<<<<<< HEAD
-		this.layout = layout;
-		this.sc = sc;
-=======
 		super(sc, layout);
->>>>>>> master
 		
 		Label label1 = new Label("Cargo weight (lb): ");
 		txtCargoWeight = new TextField();

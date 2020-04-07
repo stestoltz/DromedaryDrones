@@ -24,24 +24,6 @@ import javafx.scene.control.Button;
 
 public class MealForm extends Form
 {
-<<<<<<< HEAD
-
-	private SceneController sc;
-	private BorderPane layout;
-	
-	private List<Meal> meals;
-	private List<FoodItem> foods;
-
-	private ListView<HBox> foodView;
-	private ListView<HBox> mealView;
-	
-	private Drone drone;
-
-	public MealForm(SceneController sc, BorderPane layout) {
-		this.sc = sc;
-		this.layout = layout;
-
-=======
 	
 	private List<Meal> meals;
 	private List<FoodItem> foods;
@@ -54,7 +36,6 @@ public class MealForm extends Form
 	public MealForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
 
->>>>>>> master
 		foodView = new ListView<>();
 		mealView = new ListView<>();
 		
@@ -352,12 +333,4 @@ public class MealForm extends Form
 		/****************************finished meal list***************************/
 	}
 
-<<<<<<< HEAD
-	@Override
-	public BorderPane getLayout() {
-		return layout;
-	}
-
-=======
->>>>>>> master
 }

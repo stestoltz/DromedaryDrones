@@ -2,16 +2,10 @@ package javaFX_Forms;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-<<<<<<< HEAD
-import java.util.ArrayList;
-import java.util.List;
-
-=======
 import java.util.List;
 import java.util.Map;
 
 import javaClasses.DeliveryPoint;
->>>>>>> master
 import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Location;
@@ -40,10 +34,7 @@ public class SceneController {
 	private DroneForm droneForm;
 	private FoodForm foodForm;
 	private MealForm mealForm;
-<<<<<<< HEAD
-=======
 	private MapForm mapForm;
->>>>>>> master
 	
 	public SceneController(Stage stage) throws FileNotFoundException {
 		location = new Location("Grove City", "SAC");
@@ -56,10 +47,7 @@ public class SceneController {
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
-<<<<<<< HEAD
-=======
 		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
->>>>>>> master
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
@@ -81,13 +69,10 @@ public class SceneController {
 		return mealForm.getLayout();
 	}
 	
-<<<<<<< HEAD
-=======
 	public BorderPane getMapLayout() {
 		return mapForm.getLayout();
 	}
 	
->>>>>>> master
 	public void switchToHome() {
 		stage.getScene().setRoot(getHomeLayout());
 	}
@@ -107,14 +92,11 @@ public class SceneController {
 		stage.getScene().setRoot(getMealLayout());
 	}
 	
-<<<<<<< HEAD
-=======
 	public void switchToMap() {
 		mapForm.loadPoints(location.getDeliveryPointsMap());
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
->>>>>>> master
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
 	}
@@ -127,13 +109,10 @@ public class SceneController {
 		this.location.setMeals(meals);
 	}
 	
-<<<<<<< HEAD
-=======
 	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
 		this.location.setDeliveryPoints(points);
 	}
 	
->>>>>>> master
 	/**
 	 * builds a settings border pane
 	 * @param headerText
