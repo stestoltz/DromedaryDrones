@@ -25,12 +25,11 @@ import javafx.scene.text.Font;
 
 public class SimulationResultsForm extends Form {
 
-	public SimulationResultsForm(SceneController sc, BorderPane layout) throws Exception {
+	public SimulationResultsForm(SceneController sc, BorderPane layout, Location location) throws Exception {
 		super(sc, layout);
 		
 		//run the simulation to get the results
-		Location groveCity = new Location("Grove City", "SAC");
-		Simulation sim = new Simulation(groveCity);
+		Simulation sim = new Simulation(location);
 		
 		RoutingAlgorithm ra = new GreedyAlgorithm();
 		//RoutingAlgorithm ra = new BacktrackingSearch();
@@ -113,7 +112,7 @@ public class SimulationResultsForm extends Form {
 		//put the maximum and average in the bottom of the inside borderpane
 		HBox values = new HBox();
 		values.setAlignment(Pos.CENTER);
-		values.setSpacing(10);
+		values.setSpacing(30);
 		Label fifo = new Label("FIFO Worst Time: " + simResults[0].worstTime() + "\n" +
 									"FIFO Average Time: " + simResults[0].averageTime());
 		Label knapsack = new Label("Knapsack Worst Time: " + simResults[1].worstTime() + "\n" +
@@ -123,8 +122,7 @@ public class SimulationResultsForm extends Form {
 		
 		//put the results (graph, max, etc) in the middle of the screen
 		layout.setCenter(insideResults);
-
-		///////////////////////////////
+		
 	}
 
 
