@@ -25,16 +25,18 @@ import javafx.scene.text.Font;
 
 public class SimulationResultsForm extends Form {
 
-	public SimulationResultsForm(SceneController sc, BorderPane layout, Location location) throws Exception {
+	public SimulationResultsForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
-		
+	}
+
+	public void runSimulation(Location location) throws Exception {
 		//run the simulation to get the results
 		Simulation sim = new Simulation(location);
-		
+
 		RoutingAlgorithm ra = new GreedyAlgorithm();
 		//RoutingAlgorithm ra = new BacktrackingSearch();
 		Results[] simResults = sim.runSimulation(ra);
-		
+
 		//create the graph
 		NumberAxis xAxis = new NumberAxis();
 		NumberAxis yAxis = new NumberAxis();
@@ -55,13 +57,6 @@ public class SimulationResultsForm extends Form {
 
 			List<Double> times = r.getTimes();
 
-			for (int i = 0; i < times.size(); i++) {
-				if (times.get(i) > 100000) {
-					System.out.println("Giant time at index " + i + ": " + times.get(i));
-					times.set(i, 0.0);
-				}
-			}
-
 			Collections.sort(times);
 
 			double largestTime = times.get(times.size() - 1);
@@ -69,8 +64,6 @@ public class SimulationResultsForm extends Form {
 			for (int i = 0; i <= numBuckets; i++) {
 				buckets[i] = i * (largestTime / numBuckets);
 			}
-
-			System.out.println(Arrays.asList(buckets));
 
 			// build histogram
 			Iterator<Double> itr = times.iterator();
@@ -101,10 +94,10 @@ public class SimulationResultsForm extends Form {
 			lineChart.getData().addAll(series);
 		}
 		//graph has been created
-		
-		
+
+
 		//now set up the screen
-		
+
 		//contain results in this border pane
 		BorderPane insideResults = new BorderPane();
 		//put the chart in the center of the inside borderpane
@@ -114,15 +107,15 @@ public class SimulationResultsForm extends Form {
 		values.setAlignment(Pos.CENTER);
 		values.setSpacing(30);
 		Label fifo = new Label("FIFO Worst Time: " + simResults[0].worstTime() + "\n" +
-									"FIFO Average Time: " + simResults[0].averageTime());
+				"FIFO Average Time: " + simResults[0].averageTime());
 		Label knapsack = new Label("Knapsack Worst Time: " + simResults[1].worstTime() + "\n" +
-										"Knapsack Average Time: " + simResults[1].averageTime());
+				"Knapsack Average Time: " + simResults[1].averageTime());
 		values.getChildren().addAll(fifo, knapsack);
 		insideResults.setBottom(values);
-		
+
 		//put the results (graph, max, etc) in the middle of the screen
 		layout.setCenter(insideResults);
-		
+
 	}
 
 

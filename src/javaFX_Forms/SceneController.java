@@ -50,7 +50,7 @@ public class SceneController {
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
 		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
-		resultsForm = new SimulationResultsForm(this, buildResultsBorderPane(), location);
+		resultsForm = new SimulationResultsForm(this, buildResultsBorderPane());
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
@@ -104,8 +104,14 @@ public class SceneController {
 	}
 	
 	public void switchToResults() {
-		stage.getScene().setRoot(getResultsLayout());
+		try {
+			resultsForm.runSimulation(location);
+			stage.getScene().setRoot(getResultsLayout());
+		} catch (Exception e) {
+			System.out.println("Results list was empty");
+		}
 	}
+	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
 	}
