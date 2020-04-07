@@ -35,8 +35,9 @@ public class SceneController {
 	private FoodForm foodForm;
 	private MealForm mealForm;
 	private MapForm mapForm;
+	private SimulationResultsForm resultsForm;
 	
-	public SceneController(Stage stage) throws FileNotFoundException {
+	public SceneController(Stage stage) throws Exception {
 		location = new Location("Grove City", "SAC");
 		
 		this.stage = stage;
@@ -48,6 +49,7 @@ public class SceneController {
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
 		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
+		resultsForm = new SimulationResultsForm(this, buildResultsBorderPane(), location);
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
@@ -73,6 +75,9 @@ public class SceneController {
 		return mapForm.getLayout();
 	}
 	
+	public BorderPane getResultsLayout() {
+		return resultsForm.getLayout();
+	}
 	public void switchToHome() {
 		stage.getScene().setRoot(getHomeLayout());
 	}
@@ -97,6 +102,9 @@ public class SceneController {
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
+	public void switchToResults() {
+		stage.getScene().setRoot(getResultsLayout());
+	}
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
 	}
@@ -167,6 +175,39 @@ public class SceneController {
 	}
 	
 	/**
+	 * builds the simulation results border pane
+	 * @return
+	 */
+	private BorderPane buildResultsBorderPane() {
+		
+		BorderPane layout = buildBaseBorderPane("Simulation Results");
+		
+		Button rerun = new Button("Rerun Simulation");
+		Button returnHome = new Button("Back");
+		Button save = new Button("Save Results");
+		
+		rerun.setOnAction((event) -> {
+			switchToResults();
+		});
+		
+		returnHome.setOnAction((event) -> {
+			switchToHome();
+		});
+		
+		save.setOnAction((event) -> {
+			//TODO: put saving the results here
+		});
+		
+		BorderPane bottom = new BorderPane();
+		bottom.setCenter(rerun);
+		bottom.setRight(returnHome);
+		bottom.setLeft(save);
+		layout.setBottom(bottom);
+		
+		return layout;
+	}
+	
+	/**
 	 * builds a border pane with all elements that all border panes share
 	 * @return
 	 */
@@ -199,5 +240,6 @@ public class SceneController {
 		return layout;
 		
 	}
+	
 	
 }

@@ -28,13 +28,36 @@ public class Location {
 		this.home = new DeliveryPoint(homeName, 0, 0);
 		this.name = name;
 		
-		// add fake points
-		addPoint(new DeliveryPoint("HAL", 250, 0));
-		addPoint(new DeliveryPoint("Hoyt", -250, -300));
-		addPoint(new DeliveryPoint("PLC", -250, 300));
-		addPoint(new DeliveryPoint("STEM", -400, 0));
-		addPoint(new DeliveryPoint("Rockwell", -500, 0));
-		addPoint(new DeliveryPoint("Crawford", -750, -300));
+		// add real delivery points
+		addPoint(new DeliveryPoint("PEW", 115, -510));
+		addPoint(new DeliveryPoint("HAL", 40, -70));
+		addPoint(new DeliveryPoint("Soccer Field", 0, 1100));
+		addPoint(new DeliveryPoint("PLC", -160, 440));
+		addPoint(new DeliveryPoint("MEP", -225, 550));
+		addPoint(new DeliveryPoint("STEM", -300, 180));
+		addPoint(new DeliveryPoint("Harker", -315, 390));
+		addPoint(new DeliveryPoint("Hoyt", -350, -70));
+		addPoint(new DeliveryPoint("Hicks", -360, -440));
+		addPoint(new DeliveryPoint("TLC", -420, -400));
+		addPoint(new DeliveryPoint("Baseball Field", -475, -170));
+		addPoint(new DeliveryPoint("Library", -475, -170));
+		addPoint(new DeliveryPoint("Rockwell", -480, 290));
+		addPoint(new DeliveryPoint("Map", -560, 860));
+		addPoint(new DeliveryPoint("Rathburn", -675, 985));
+		addPoint(new DeliveryPoint("Hopeman", -715, -225));
+		addPoint(new DeliveryPoint("Lincoln", -780, -70));
+		addPoint(new DeliveryPoint("Ketler Recreation", -800, 155));
+		addPoint(new DeliveryPoint("Chapel", -860, 680));
+		addPoint(new DeliveryPoint("Softball Field", -930, 1420));
+		addPoint(new DeliveryPoint("Zerbe", -940, -135));
+		addPoint(new DeliveryPoint("Crawford", -975, 485));
+		addPoint(new DeliveryPoint("Memorial", -1160, 100));
+		addPoint(new DeliveryPoint("President's House", -1280, -30));
+		addPoint(new DeliveryPoint("Field House", -1625, 1000));
+		addPoint(new DeliveryPoint("Tennis Courts", -1880, 1210));
+		addPoint(new DeliveryPoint("Football Field", -2065, 885));
+		addPoint(new DeliveryPoint("Colonial Apartments", -2330, 770));
+		addPoint(new DeliveryPoint("Carnegie Hall", -2455, 835));
 
 		this.foods = new ArrayList<FoodItem>();	
 		// add default foods
