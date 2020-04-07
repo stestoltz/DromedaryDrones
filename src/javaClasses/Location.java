@@ -75,7 +75,11 @@ public class Location {
 		typical.put(burger, 1);
 		typical.put(fries, 1);
 		typical.put(drink, 1);
-		meals.add(new Meal(typical, 100));
+		meals.add(new Meal(typical, 80));
+		
+		HashMap<FoodItem, Integer> oneDrink = new HashMap<>();
+		oneDrink.put(drink, 1);
+		meals.add(new Meal(oneDrink, 20));
 
 		// create default drone and default shift details
 		this.drone = new Drone();
