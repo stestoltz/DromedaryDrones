@@ -1,9 +1,16 @@
 package javaFX_Forms;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import javaClasses.DeliveryPoint;
 import javaClasses.Drone;
@@ -20,7 +27,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class SceneController {
@@ -37,8 +46,11 @@ public class SceneController {
 	private MealForm mealForm;
 	private MapForm mapForm;
 	private ShiftSettingsForm shiftForm;
+	private SimulationResultsForm resultsForm;
 	
-	public SceneController(Stage stage) throws FileNotFoundException {
+	private JFileChooser chooser;
+	
+	public SceneController(Stage stage) throws Exception {
 		location = new Location("Grove City", "SAC");
 		
 		this.stage = stage;
@@ -50,10 +62,17 @@ public class SceneController {
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
 		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
+
 		shiftForm = new ShiftSettingsForm(this, buildSettingsBorderPane("Shift Settings"));
+
+		resultsForm = new SimulationResultsForm(this, buildResultsBorderPane());
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
+		
+		chooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("text", "txt");
+		chooser.setFileFilter(filter);
 	}
 	
 	public BorderPane getHomeLayout() {
@@ -80,6 +99,9 @@ public class SceneController {
 		return shiftForm.getLayout();
 	}
 	
+	public BorderPane getResultsLayout() {
+		return resultsForm.getLayout();
+	}
 	public void switchToHome() {
 		stage.getScene().setRoot(getHomeLayout());
 	}
@@ -107,6 +129,14 @@ public class SceneController {
 	public void switchToShifts() {
 		shiftForm.loadShift(location.getShiftDetails());
 		stage.getScene().setRoot(getShiftLayout());
+	}
+	public void switchToResults() {
+		try {
+			resultsForm.runSimulation(location);
+			stage.getScene().setRoot(getResultsLayout());
+		} catch (Exception e) {
+			System.out.println("Results list was empty");
+		}
 	}
 	
 	public void replaceDrone(Drone d) {
@@ -155,9 +185,26 @@ public class SceneController {
 		BorderPane layout = buildBaseBorderPane("Dromedary Drones");
 		
 		Button startSimulation = new Button("Start Simulation");
+		Label loc = new Label("Location: " + location.getName());
+		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
+		Button changeLocation = new Button("Change Location");
+		Button saveLocation = new Button("Save Location");
+		HBox editLocation = new HBox();
+		editLocation.setSpacing(10);
+		editLocation.getChildren().addAll(changeLocation, saveLocation);
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setCenter(startSimulation);
+		bottom.setLeft(loc);
+		bottom.setRight(editLocation);
+		
+		changeLocation.setOnAction((event) -> {
+			changeLocation();
+		});
+		
+		saveLocation.setOnAction((event) -> {
+			saveLocation();
+		});
 		
 		//create a menubar for the hamburger menu
 		MenuBar menuBar = new MenuBar();
@@ -178,6 +225,39 @@ public class SceneController {
 		
 		BorderPane top = ((BorderPane) layout.getTop());
 		top.setRight(menuBar);
+		
+		return layout;
+	}
+	
+	/**
+	 * builds the simulation results border pane
+	 * @return
+	 */
+	private BorderPane buildResultsBorderPane() {
+		
+		BorderPane layout = buildBaseBorderPane("Simulation Results");
+		
+		Button rerun = new Button("Rerun Simulation");
+		Button returnHome = new Button("Back");
+		Button save = new Button("Save Results");
+		
+		rerun.setOnAction((event) -> {
+			switchToResults();
+		});
+		
+		returnHome.setOnAction((event) -> {
+			switchToHome();
+		});
+		
+		save.setOnAction((event) -> {
+			//TODO: put saving the results here
+		});
+		
+		BorderPane bottom = new BorderPane();
+		bottom.setCenter(rerun);
+		bottom.setRight(returnHome);
+		bottom.setLeft(save);
+		layout.setBottom(bottom);
 		
 		return layout;
 	}
@@ -218,4 +298,51 @@ public class SceneController {
 
 	
 	
+	/**
+	 * this method lets the user upload a file to change the location object
+	 * then the location object details are all updated to match the file
+	 * @throws FileNotFoundException 
+	 */
+	private void changeLocation() {
+		chooser.setDialogTitle("Choose Location File");
+		int value = chooser.showOpenDialog(null);
+		
+		if (value == JFileChooser.APPROVE_OPTION) {
+			try {
+			File selectedFile = chooser.getSelectedFile();
+			FileInputStream filein = new FileInputStream(selectedFile.getAbsolutePath());
+			ObjectInputStream objectIn = new ObjectInputStream(filein);
+			
+			Object obj = objectIn.readObject();
+			location = (Location) obj;
+			
+			objectIn.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
+	
+	/**
+	 * this method saves the location to an object file
+	 */
+	private void saveLocation() {
+		chooser.setDialogTitle("Choose a Save Location");
+		int value = chooser.showSaveDialog(null);
+
+		if (value == JFileChooser.APPROVE_OPTION) {
+			String filepath = chooser.getSelectedFile().getAbsolutePath();
+			try {
+				FileOutputStream fileOut = new FileOutputStream(filepath);
+				ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+				objectOut.writeObject(location);
+				objectOut.close();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 }

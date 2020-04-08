@@ -64,15 +64,10 @@ public class Simulation {
 		
 		int numShifts = location.getShiftDetails().getNumberOfShifts();
 		
-		List<List<Queue<Order>>> allOrders = new ArrayList<List<Queue<Order>>>();
-		
-		allOrders.add(new ArrayList<>());
-		allOrders.add(new ArrayList<>());
+		List<Queue<Order>> allOrders = new ArrayList<Queue<Order>>();
 		
 		for (int i = 0; i < numShifts; i++) {
-			Queue<Order> thisShiftOrders = generateOrders();
-			
-			//allOrders.add(generateOrders());
+			allOrders.add(generateOrders());
 		}
 		
 		// for each packing algorithm
