@@ -160,7 +160,7 @@ public class Simulation {
 		double timeStamp, timeIncrease;
 		//generate orders for each hour of the shift
 		for (int i=0; i<location.getShiftDetails().getHoursInShift(); i++) {
-			int numOrders = location.getShiftDetails().getOrdersPerHour()[i];
+			int numOrders = location.getShiftDetails().getOrdersPerHour().get(i);
 			timeStamp = i*3600;
 			timeIncrease = 3600/numOrders;
 			
