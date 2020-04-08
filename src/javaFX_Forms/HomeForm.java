@@ -2,7 +2,21 @@ package javaFX_Forms;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
+import javaClasses.GreedyAlgorithm;
+import javaClasses.Location;
+import javaClasses.Results;
+import javaClasses.RoutingAlgorithm;
+import javaClasses.Simulation;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -12,12 +26,8 @@ import javafx.scene.layout.BorderPane;
 
 public class HomeForm extends Form {
 	
-	private SceneController sc;
-	private BorderPane layout;
-	
 	public HomeForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
-		this.layout = layout;
-		this.sc = sc;
+		super(sc, layout);
 		
 		//create map
 		Image map = new Image(new FileInputStream("res/map.jfif"));
@@ -31,6 +41,12 @@ public class HomeForm extends Form {
 		MenuBar menuBar = (MenuBar) top.getRight();
 		Menu menu = menuBar.getMenus().get(0);
 		
+		MenuItem mapItem = menu.getItems().get(0);
+		
+		mapItem.setOnAction((event)->{
+			this.sc.switchToMap();
+		});
+		
 		MenuItem foodItem = menu.getItems().get(1);
 		
 		foodItem.setOnAction((event)->{
@@ -43,16 +59,25 @@ public class HomeForm extends Form {
 			this.sc.switchToMeal();
 		});
 		
+		MenuItem shiftItem = menu.getItems().get(3);
+		
+		shiftItem.setOnAction((event)->{
+			this.sc.switchToShifts();
+		});
+		
 		MenuItem droneItem = menu.getItems().get(4);
 		
 		droneItem.setOnAction((event)->{
 			this.sc.switchToDrone();
 		});
-	}
-
-	@Override
-	public BorderPane getLayout() {
-		return layout;
+		
+		
+		BorderPane bottom = ((BorderPane) layout.getBottom());
+		Button startSimulation = ((Button) bottom.getCenter());
+		
+		startSimulation.setOnAction((event) -> {
+			this.sc.switchToResults();
+		});
 	}
 
 }

@@ -36,7 +36,7 @@ import javaClasses.BacktrackingSearch;
 import javaClasses.GreedyAlgorithm;
 
 
-public class Main2 extends Application
+public class MainOld extends Application
 {
 	// Declaring the TextArea for Logging
 	TextArea logging;

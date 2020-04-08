@@ -1,43 +1,37 @@
 package javaFX_Forms;
 
-import java.awt.Event;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javaClasses.DeliveryPoint;
-import javaClasses.Location;
-
-import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-public class MapForm extends Application {
+public class MapForm extends Form {
 	
-	public static void main(String[] args) 
-	{
-		Application.launch(args);
-	}
-
-	@Override
-	public void start(Stage stage) throws Exception {
-		//create logo
-		Image image = new Image(new FileInputStream("res/Temp_logo.jpg"));
-		ImageView imageView = new ImageView(image);
-		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(150);
+	private ListView<HBox> pointsView;
+	
+	private List<DeliveryPoint> points;
+	
+	public MapForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
+		super(sc, layout);
+		
+		pointsView = new ListView<>();
 
 		//create map
 		Image map = new Image(new FileInputStream("res/map2.jpg"));
@@ -49,38 +43,6 @@ public class MapForm extends Application {
 			System.out.println(event.getX() + " " + event.getY());
 		});
 		
-		Location bogus = generateBogusLocation();
-		
-		ComboBox<Location> locations = new ComboBox<>();
-		locations.getItems().add(bogus);
-		locations.setValue(bogus);
-		
-		ListView<DeliveryPoint> points = new ListView<>();
-		
-		for (DeliveryPoint dp : bogus.getDeliveryPoints()) {
-			points.getItems().add(dp);
-		}
-
-		//set title
-		stage.setTitle("Modify Mappings"); 
-
-		//create buttons and header
-		Button returnToMenu = new Button("Return to Menu");
-		Button saveChanges = new Button("Save Changes");
-		Label header = new Label("Modify Mappings");
-		header.setFont(new Font("Comic Sans", 30));
-
-		//create pane and add buttons to bottom corners
-		BorderPane bottom = new BorderPane();
-		bottom.setLeft(returnToMenu);
-		bottom.setRight(saveChanges);
-		//do stuff
-
-		//create pane and add images
-		BorderPane top = new BorderPane();
-		top.setLeft(imageView);
-		top.setCenter(header);
-		
 		HBox listButtons = new HBox();
 		Button edit = new Button("Edit");
 		Button delete = new Button("Delete");
@@ -88,26 +50,55 @@ public class MapForm extends Application {
 		listButtons.getChildren().add(delete);
 		
 		delete.setOnAction((event) -> {
-			DeliveryPoint selectedPoint = points.getSelectionModel().getSelectedItem();
-			Location selectedLocation = locations.getSelectionModel().getSelectedItem();
+			HBox hbox = pointsView.getSelectionModel().getSelectedItem();
 			
-			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
-			if (selectedPoint != null) {
-				selectedLocation.deletePoint(selectedPoint);
-				points.getItems().remove(selectedPoint);
+			if (hbox != null) {
+				DeliveryPoint selectedPoint = getDeliveryPoint(hbox);
+				
+				points.remove(selectedPoint);
+				pointsView.getItems().remove(hbox);
+			}
+		});
+		
+		edit.setOnAction((event) -> {
+			HBox hbox = pointsView.getSelectionModel().getSelectedItem();
+			
+			if (hbox != null) {
+				TextField text = (TextField) hbox.getChildren().get(0);
+				
+				String currentVal = text.getText();
+				
+				// temporarily listener to prevent empty strings in text fields
+				ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {
+				    @Override
+				    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
+				    	// lost focus
+						if (!newValue) {
+							if (text.getText().equals("")) {
+								// if empty, revert to old
+								text.setText(currentVal);
+								
+								// remove this listener
+								text.focusedProperty().removeListener(this);
+							}
+							
+							// change the name in the list
+							getDeliveryPoint(hbox).setName(text.getText());
+						}
+				    }
+				};
+				
+				text.focusedProperty().addListener(listener);		
+				
+				text.setEditable(true);
+				text.requestFocus();
 			}
 		});
 		
 		VBox left = new VBox();
-		left.getChildren().add(locations);
-		left.getChildren().add(points);
+		left.getChildren().add(pointsView);
 		left.getChildren().add(listButtons);
 		
-
-		// Create the pane and add the other panes
-		BorderPane layout = new BorderPane();
-		layout.setBottom(bottom);
-		layout.setTop(top);
 		layout.setCenter(mapView);
 		layout.setLeft(left);
 		
@@ -115,29 +106,87 @@ public class MapForm extends Application {
 		left.setPadding(new Insets(10, 10, 10, 10));
 		left.setSpacing(10);
 		listButtons.setSpacing(10);
+		
+		
+		BorderPane top = ((BorderPane) layout.getTop());
+		
+		BorderPane bottom = ((BorderPane) layout.getBottom());
+		Button cancel = ((Button) bottom.getLeft());
+		Button save = ((Button) bottom.getRight());
+		
 		top.setPadding(new Insets(10, 10, 10, 10));
 		bottom.setPadding(new Insets(10, 10, 10, 10));
 		
+		cancel.setOnAction((event) -> {
+			this.sc.switchToHome();
+		});
 		
-		Scene scene = new Scene(layout);
+		save.setOnAction((event) -> {
+			
+			Map<DeliveryPoint, Boolean> endPoints = new HashMap<>();
 
-		// Add the Scene to the Stage
-		stage.setScene(scene);
-		// maximize screen and display the Stage
-		stage.setMaximized(true);
-		stage.show();
+			boolean atLeastOneActivePoint = false;
+			
+			for (HBox hbox : pointsView.getItems()) {
+				boolean active = getActive(hbox);
+				endPoints.put(getDeliveryPoint(hbox), active);
+				
+				if (active) {
+					atLeastOneActivePoint = true;
+				}
+			}
+			
+			if (atLeastOneActivePoint) {
+				this.sc.replaceDeliveryPoints(endPoints);
+				this.sc.switchToHome();
+			} else {
+				System.out.println("No active delivery points selected");
+			}
+		});
 	}
 	
-	public Location generateBogusLocation() {
-		Location location = new Location("Bogus", "SAC");
+	public void loadPoints(Map<DeliveryPoint, Boolean> points) {
+		this.points = new ArrayList<>();
 		
-		location.addPoint(new DeliveryPoint("HAL", 25, 0));
-		location.addPoint(new DeliveryPoint("Hoyt", -25, -30));
-		location.addPoint(new DeliveryPoint("PLC", -25, 30));
-		location.addPoint(new DeliveryPoint("STEM", -40, 0));
-		location.addPoint(new DeliveryPoint("Rockwell", -50, 0));
-		location.addPoint(new DeliveryPoint("Crawford", -75, -30));
+		pointsView.getItems().clear();
+				
+		for (DeliveryPoint dp : points.keySet()) {
+			
+			this.points.add(dp);
+			
+			HBox hbox = new HBox();
+			
+			TextField text = new TextField();
+			text.setText(dp.toString());
+			text.setEditable(false);
+			
+			CheckBox check = new CheckBox();
+			check.setSelected(points.get(dp));
+			
+			hbox.getChildren().addAll(text, check);
+			pointsView.getItems().add(hbox);
+		}
+	}
+	
+	public DeliveryPoint getDeliveryPoint(HBox hbox) {
+		for (int i = 0; i < points.size(); i++) {
+			if (hbox == pointsView.getItems().get(i)) {
+				return points.get(i);
+			}
+		}
 		
-		return location;
+		return null;
+	}
+	
+	public boolean getActive(HBox hbox) {
+		for (int i = 0; i < points.size(); i++) {
+			if (hbox == pointsView.getItems().get(i)) {
+				CheckBox check = (CheckBox) hbox.getChildren().get(1);
+				
+				return check.isSelected();
+			}
+		}
+		
+		return false;
 	}
 }

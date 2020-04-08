@@ -1,20 +1,23 @@
 package javaClasses;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShiftDetails {
 	
 	private int numberOfShifts;
 	private int hoursInShift;
-	private int ordersPerHour[]; //size of hoursInShift
+	private List<Integer> ordersPerHour; //size of hoursInShift
 	
 	public ShiftDetails() {
 		this.numberOfShifts = 50;
 		this.hoursInShift = 4;
-		this.ordersPerHour = new int[4];
-		this.ordersPerHour[0] = 15;
-		this.ordersPerHour[1] = 17;
-		this.ordersPerHour[2] = 22;
-		this.ordersPerHour[3] = 15;
-		//this.ordersPerHour = new int[] {100, 100, 100, 100};
+		this.ordersPerHour = new ArrayList<>();
+		this.ordersPerHour.add(15);
+		this.ordersPerHour.add(17);
+		this.ordersPerHour.add(22);
+		this.ordersPerHour.add(15);
+		//this.ordersPerHour = new int[] {200, 200, 200, 200};
 	}
 	
 	/**
@@ -23,10 +26,16 @@ public class ShiftDetails {
 	 * @param hoursInShift
 	 * @param ordersPerHour
 	 */
-	public ShiftDetails(int numberOfShifts, int hoursInShift, int[] ordersPerHour) {
+	public ShiftDetails(int numberOfShifts, int hoursInShift, List<Integer> ordersPerHour) {
 		this.numberOfShifts = numberOfShifts;
 		this.hoursInShift = hoursInShift;
 		this.ordersPerHour = ordersPerHour;
+	}
+	
+	public ShiftDetails(ShiftDetails shiftDetails) {
+		this.numberOfShifts = shiftDetails.numberOfShifts;
+		this.hoursInShift = shiftDetails.hoursInShift;
+		this.ordersPerHour = new ArrayList<>(shiftDetails.ordersPerHour);
 	}
 
 
@@ -50,12 +59,12 @@ public class ShiftDetails {
 	}
 
 
-	public int[] getOrdersPerHour() {
+	public List<Integer> getOrdersPerHour() {
 		return ordersPerHour;
 	}
 
 
-	public void setOrdersPerHour(int[] ordersPerHour) {
+	public void setOrdersPerHour(List<Integer> ordersPerHour) {
 		this.ordersPerHour = ordersPerHour;
 	}
 

@@ -25,19 +25,12 @@ import javafx.scene.control.Button;
 public class FoodForm extends Form
 {
 
-	//ArrayList<String> foods = new ArrayList<>();
-	//Location location = new Location("test", "home");
-
-	private SceneController sc;
-	private BorderPane layout;
-
 	private ListView<FoodItem> foodView;
 	private List<FoodItem> displayedFoods;
 	private Drone drone;
 
 	public FoodForm(SceneController sc, BorderPane layout) {
-		this.sc = sc;
-		this.layout = layout;
+		super(sc, layout);
 		
 		/****************************setup the food list***************************/
 		this.foodView = new ListView<>();
@@ -349,10 +342,5 @@ public class FoodForm extends Form
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public BorderPane getLayout() {
-		return layout;
 	}
 }

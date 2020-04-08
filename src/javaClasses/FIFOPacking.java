@@ -38,4 +38,8 @@ public class FIFOPacking extends PackingAlgorithm {
 	public boolean hasNextOrder() {
 		return !shiftOrders.isEmpty();
 	}
+	
+	public double nextOrderTime() {
+		return shiftOrders.peek().getReadyTime();
+	}
 }
