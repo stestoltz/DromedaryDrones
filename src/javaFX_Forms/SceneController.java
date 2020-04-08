@@ -1,9 +1,16 @@
 package javaFX_Forms;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import javaClasses.DeliveryPoint;
 import javaClasses.Drone;
@@ -19,6 +26,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -38,6 +46,8 @@ public class SceneController {
 	private MapForm mapForm;
 	private SimulationResultsForm resultsForm;
 	
+	private JFileChooser chooser;
+	
 	public SceneController(Stage stage) throws Exception {
 		location = new Location("Grove City", "SAC");
 		
@@ -54,6 +64,10 @@ public class SceneController {
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
+		
+		chooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("text", "txt");
+		chooser.setFileFilter(filter);
 	}
 	
 	public BorderPane getHomeLayout() {
@@ -157,14 +171,22 @@ public class SceneController {
 		Label loc = new Label("Location: " + location.getName());
 		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
 		Button changeLocation = new Button("Change Location");
+		Button saveLocation = new Button("Save Location");
+		HBox editLocation = new HBox();
+		editLocation.setSpacing(10);
+		editLocation.getChildren().addAll(changeLocation, saveLocation);
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setCenter(startSimulation);
 		bottom.setLeft(loc);
-		bottom.setRight(changeLocation);
+		bottom.setRight(editLocation);
 		
 		changeLocation.setOnAction((event) -> {
 			changeLocation();
+		});
+		
+		saveLocation.setOnAction((event) -> {
+			saveLocation();
 		});
 		
 		//create a menubar for the hamburger menu
@@ -260,15 +282,48 @@ public class SceneController {
 	/**
 	 * this method lets the user upload a file to change the location object
 	 * then the location object details are all updated to match the file
+	 * @throws FileNotFoundException 
 	 */
 	private void changeLocation() {
+		chooser.setDialogTitle("Choose Location File");
+		int value = chooser.showOpenDialog(null);
 		
+		if (value == JFileChooser.APPROVE_OPTION) {
+			try {
+			File selectedFile = chooser.getSelectedFile();
+			FileInputStream filein = new FileInputStream(selectedFile.getAbsolutePath());
+			ObjectInputStream objectIn = new ObjectInputStream(filein);
+			
+			Object obj = objectIn.readObject();
+			location = (Location) obj;
+			
+			objectIn.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
+	
 	
 	/**
 	 * this method saves the location to an object file
 	 */
 	private void saveLocation() {
-		
+		chooser.setDialogTitle("Choose a Save Location");
+		int value = chooser.showSaveDialog(null);
+
+		if (value == JFileChooser.APPROVE_OPTION) {
+			String filepath = chooser.getSelectedFile().getAbsolutePath();
+			try {
+				FileOutputStream fileOut = new FileOutputStream(filepath);
+				ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+				objectOut.writeObject(location);
+				objectOut.close();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
+
 }
