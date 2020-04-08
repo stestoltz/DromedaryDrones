@@ -1,11 +1,12 @@
 package javaClasses;
 import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class Location {
+public class Location implements Serializable {
 	
 	// hashmap of delivery points, each with a boolean value for active/not active
 	private Map<DeliveryPoint, Boolean> deliveryPoints;
