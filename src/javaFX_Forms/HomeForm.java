@@ -59,6 +59,12 @@ public class HomeForm extends Form {
 			this.sc.switchToMeal();
 		});
 		
+		MenuItem shiftItem = menu.getItems().get(3);
+		
+		shiftItem.setOnAction((event)->{
+			this.sc.switchToShifts();
+		});
+		
 		MenuItem droneItem = menu.getItems().get(4);
 		
 		droneItem.setOnAction((event)->{

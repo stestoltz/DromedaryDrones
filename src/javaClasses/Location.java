@@ -237,7 +237,7 @@ public class Location implements Serializable {
 	}
 	
 	public ShiftDetails getShiftDetails() {
-		return this.shiftDetails;
+		return new ShiftDetails(shiftDetails);
 	}
 	
 	public void setShiftDetails(ShiftDetails shiftDetails) {

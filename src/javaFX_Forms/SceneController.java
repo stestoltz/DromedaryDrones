@@ -17,6 +17,7 @@ import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
+import javaClasses.ShiftDetails;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,6 +45,7 @@ public class SceneController {
 	private FoodForm foodForm;
 	private MealForm mealForm;
 	private MapForm mapForm;
+	private ShiftSettingsForm shiftForm;
 	private SimulationResultsForm resultsForm;
 	
 	private JFileChooser chooser;
@@ -60,6 +62,9 @@ public class SceneController {
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
 		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
+
+		shiftForm = new ShiftSettingsForm(this, buildSettingsBorderPane("Shift Settings"));
+
 		resultsForm = new SimulationResultsForm(this, buildResultsBorderPane());
 		
 		Scene scene = new Scene(homeForm.getLayout());
@@ -90,6 +95,10 @@ public class SceneController {
 		return mapForm.getLayout();
 	}
 	
+	public BorderPane getShiftLayout() {
+		return shiftForm.getLayout();
+	}
+	
 	public BorderPane getResultsLayout() {
 		return resultsForm.getLayout();
 	}
@@ -117,6 +126,10 @@ public class SceneController {
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
+	public void switchToShifts() {
+		shiftForm.loadShift(location.getShiftDetails());
+		stage.getScene().setRoot(getShiftLayout());
+	}
 	public void switchToResults() {
 		try {
 			resultsForm.runSimulation(location);
@@ -140,6 +153,10 @@ public class SceneController {
 	
 	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
 		this.location.setDeliveryPoints(points);
+	}
+	
+	public void replaceShift(ShiftDetails shift) {
+		this.location.setShiftDetails(shift);
 	}
 	
 	/**
@@ -278,6 +295,8 @@ public class SceneController {
 		return layout;
 		
 	}
+
+	
 	
 	/**
 	 * this method lets the user upload a file to change the location object
