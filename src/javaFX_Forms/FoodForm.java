@@ -1,10 +1,12 @@
 package javaFX_Forms;
 import java.util.List;
 
+import javaClasses.Drone;
 import javaClasses.FoodItem;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
@@ -15,6 +17,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
 import javafx.scene.control.Button; 
 
 public class FoodForm extends Form
@@ -28,11 +33,12 @@ public class FoodForm extends Form
 
 	private ListView<FoodItem> foodView;
 	private List<FoodItem> displayedFoods;
+	private Drone drone;
 
 	public FoodForm(SceneController sc, BorderPane layout) {
 		this.sc = sc;
 		this.layout = layout;
-
+		
 		/****************************setup the food list***************************/
 		this.foodView = new ListView<>();
 
@@ -57,14 +63,12 @@ public class FoodForm extends Form
 		Button edit = new Button("Edit"); 
 		Button delete = new Button("Delete");
 
-		edit.setOnAction(event-> {
-			System.out.println("edit: " + foodView.getSelectionModel().getSelectedItem());
-		});
-
+		//edit set on action is done in popup section of code
+		//delete button action:
 		delete.setOnAction((event) -> {
 			FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
 			System.out.println("delete: " + selectedFood);
-
+			//if a food was selected, delete it
 			if (selectedFood != null) {
 				displayedFoods.remove(selectedFood);
 				foodView.getItems().remove(selectedFood);
@@ -125,38 +129,94 @@ public class FoodForm extends Form
 		pane.addColumn(1, buttons);
 		pane.addColumn(2, allFields);
 
-
-
-		//        // Add the TextArea at position 2
-		//        pane.addColumn(2, logging);
-
 		// Set the Style-properties of the GridPane
 		pane.setPadding(new Insets(25,25,25,25));
 
 		layout.setCenter(pane);
 
-
 		// get buttons and set event handlers
-
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
-
+		
+		
+				
 		cancel.setOnAction((event) -> {
 			this.sc.switchToHome();
 		});
 
 		save.setOnAction((event) -> {
-
-
 			this.sc.replaceFoods(displayedFoods);
 			this.sc.switchToHome();
+		});
+		
+		/***************************popup section******************************/
+		GridPane popupPane = new GridPane();
+		/****************************set up popup buttons area***************************/
+		Label editLabel = new Label("Edit Food Item:");
+		Text namePopup = new Text("Name: ");
+		TextField input1 = new TextField();
+		Text weightPopup = new Text("Weight: ");
+		TextField input2 = new TextField();
+		Text prepTimePopup = new Text("Prep Time: ");
+		TextField input3 = new TextField();
+		HBox popupRow1 = new HBox();
+		popupRow1.setSpacing(10);
+		popupRow1.getChildren().addAll(namePopup,input1);	//adds buttons to vbox
+		popupRow1.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
+		HBox popupRow2 = new HBox();
+		popupRow2.setSpacing(10);
+		popupRow2.getChildren().addAll(weightPopup,input2);	//adds buttons to vbox
+		popupRow2.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
+		HBox popupRow3 = new HBox();
+		popupRow3.setSpacing(10);
+		popupRow3.getChildren().addAll(prepTimePopup,input3);	//adds buttons to vbox
+		popupRow3.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
+		
+		Button editSave = new Button("Save");
 
+		VBox popupFields = new VBox();
+		popupFields.setSpacing(10);
+		popupFields.getChildren().addAll(editLabel,popupRow1,popupRow2,popupRow3,editSave);
+		popupFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
+		/***************************end popup buttons area**************************/
+		popupPane.addColumn(0, popupFields);
+		Scene scene2 = new Scene(popupPane,200,200);
+		Stage popup = new Stage();
+		popup.setScene(scene2);
+		popup.initModality(Modality.APPLICATION_MODAL);
+		// Set the Style-properties of the GridPane
+		popupPane.setPadding(new Insets(0,25,25,25));
+		
+		//calls function to check if save edited stuff (if valid)
+		editSave.setOnAction(event->{
+			//if successfully edited
+			if(editSave(input1,input2,input3,foodView)) {
+				popup.close();
+			}
+			
+		});
+		
+		edit.setOnAction(event-> {
+			
+			FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
+			System.out.println("edit: " + selectedFood);
+			//if a food was selected, delete it
+			if (selectedFood != null) {
+				input1.setText(selectedFood.getName());
+				input2.setText("" + selectedFood.getWeight());
+				input3.setText("" + selectedFood.getPrepTime());
+				popup.showAndWait();
+			}
+			else {
+				System.out.println("Must select something to edit");
+			}
 		});
 	}
 
-	public void loadFoods(List<FoodItem> foods) {
+	public void loadFoods(List<FoodItem> foods, Drone d) {
 
+		this.drone = d;
 		// given a list of foods, load it into the form
 
 		ObservableList<FoodItem> foodList = FXCollections.<FoodItem>observableArrayList(foods);
@@ -188,6 +248,11 @@ public class FoodForm extends Form
 		}
 		try{
 			w = Double.parseDouble(weight);
+			//check if weight is under flight weight
+			if(w> drone.getCargoWeight()) {
+				errorFound = true;
+				System.out.println("the weight is too much for a drone");
+			}
 		}
 		//not a valid double for weight
 		catch(Exception e) {
@@ -221,6 +286,69 @@ public class FoodForm extends Form
 			inputWeight.setText("");
 			inputPrepTime.setText("");
 		}
+	}
+	
+	
+	public boolean editSave(TextField input1, TextField input2, 
+			TextField input3, ListView<FoodItem> foodView) {
+
+		FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
+		
+		boolean errorFound = false;
+		double time = 0;
+		double w = 0;
+		String name = input1.getText();
+		String weight = input2.getText();
+		String prepTime = input3.getText();
+
+		try{
+			time = Double.parseDouble(prepTime);
+		}
+		//not a valid double for preptime
+		catch(Exception e) {
+			errorFound = true;
+			System.out.println("Prep time was not a recognizable number.");
+			e.getMessage();
+		}
+		try{
+			w = Double.parseDouble(weight);
+			//check if weight is under flight weight
+			if(w> drone.getCargoWeight()) {
+				errorFound = true;
+				System.out.println("the weight is too much for a drone");
+			}
+		}
+		//not a valid double for weight
+		catch(Exception e) {
+			errorFound = true;
+			System.out.println("Weight was not a recognizable number.");
+			e.getMessage();
+		}
+		//empty name
+		if(name.isEmpty()) {
+			System.out.println("Name for a new food cannot be empty.");
+			errorFound = true;
+		}
+		//check if the food already exists (and isnt the food being edited)
+		for(FoodItem f : displayedFoods) {
+			if(name.toLowerCase().equals(f.toString().toLowerCase())
+					&& !(name.toLowerCase().equals(selectedFood.toString().toLowerCase()))) {
+				System.out.println("This food (" + name + ") already exists");
+				errorFound = true;
+			}
+		}
+		//if there were no errors
+		if(!errorFound){
+			FoodItem newFood = new FoodItem(name, w, time);
+			//display the edited food
+			foodView.getItems().remove(selectedFood);
+			foodView.getItems().add(newFood);
+			displayedFoods.remove(selectedFood);
+			displayedFoods.add(newFood);
+			System.out.println("successfully edited " + name);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
