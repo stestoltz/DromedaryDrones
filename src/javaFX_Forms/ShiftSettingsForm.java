@@ -64,7 +64,7 @@ public class ShiftSettingsForm extends Form {
 			// if form is valid
 			
 			//make shift contain form data
-				
+			
 			this.sc.replaceShift(shift);
 			this.sc.switchToHome();
 		});
