@@ -76,11 +76,23 @@ public class Location implements Serializable {
 		typical.put(burger, 1);
 		typical.put(fries, 1);
 		typical.put(drink, 1);
-		meals.add(new Meal(typical, 80));
+		meals.add(new Meal(typical, 55));
 		
-		HashMap<FoodItem, Integer> oneDrink = new HashMap<>();
-		oneDrink.put(drink, 1);
-		meals.add(new Meal(oneDrink, 20));
+		HashMap<FoodItem, Integer> meal2 = new HashMap<>();
+		meal2.put(burger, 2);
+		meal2.put(fries, 1);
+		meal2.put(drink, 1);
+		meals.add(new Meal(meal2, 10));
+		
+		HashMap<FoodItem, Integer> meal3 = new HashMap<>();
+		meal3.put(burger, 1);
+		meal3.put(fries, 1);
+		meals.add(new Meal(meal3, 20));
+		
+		HashMap<FoodItem, Integer> meal4 = new HashMap<>();
+		meal4.put(burger, 2);
+		meal4.put(fries, 1);
+		meals.add(new Meal(meal4, 15));
 
 		// create default drone and default shift details
 		this.drone = new Drone();
