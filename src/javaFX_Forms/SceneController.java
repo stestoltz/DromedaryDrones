@@ -249,10 +249,6 @@ public class SceneController {
 			switchToHome();
 		});
 		
-		save.setOnAction((event) -> {
-			//TODO: put saving the results here
-		});
-		
 		BorderPane bottom = new BorderPane();
 		bottom.setCenter(rerun);
 		bottom.setRight(returnHome);
