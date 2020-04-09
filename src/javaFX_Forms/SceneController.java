@@ -112,7 +112,7 @@ public class SceneController {
 	}
 	
 	public void switchToFood() {
-		foodForm.loadFoods(location.getFoods());
+		foodForm.loadFoods(location.getFoods(), location.getDrone());
 		stage.getScene().setRoot(getFoodLayout());
 	}
 	
@@ -247,10 +247,6 @@ public class SceneController {
 		
 		returnHome.setOnAction((event) -> {
 			switchToHome();
-		});
-		
-		save.setOnAction((event) -> {
-			//TODO: put saving the results here
 		});
 		
 		BorderPane bottom = new BorderPane();
