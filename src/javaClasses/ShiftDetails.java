@@ -67,13 +67,4 @@ public class ShiftDetails {
 	public void setOrdersPerHour(List<Integer> ordersPerHour) {
 		this.ordersPerHour = ordersPerHour;
 	}
-
-	/**
-	 * allow the user to change a number of orders in an hour in the shift
-	 * @param hour - the hour that is being changed
-	 * @param orders - the number of orders in that hour
-	 */
-	public void editOrderPerHour(int hour, int orders) {
-		
-	}
 }
