@@ -3,7 +3,6 @@ package javaFX_Forms;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -13,8 +12,6 @@ import javaClasses.Location;
 import javaClasses.Results;
 import javaClasses.RoutingAlgorithm;
 import javaClasses.Simulation;
-import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -24,7 +21,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -44,6 +40,12 @@ public class SimulationResultsForm extends Form {
 		});
 	}
 
+	/**
+	 * Runs a simulation for a given location and shows a graph of the results
+	 * @param location
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
 	public void runSimulation(Location location) throws Exception {
 		//run the simulation to get the results
 		Simulation sim = new Simulation(location);
@@ -154,6 +156,9 @@ public class SimulationResultsForm extends Form {
 
 	}
 
+	/**
+	 * Saves the results of the simulation as a CSV
+	 */
 	public void saveResults() {
 		if (simResults != null) {
 			

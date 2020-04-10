@@ -2,20 +2,7 @@ package javaFX_Forms;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
-import javaClasses.GreedyAlgorithm;
-import javaClasses.Location;
-import javaClasses.Results;
-import javaClasses.RoutingAlgorithm;
-import javaClasses.Simulation;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
