@@ -22,6 +22,11 @@ public class KnapsackPacking extends PackingAlgorithm {
 		this.skippedOrders = new ArrayList<>();
 	}
 	
+	/**
+	 * next order builds the next order
+	 * @param the time at which the drone wants to leave - only look at orders from before this time
+	 * @return the next order
+	 */
 	@Override
 	public List<Order> nextOrder(double time) {
 		//the array that holds the orders that are next
@@ -108,19 +113,7 @@ public class KnapsackPacking extends PackingAlgorithm {
 				ready.add(o);
 			}
 		}
-		/*//first order in the queue
-		Order o = shiftOrders.peek();
-		
-		Iterator<Order> itr = shiftOrders.iterator();
-		
-		//keep looking until the orders are after the time or the list is empty
-		while (itr.hasNext() && o.getOrderedTime() < time) {
-			//if the order is ready, add it to the list
-			if (o.getReadyTime() < time) {
-				ready.add(o);
-			}
-		}
-		*/
+
 		return ready;
 	}
 	

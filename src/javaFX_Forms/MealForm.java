@@ -146,10 +146,6 @@ public class MealForm extends Form
 		pane.addColumn(1, buttons);
 		pane.addColumn(2, foodSelection,addMeal);
 
-
-		//        // Add the TextArea at position 2
-		//        pane.addColumn(2, logging);
-
 		// Set the Style-properties of the GridPane
 		pane.setPadding(new Insets(25,25,25,25));
 

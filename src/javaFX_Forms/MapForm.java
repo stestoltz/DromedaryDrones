@@ -145,6 +145,10 @@ public class MapForm extends Form {
 		});
 	}
 	
+	/**
+	 * load a hashmap of delivery points into the ListView<HBox>
+	 * @param points
+	 */
 	public void loadPoints(Map<DeliveryPoint, Boolean> points) {
 		this.points = new ArrayList<>();
 		
@@ -168,6 +172,11 @@ public class MapForm extends Form {
 		}
 	}
 	
+	/**
+	 * Retrieve a DeliveryPoint from a given HBox
+	 * @param hbox
+	 * @return
+	 */
 	public DeliveryPoint getDeliveryPoint(HBox hbox) {
 		for (int i = 0; i < points.size(); i++) {
 			if (hbox == pointsView.getItems().get(i)) {
@@ -178,6 +187,11 @@ public class MapForm extends Form {
 		return null;
 	}
 	
+	/**
+	 * Retrieve an active value for a DeliveryPoint from a given HBox
+	 * @param hbox
+	 * @return
+	 */
 	public boolean getActive(HBox hbox) {
 		for (int i = 0; i < points.size(); i++) {
 			if (hbox == pointsView.getItems().get(i)) {

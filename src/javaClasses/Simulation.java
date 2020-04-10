@@ -1,18 +1,11 @@
 package javaClasses;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Queue;
 import java.util.Random;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 public class Simulation {
 
@@ -87,16 +80,8 @@ public class Simulation {
 					
 					packingAlgorithm = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone());
 				}
-	
-				/*
-				 * send orders queue to xml file
-				 * 
-				 * read orders queue from xml file
-				 * 
-				 */
 		
 				// process the orders into drone trips
-				
 		
 				// start at time of first order
 				double time = packingAlgorithm.nextOrderTime();
@@ -175,118 +160,6 @@ public class Simulation {
 			}
 		} //loop of hours in shift
 		return q;
-	}
-
-	/**
-	 * Given queue of orders, write to XML file
-	 * @return file path to XML file
-	 */
-	public String generateXML(Queue<Order> orders) {
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-	    //DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-	    //Document doc = docBuilder.newDocument();
-	    //Element rootElement = doc.createElement("Orders");
-	    
-	    
-		
-		//
-		return "";
-	}
-
-	/**
-	 * Given XML file, read to queue of orders
-	 * @param filePath path to XML file
-	 * @return queue of orders
-	 */
-	public Queue<Order> readXML(String filePath) {
-		//variable dictionary:
-		Queue<Order> orders = new LinkedList<>();//create the queue of orders to be returned
-		//variables for storing all data going into the orders queue
-		String name = "";
-		Meal meal4Order = null;
-		String meal = "";
-		double orderedTime = 0;
-		int xPoint = 0;
-		int yPoint = 0;
-		DeliveryPoint deliveryPoint = null;		
-		
-		//setup for reading xml file
-		XMLInputFactory factory = XMLInputFactory.newInstance();
-		XMLStreamReader streamReader = null;
-		
-		try {	//try to open the file if its there
-			streamReader = factory.createXMLStreamReader(new FileReader(filePath));
-		} 
-		//catch errors if they occur and inform user
-		catch (FileNotFoundException e) {
-			System.out.println("XML File could not be found");
-			e.printStackTrace();
-		} 
-		catch (XMLStreamException e) {
-			System.out.println("An XML stream error occured");
-			e.printStackTrace();
-		}
-
-		//try to parse through the xml for each of its values
-		try {
-			while (streamReader.hasNext()) {	//iterate through each xml element
-				int event = streamReader.next();
-				if(event == XMLStreamConstants.START_ELEMENT) {
-					if(streamReader.getLocalName().equals("Order")) {	//make sure its correct element
-						//get all the values in the element
-						
-						//x and y coordinates:
-						streamReader.nextTag();
-						xPoint = Integer.parseInt(streamReader.getElementText());
-						streamReader.nextTag();
-						yPoint = Integer.parseInt(streamReader.getElementText());
-
-						//name:
-						streamReader.nextTag();
-						name = streamReader.getElementText();
-
-						//meal:
-						streamReader.nextTag();
-						meal =streamReader.getElementText();
-
-						//timestamp: 
-						streamReader.nextTag();
-						orderedTime = Double.parseDouble(streamReader.getElementText());
-					}
-					
-			/*____here down cannot be tested since SimulationDetails isnt complete____*/
-					//get deliveryPoint object for order
-					for(DeliveryPoint d: 
-						location.getDeliveryPoints()) {
-						if(d.getX() == xPoint && d.getY() == yPoint) {
-							deliveryPoint = d;
-						}
-					}
-					//name is already good to go
-
-					//get meal object
-					for(Meal locElement: 
-						location.getMeals()) {
-						if(locElement.stringEquals(meal)) {
-							meal4Order = locElement;
-						}
-					}
-					//create order
-					Order order = new Order(name, meal4Order, orderedTime,
-							deliveryPoint);
-
-					//add order to queue
-					orders.add(order);
-				}
-			}
-		} catch (NumberFormatException e) {
-			System.out.println("Error converting XML data to appropriate variable types");
-			e.printStackTrace();
-		} catch (XMLStreamException e) {
-			System.out.println("An XML stream error occured");
-			e.printStackTrace();
-		}
-		return orders;
 	}
 
 	/**

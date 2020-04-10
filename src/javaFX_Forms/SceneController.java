@@ -73,6 +73,10 @@ public class SceneController {
 		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt", "*.txt"));
 	}
 	
+	// each form has a getLayout() method to get its layout,
+	//  a switchTo method to switch forms to it,
+	//  and a replace(object) method to replace its data in Location
+	
 	public BorderPane getHomeLayout() {
 		return homeForm.getLayout();
 	}
@@ -100,6 +104,8 @@ public class SceneController {
 	public BorderPane getResultsLayout() {
 		return resultsForm.getLayout();
 	}
+	
+	
 	public void switchToHome() {
 		stage.getScene().setRoot(getHomeLayout());
 	}
@@ -128,6 +134,7 @@ public class SceneController {
 		shiftForm.loadShift(location.getShiftDetails());
 		stage.getScene().setRoot(getShiftLayout());
 	}
+	
 	public void switchToResults() {
 		try {
 			resultsForm.runSimulation(location);
@@ -136,6 +143,7 @@ public class SceneController {
 			System.out.println("Results list was empty");
 		}
 	}
+	
 	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
@@ -156,6 +164,7 @@ public class SceneController {
 	public void replaceShift(ShiftDetails shift) {
 		this.location.setShiftDetails(shift);
 	}
+	
 	
 	/**
 	 * builds a settings border pane
@@ -288,9 +297,7 @@ public class SceneController {
 		
 		return layout;
 		
-	}
-
-	
+	}	
 	
 	/**
 	 * this method lets the user upload a file to change the location object

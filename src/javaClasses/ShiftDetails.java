@@ -20,7 +20,6 @@ public class ShiftDetails implements Serializable {
 		this.ordersPerHour.add(17);
 		this.ordersPerHour.add(22);
 		this.ordersPerHour.add(15);
-		//this.ordersPerHour = new int[] {200, 200, 200, 200};
 	}
 	
 	/**

@@ -75,11 +75,10 @@ public class DroneForm extends Form {
 
 	}
 
-	@Override
-	public BorderPane getLayout() {
-		return layout;
-	}
-
+	/**
+	 * load drone data d into the drone form
+	 * @param d
+	 */
 	public void loadDrone(Drone d) {
 		txtCargoWeight.setText(Double.toString(d.getCargoWeight()));
 		txtCruisingSpeed.setText(Double.toString(d.getAverageCruisingSpeed()));
@@ -88,6 +87,10 @@ public class DroneForm extends Form {
 		txtDeliveryTime.setText(Double.toString(d.getDeliveryTime()));
 	}
 
+	/**
+	 * return a Drone containing the data in the form
+	 * @return null if data is missing or invalid
+	 */
 	public Drone getFormData() {
 
 		try {
