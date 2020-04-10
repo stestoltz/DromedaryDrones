@@ -62,8 +62,24 @@ public class SimulationResultsForm extends Form {
 		LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
 		lineChart.setTitle("Simulation Results");
-
+		
+		// largest time should be the same for both algorithm so that buckets line up
+		double largestTime = 0;
 		for (Results r : simResults) {
+			List<Double> times = r.getTimes();
+
+			Collections.sort(times);
+			
+			if (times.get(times.size() - 1) > largestTime) {
+				largestTime = times.get(times.size() - 1);
+			}
+			
+		}
+
+		for (int index = 0; index < simResults.length; index++) {
+			
+			Results r = simResults[index];
+			
 			Series<Number, Number> series = new XYChart.Series<>();
 
 			int numBuckets = 25;
@@ -72,9 +88,8 @@ public class SimulationResultsForm extends Form {
 
 			List<Double> times = r.getTimes();
 
+			// sort times so that bucketing is easier
 			Collections.sort(times);
-
-			double largestTime = times.get(times.size() - 1);
 
 			for (int i = 0; i <= numBuckets; i++) {
 				buckets[i] = i * (largestTime / numBuckets);
@@ -104,6 +119,12 @@ public class SimulationResultsForm extends Form {
 
 			for (int i = 0; i < numBuckets; i++) {
 				series.getData().add(new XYChart.Data<Number, Number>((buckets[i] + buckets[i + 1]) / 2, ((double)counts[i] / times.size()) * 100));
+			}
+			
+			if (index == 0) {
+				series.setName("FIFO");
+			} else if (index == 1) {
+				series.setName("Knapsack");
 			}
 
 			lineChart.getData().addAll(series);

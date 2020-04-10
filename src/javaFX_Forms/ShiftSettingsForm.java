@@ -110,6 +110,11 @@ public class ShiftSettingsForm extends Form {
 
 	public void loadShift(ShiftDetails shiftDetails) {
 		
+		// if hours > length of list, fill with empty slots
+		while (shiftDetails.getHoursInShift() > shiftDetails.getOrdersPerHour().size()) {
+			shiftDetails.getOrdersPerHour().add(0);
+		}
+		
 		ArrayList<HBox> orderElements = new ArrayList();
 		
 		for(int i = 0; i < shiftDetails.getHoursInShift(); i++) {
