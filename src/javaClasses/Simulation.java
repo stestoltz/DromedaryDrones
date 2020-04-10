@@ -68,7 +68,6 @@ public class Simulation {
 		}
 		
 		// for each packing algorithm
-		//for (int p = 0; p < packingAlgorithms.length; p++) {
 		for (int p = 0; p < 2; p++) {
 		
 			// create results[] for each shift's results
@@ -98,8 +97,6 @@ public class Simulation {
 		
 				// process the orders into drone trips
 				
-				
-				//DroneTrip[] trips = processOrders(orders, routingAlgorithm);
 		
 				// start at time of first order
 				double time = packingAlgorithm.nextOrderTime();
@@ -300,8 +297,6 @@ public class Simulation {
 	 * @return the amount of time the drone was away from home
 	 */
 	public double processTrip(DroneTrip trip, double startTime) {
-		
-		// DOES NOT TAKING INTO ACCOUNT SAME LOCATION
 		
 		double time = startTime;
 		
