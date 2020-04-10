@@ -40,6 +40,11 @@ public class MealForm extends Form
 
 	private Button edit;
 
+	/**
+	 * Constructor that creates the Meal form from the data used in the simulation
+	 * @param sc the SceneController that calls different scenes to be used
+	 * @param layout the BorderPane that is set up to hold the meal form
+	 */
 	public MealForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
 
@@ -175,7 +180,9 @@ public class MealForm extends Form
 	}
 
 
-
+/**
+ * Method that handles adding a new meal to the simulation
+ */
 	public void addingEvent() {
 		HashMap<FoodItem,Integer> foodList = new HashMap<>();	//stores foods being added
 		double mealWeight = 0.0;	//total weight for the meal
@@ -306,6 +313,15 @@ public class MealForm extends Form
 		return true;
 	}
 
+	/**
+	 * Method that grabs the meals from the simulation
+	 	* and adds them to the meal form. Also does the setup
+	 	* and functionality for the popup to edit the meals
+	 * @param meals a List of Meals that is used to set up the meal list
+	 * @param foods a List of FoodItem that is used to set up the food list
+	 * @param d a Drone that is used to determine how much food is allowed
+	 	* on the drone to keep it under the maximum weight allowed
+	 */
 	public void loadMeals(List<Meal> meals, List<FoodItem> foods, Drone d) {
 
 		this.meals = meals;
@@ -417,6 +433,8 @@ public class MealForm extends Form
 
 		});
 
+		//if user clicks on the edit button brings up a popup window where they
+		//can change the number of items in a Meal that already exists
 		edit.setOnAction(event-> {
 
 			HBox selectedBox = (HBox) mealView.getSelectionModel().getSelectedItem();
@@ -425,6 +443,8 @@ public class MealForm extends Form
 				Text temp = (Text)(selectedBox.getChildren().get(0));
 				String meal = temp.getText();
 
+				//Loops through the meals and foods to grab the quantity of how many foodItems
+				// are in a certain meal and auto populates the edit meal list with these values
 				for(Meal m : meals) {
 					if(m.toString().equals(meal)) {
 						selectedMeal = m;
@@ -455,6 +475,13 @@ public class MealForm extends Form
 
 		});
 	}
+	/**
+	 * Method that lets the user edit whatever they
+	 * changed and add it into the simulation
+	 * @param popupList ListView of HBox's that are the foods
+	 * that are being displayed in the popup
+	 * @return foundFood if the food was successfully edited
+	 */
 	public boolean editEvent(ListView<HBox> popupList) {
 		HashMap<FoodItem,Integer> foodList = new HashMap<>();	//stores foods being added
 		double mealWeight = 0.0;	//total weight for the meal
@@ -462,10 +489,11 @@ public class MealForm extends Form
 		double percentage = 0.0;	//store the percent
 		HBox selectedMeal = (HBox) mealView.getSelectionModel().getSelectedItem();
 
-		Text tempMealText = (Text)(selectedMeal.getChildren().get(0));
-		String mealString = tempMealText.getText();
+		Text tempMealText = (Text)(selectedMeal.getChildren().get(0));  
+		String mealString = tempMealText.getText();  //selected meal as a string
 
 
+		//attempts to get the percentage that was in the HBox
 		try {
 			TextField temp = (TextField)(selectedMeal.getChildren().get(1));
 			percentage = Double.parseDouble(temp.getText());	//gets the percentage
@@ -495,7 +523,7 @@ public class MealForm extends Form
 						}
 					}
 				}
-				//not a valid integer for preptime
+				//user entered invalid input
 				catch(Exception e) {
 					foundFood = false;
 					System.out.println("The value " + stringNum +" cannot be used as a integer.");
@@ -509,7 +537,10 @@ public class MealForm extends Form
 		else if (mealWeight > drone.getCargoWeight()) {
 			System.out.println("The meal being created is weighs too much");
 		}
+		
+		//if there were no errors
 		else {
+			//variables for checking for duplicates
 			boolean mealSuccess = false;
 			Meal m = new Meal(foodList, 0);
 			String[] tempM = m.toString().split(" ");
@@ -523,8 +554,11 @@ public class MealForm extends Form
 				String[] tempMeal = temp.getText().split(" ");
 				List<String> meal = Arrays.asList(tempMeal);
 				Collections.sort(meal);	//sorts the new list
+				
+				//checks the size of the current meal with every meal in the list
 				if(meal.size() == tempNewList.size()) {
 					for(int i = 0; i<meal.size(); i++) {
+						//if they are not the same meal
 						if(!meal.get(i).equals(tempNewList.get(i))) {
 							mealSuccess = true;
 						}
@@ -538,7 +572,7 @@ public class MealForm extends Form
 					mealSuccess = true;
 				}
 			}
-			//create meal
+			//create meal - since no errors and no duplicates
 			if(mealSuccess){
 				//add new meal to display
 				TextField inputVal = new TextField(""+percentage);	//creates the textField
@@ -555,12 +589,14 @@ public class MealForm extends Form
 				String[] tempMeal = mealString.split(" ");
 				List<String> listedMeal = Arrays.asList(tempMeal);
 				Collections.sort(listedMeal);	//sorts the new list
+				
 				//removes the selected meal
 				for(Meal meal : meals) {
 					boolean mealFound = true;
 					String[] tempMealArr = meal.toString().split(" ");
 					List<String> mealList = Arrays.asList(tempMealArr);
 					Collections.sort(mealList);	//sorts the new list
+					
 					if(mealList.size() == listedMeal.size()) {
 						for(int i = 0; i<mealList.size(); i++) {
 							if(!mealList.get(i).equals(listedMeal.get(i))) {
