@@ -452,13 +452,20 @@ public class MealForm extends Form
 							Text foodText = ((Text)fBox.getChildren().get(0));
 							TextField foodField = ((TextField)fBox.getChildren().get(1));
 							if(meal.contains(foodText.getText())) {
+								boolean found = false;
 								for(HashMap.Entry<FoodItem, Integer> food : m.getMeal().entrySet()) {
 									FoodItem key = food.getKey();
 									int value = food.getValue();
 									if(key.toString().equals(foodText.getText())) {
 										foodField.setText("" + value);
+										found = true;
 									}
 								}
+								if (!found) {
+									foodField.setText("0");
+								}
+							} else {
+								foodField.setText("0");
 							}
 						}
 						break;

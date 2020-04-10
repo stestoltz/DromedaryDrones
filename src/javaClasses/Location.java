@@ -215,109 +215,86 @@ public class Location implements Serializable {
 	
 	/*-------------------- End DeliveryPoint/ basic Location stuff ------------------------*/
 	
+	/**
+	 * 
+	 * @returns - the list of meals available 
+	 * for this location's simulation (as a copy)
+	 */
 	public List<Meal> getMeals() {
+		//creates a copy
 		List<Meal> mealsCopy = new ArrayList<Meal>();
 		
+		//copies the meals list
 		for (Meal m : meals) {
 			mealsCopy.add(new Meal(m));
 		}
 		
-		return mealsCopy;
+		return mealsCopy;	//returns the copy
 	}
 	
+	/**
+	 * 
+	 * @param meals - sets the this.meals list to the given meals list
+	 */
 	public void setMeals(List<Meal> meals) {
 		this.meals = meals;
 	}
 	
+	/**
+	 * 
+	 * @returns - this's drone object
+	 */
 	public Drone getDrone() {
 		return drone;
 	}
 	
+	/**
+	 * 
+	 * @param drone - sets the drone object of this to the given drone
+	 */
 	public void setDrone(Drone drone) {
 		this.drone = drone;
 	}
 	
+	/**
+	 * 
+	 * @returns - the list of foods available (for this location's simulation) - as a copy
+	 */
 	public List<FoodItem> getFoods(){
+		//makes a list for a copy
 		List<FoodItem> foodsCopy = new ArrayList<FoodItem>();
 		
+		//copies the foods from the list
 		for (FoodItem f : foods) {
 			foodsCopy.add(new FoodItem(f));
 		}
-		return foodsCopy;
+		return foodsCopy;	//returns the copy
 	}
 	
+	/**
+	 * 
+	 * @param foods - sets the list of foods in this to the given food list
+	 */
 	public void setFoods(List<FoodItem> foods){
 		this.foods = foods;
 	}
 	
+	/**
+	 * 
+	 * @returns - the shift details object (as a copy)
+	 */
 	public ShiftDetails getShiftDetails() {
 		return new ShiftDetails(shiftDetails);
 	}
 	
+	/**
+	 * 
+	 * @param shiftDetails - sets the shift details object of this to the given shift details object
+	 */
 	public void setShiftDetails(ShiftDetails shiftDetails) {
 		this.shiftDetails = shiftDetails;
 	}
 	
-	/**
-	 * add a food to the arraylist
-	 * @param food to be added
-	 * @return - a boolean to alert form if it was added or not
-	 */
-	/*public boolean addFood(FoodItem f) {
-		for(FoodItem food : foods) {
-			if(f.toString().equals(food.toString())) {
-				System.out.println("There is already a food with that name");
-				return false;
-			}
-		}
-		foods.add(f);
-		return true;
-	}*/
-	
-	/**
-	 * delete a food from the arraylist
-	 * @param food to be deleted
-	 */
-	/*public void deleteFood(FoodItem f) {
-		//if I am checking a food to be equal to another does this work? 
-		//or would they be different references
-		for(int i = 0; i<foods.size(); i++) {
-			if (foods.get(i)==f) {
-				foods.remove(i);
-			}
-		}
-	}*/
-	
-	
-	/**
-	 * add a meal to the arraylist
-	 * @param m meal to be added
-	 * @return - a boolean to tell the fx form not to display the meal
-	 */
-	/*public boolean addMeal(Meal m) {
-		for(Meal meal : meals) {
-			if(m.toString().equals(meal.toString())) {
-				System.out.println("This is already a meal");
-				return false;
-			}
-		}
-		meals.add(m);
-		return true;
-	}*/
-	
-	/**
-	 * delete a meal from the arraylist
-	 * @param m meal to delete
-	 */
-	/*public void deleteMeal(Meal m) {
-		//if I am checking a meal to be equal to another does this work? 
-		//or would they be different references
-		for(int i = 0; i<meals.size(); i++) {
-			if (meals.get(i)==m) {
-				meals.remove(i);
-			}
-		}
-	}*/
 	
 	/**
 	 * returns a random meal from the arraylist based off percentages
@@ -332,14 +309,13 @@ public class Location implements Serializable {
 		Random rand = new Random();
 		int index = rand.nextInt(100);
 		//converts index to a double (between 0 and 1)
-		indexDecimal = index/100;
 		
 		//goes through list of meals
 		for(Meal m : meals) {
 			//sets upper bound val to the lowerbound + the meals percent chance
 			upperBound = lowerBound + m.getPercentage();
 			//checks if the random double was in the range for this meal
-			if(indexDecimal>=lowerBound && indexDecimal<upperBound) {
+			if(index>=lowerBound && index<upperBound) {
 				return m;
 			}
 			//sets lowerBound to upperBound for next iteration through loop
