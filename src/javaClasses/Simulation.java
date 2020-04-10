@@ -1,16 +1,13 @@
 package javaClasses;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Queue;
 import java.util.Random;
 
-import javax.lang.model.element.Element;
-import javax.swing.text.Document;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -154,25 +151,32 @@ public class Simulation {
 	 * @param packingAlgorithm the packing algorithm to use
 	 * @return the queue
 	 */
-	//NEEDS TO BE FIXED: to put orders in the hour randomly, not evenly spaced out
 	public Queue<Order> generateOrders() {
 		Queue<Order> q = new LinkedList<Order>();
-		double timeStamp, timeIncrease;
+		double timeStart, timeIncrease;
+		Random rand = new Random();
 		//generate orders for each hour of the shift
 		for (int i=0; i<location.getShiftDetails().getHoursInShift(); i++) {
 			int numOrders = location.getShiftDetails().getOrdersPerHour().get(i);
-			timeStamp = i*3600;
-			timeIncrease = 3600/numOrders;
+			//the staring time at the beginning of the hour
+			timeStart = i*3600;
 			
-			//generate the number of orders for that order
+			ArrayList<Double> times = new ArrayList<Double>();
+			
+			//generate the time stamps for the orders for the hour
 			for (int j=0; j<numOrders; j++) {
-				//calculate the timestamp for the order
-				timeStamp += timeIncrease;
-			
-				//add the order to the queue
-				q.add(generateOrder(timeStamp));
+				timeIncrease = rand.nextInt(3600);
+				times.add(timeStart + timeIncrease);
 			}
-		}
+			
+			//sort the times
+			Collections.sort(times);
+			
+			//put all of the new orders with times in the full q
+			for (double t : times) {
+				q.add(generateOrder(t));
+			}
+		} //loop of hours in shift
 		return q;
 	}
 
