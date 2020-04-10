@@ -1,6 +1,10 @@
 package javaClasses;
 
-public class FoodItem {
+import java.io.Serializable;
+
+public class FoodItem implements Serializable { 
+
+	private static final long serialVersionUID = 13456L;
 	
 	// variables
 	private double weight;	//weight of food

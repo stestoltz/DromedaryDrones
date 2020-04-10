@@ -1,6 +1,10 @@
 package javaClasses;
 
-public class Drone {
+import java.io.Serializable;
+
+public class Drone implements Serializable {
+	
+	private static final long serialVersionUID = 13456L;
 	
 	private double cargoWeight; /* default: 12 lbs */
 	private double averageCruisingSpeed; /* default: 20 miles per hour */

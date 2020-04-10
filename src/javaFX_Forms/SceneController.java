@@ -185,18 +185,18 @@ public class SceneController {
 		Button startSimulation = new Button("Start Simulation");
 		Label loc = new Label("Location: " + location.getName());
 		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
-		Button changeLocation = new Button("Change Location");
+		Button uploadLocation = new Button("Upload Location");
 		Button saveLocation = new Button("Save Location");
 		HBox editLocation = new HBox();
 		editLocation.setSpacing(10);
-		editLocation.getChildren().addAll(changeLocation, saveLocation);
+		editLocation.getChildren().addAll(uploadLocation, saveLocation);
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setCenter(startSimulation);
 		bottom.setLeft(loc);
 		bottom.setRight(editLocation);
 		
-		changeLocation.setOnAction((event) -> {
+		uploadLocation.setOnAction((event) -> {
 			changeLocation();
 		});
 		
@@ -303,11 +303,15 @@ public class SceneController {
 		
 		if (file != null) {
 			try {
-			FileInputStream filein = new FileInputStream(file.getAbsolutePath());
-			ObjectInputStream objectIn = new ObjectInputStream(filein);
+			FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
+			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 			
 			Object obj = objectIn.readObject();
 			location = (Location) obj;
+			
+			//close streams
+			fileIn.close();
+			objectIn.close();
 			
 			objectIn.close();
 			} catch (Exception ex) {
@@ -330,7 +334,10 @@ public class SceneController {
 				FileOutputStream fileOut = new FileOutputStream(filepath);
 				ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
 				objectOut.writeObject(location);
+				
+				//close files
 				objectOut.close();
+				fileOut.close();
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
