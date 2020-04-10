@@ -105,8 +105,8 @@ public class Meal implements Serializable {
 	public double getMealWeight() {
 		double ret = 0;	//sums all of the foods' weight
 		for (HashMap.Entry<FoodItem,Integer> element : meal.entrySet()) { 
-			//gets individual food's weight
-			ret +=  (element.getKey()).getWeight();
+			//gets individual food's weight * quantity of that item in the meal
+			ret +=  (element.getKey()).getWeight() * element.getValue();
 		}
 		return ret;
 	}
