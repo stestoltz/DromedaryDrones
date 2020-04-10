@@ -4,6 +4,7 @@ import java.util.List;
 
 public class BacktrackingSearch implements RoutingAlgorithm {
 	
+	//global variables for storing the current best distance and route
 	double bestDistance;
 	List<Order> bestRoute;
 
@@ -23,6 +24,14 @@ public class BacktrackingSearch implements RoutingAlgorithm {
 		return new DroneTrip(bestRoute.toArray(new Order[bestRoute.size()]));
 	}
 	
+	/**
+	 * 
+	 * @param ordersLeft - the orders that still need to be traversed
+	 * @param route - the route of the drone
+	 * @param current - current delivery point
+	 * @param distance - the distance traveled
+	 * @param home - the 0,0 point (ex: the sac)
+	 */
 	public void backtrack(List<Order> ordersLeft, List<Order> route, DeliveryPoint current, double distance, DeliveryPoint home) {
 		
 		// prune if we've already exceeded our target
@@ -57,13 +66,18 @@ public class BacktrackingSearch implements RoutingAlgorithm {
 		}
 	}
 	
+	/**
+	 * method for updating the best route available
+	 * @param distance - total distance of a given path
+	 * @param route - the list of orders for the current route
+	 */
 	public void updateBestRoute(double distance, List<Order> route) {
 		
+		//if the distance of the given path is shorter than the current best path
 		if (distance < bestDistance) {
+			//change the new best route to the shorter distance route
 			bestDistance = distance;
 			bestRoute = new ArrayList<>(route);
 		}
-		
 	}
-
 }
