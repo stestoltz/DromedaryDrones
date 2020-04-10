@@ -9,8 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javafx.stage.FileChooser;
 
 import javaClasses.DeliveryPoint;
 import javaClasses.Drone;
@@ -46,7 +45,7 @@ public class SceneController {
 	private MapForm mapForm;
 	private SimulationResultsForm resultsForm;
 	
-	private JFileChooser chooser;
+	private FileChooser chooser;
 	
 	public SceneController(Stage stage) throws Exception {
 		location = new Location("Grove City", "SAC");
@@ -65,9 +64,8 @@ public class SceneController {
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
 		
-		chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("text", "txt");
-		chooser.setFileFilter(filter);
+		chooser = new FileChooser();
+		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt", "*.txt"));
 	}
 	
 	public BorderPane getHomeLayout() {
@@ -279,13 +277,12 @@ public class SceneController {
 	 * @throws FileNotFoundException 
 	 */
 	private void changeLocation() {
-		chooser.setDialogTitle("Choose Location File");
-		int value = chooser.showOpenDialog(null);
+		chooser.setTitle("Choose Location File");
+		File file = chooser.showOpenDialog(null);
 		
-		if (value == JFileChooser.APPROVE_OPTION) {
+		if (file != null) {
 			try {
-			File selectedFile = chooser.getSelectedFile();
-			FileInputStream filein = new FileInputStream(selectedFile.getAbsolutePath());
+			FileInputStream filein = new FileInputStream(file.getAbsolutePath());
 			ObjectInputStream objectIn = new ObjectInputStream(filein);
 			
 			Object obj = objectIn.readObject();
@@ -303,11 +300,11 @@ public class SceneController {
 	 * this method saves the location to an object file
 	 */
 	private void saveLocation() {
-		chooser.setDialogTitle("Choose a Save Location");
-		int value = chooser.showSaveDialog(null);
+		chooser.setTitle("Choose a Save Location");
+		File saveFile = chooser.showSaveDialog(stage);
 
-		if (value == JFileChooser.APPROVE_OPTION) {
-			String filepath = chooser.getSelectedFile().getAbsolutePath();
+		if (saveFile != null) {
+			String filepath = saveFile.getAbsolutePath();
 			try {
 				FileOutputStream fileOut = new FileOutputStream(filepath);
 				ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
