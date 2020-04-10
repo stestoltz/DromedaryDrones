@@ -64,9 +64,22 @@ public class ShiftSettingsForm extends Form {
 			// if form is valid
 			
 			//make shift contain form data
-				
-			this.sc.replaceShift(shift);
-			this.sc.switchToHome();
+			try {
+				shift.setNumberOfShifts(Integer.parseInt(numShiftsField.getText()));
+				shift.setHoursInShift(Integer.parseInt(hrsinShiftField.getText()));
+				List<Integer> editOrderPerHour = new ArrayList<Integer>();
+				for(HBox o : order.getItems()) {
+					TextField inputVal = (TextField)o.getChildren().get(1);
+					editOrderPerHour.add(Integer.parseInt(inputVal.getText()));
+				}
+				shift.setOrdersPerHour(editOrderPerHour);
+				this.sc.replaceShift(shift);
+				this.sc.switchToHome();
+			}
+			
+			catch(Exception e) {
+				System.out.println("Not a valid integer input");
+			}
 		});
 		
 		//Labels

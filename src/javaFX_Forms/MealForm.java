@@ -22,6 +22,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
 import javafx.scene.control.Button; 
 
 public class MealForm extends Form
@@ -34,6 +37,8 @@ public class MealForm extends Form
 	private ListView<HBox> mealView;
 
 	private Drone drone;
+
+	private Button edit;
 
 	public MealForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
@@ -78,7 +83,7 @@ public class MealForm extends Form
 
 		/****************************set up edit list buttons***************************/
 		// create a button 
-		Button edit = new Button("Edit"); 
+		edit = new Button("Edit"); 
 		Button delete = new Button("Delete");
 
 		//button section on gui
@@ -97,7 +102,7 @@ public class MealForm extends Form
 		//need to check for duplicates
 		//need to refresh the list
 		addMeal.setOnAction(event-> {
-			addingEvent(foodView,mealView);
+			addingEvent();
 		});
 
 		delete.setOnAction((event) -> {
@@ -123,9 +128,7 @@ public class MealForm extends Form
 			}
 		});
 
-		edit.setOnAction((event) -> {
-			System.out.println("edit food");
-		});
+
 		/***************************finished add area**************************/
 
 		// Create the GridPane
@@ -166,9 +169,14 @@ public class MealForm extends Form
 				this.sc.switchToHome();
 			}
 		});
+
+		/***************************popup section******************************/
+
 	}
 
-	public void addingEvent(ListView<HBox> foodView, ListView<HBox> mealView) {
+
+
+	public void addingEvent() {
 		HashMap<FoodItem,Integer> foodList = new HashMap<>();	//stores foods being added
 		double mealWeight = 0.0;	//total weight for the meal
 		boolean foundFood = false;	//if food was found or not
@@ -215,7 +223,7 @@ public class MealForm extends Form
 			String[] tempM = m.toString().split(" ");
 			List<String> tempNewList = Arrays.asList(tempM);
 			Collections.sort(tempNewList);	//sorts the new list
-						
+
 			//check if potential new meal doesnt already exist
 			for(HBox hbox : mealView.getItems()) {	//loop through all the foods
 				mealSuccess = false;
@@ -252,7 +260,6 @@ public class MealForm extends Form
 				System.out.println("meal added!");
 			}
 		}
-		//should alert user and/or clear out textboxes
 	}
 
 	/**
@@ -355,6 +362,223 @@ public class MealForm extends Form
 
 
 		/****************************finished meal list***************************/
-	}
+		GridPane popupPane = new GridPane();
+		/****************************set up popup buttons area***************************/
+		ListView<HBox> popupList = new ListView<HBox>();
+		Label editMeal = new Label("Edit Meal");
+		//creates arraylist to store all hboxes going into the listview
+		ArrayList<HBox> foodElem = new ArrayList<>();
+		for(int i=0; i<foods.size(); i++) {
+			TextField inputVal = new TextField();	//creates the textField
 
+			HBox hbox = new HBox();
+			//gets the food item as text
+			Text temp = new Text(foods.get(i).toString());
+			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
+			foodElem.add(hbox);	//adds the hbox to the arraylist
+			hbox.setPrefWidth(20);
+		}
+
+
+		//makes the arraylist of hboxes an observable list
+		ObservableList<HBox>ListOfFoods  = FXCollections.<HBox>observableArrayList(foodElem);
+
+		// fill the food ListView
+
+		popupList.getItems().clear();
+		popupList.getItems().addAll(ListOfFoods);
+
+		/****************************finished food list***************************/	//above,right,below,left
+
+		Button editSave = new Button("Save");
+
+		VBox popupFields = new VBox();
+		popupFields.setSpacing(10);
+		popupFields.getChildren().addAll(editMeal, popupList, editSave);
+		popupFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
+		/***************************end popup buttons area**************************/
+		popupPane.addColumn(0, popupFields);
+		Scene scene2 = new Scene(popupPane,200,200);
+		Stage popup = new Stage();
+		popup.setScene(scene2);
+		popup.initModality(Modality.APPLICATION_MODAL);
+		// Set the Style-properties of the GridPane
+		popupPane.setPadding(new Insets(0,25,25,25));
+
+		//calls function to check if save edited stuff (if valid)
+		editSave.setOnAction(event->{
+			//if successfully edited
+			if(editEvent(popupList)) {
+				popup.close();
+			}
+			else {
+				System.out.println("Could not save the edit made");
+			}
+
+		});
+
+		edit.setOnAction(event-> {
+
+			HBox selectedBox = (HBox) mealView.getSelectionModel().getSelectedItem();
+			Meal selectedMeal = null;
+			try {
+				Text temp = (Text)(selectedBox.getChildren().get(0));
+				String meal = temp.getText();
+
+				for(Meal m : meals) {
+					if(m.toString().equals(meal)) {
+						selectedMeal = m;
+						for(HBox fBox : foodElem) {
+							Text foodText = ((Text)fBox.getChildren().get(0));
+							TextField foodField = ((TextField)fBox.getChildren().get(1));
+							if(meal.contains(foodText.getText())) {
+								for(HashMap.Entry<FoodItem, Integer> food : m.getMeal().entrySet()) {
+									FoodItem key = food.getKey();
+									int value = food.getValue();
+									if(key.toString().equals(foodText.getText())) {
+										foodField.setText("" + value);
+									}
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+			catch(NullPointerException e) {
+				System.out.println("no meal selected");
+			}
+			if (selectedMeal != null) {
+				System.out.println("edit: " + selectedMeal);
+				popup.showAndWait();
+			}
+
+		});
+	}
+	public boolean editEvent(ListView<HBox> popupList) {
+		HashMap<FoodItem,Integer> foodList = new HashMap<>();	//stores foods being added
+		double mealWeight = 0.0;	//total weight for the meal
+		boolean foundFood = false;	//if food was found or not
+		double percentage = 0.0;	//store the percent
+		HBox selectedMeal = (HBox) mealView.getSelectionModel().getSelectedItem();
+
+		Text tempMealText = (Text)(selectedMeal.getChildren().get(0));
+		String mealString = tempMealText.getText();
+
+
+		try {
+			TextField temp = (TextField)(selectedMeal.getChildren().get(1));
+			percentage = Double.parseDouble(temp.getText());	//gets the percentage
+
+		}catch(Exception e) {
+			System.out.println("Could not get the percentage");
+		}
+
+		for(HBox hbox : popupList.getItems()) {	//loop through all the foods
+
+			Text temp = (Text)(hbox.getChildren().get(0));
+			String food = temp.getText();	//gets the food
+
+			TextField temp2 = (TextField)(hbox.getChildren().get(1));
+			String stringNum = temp2.getText();	//gets the user's text
+
+			if (!stringNum.equals("") && !stringNum.equals("0")) {
+				foundFood = true;
+				try{
+					int foodCount = Integer.parseInt(stringNum);	//convert to integer
+					//loop through foods and add food matching the food string
+					for(FoodItem f : foods) {
+						if (f.toString().equals(food)) {
+							foodList.put(f, foodCount);
+							mealWeight += foodCount * f.getWeight();
+							break;
+						}
+					}
+				}
+				//not a valid integer for preptime
+				catch(Exception e) {
+					foundFood = false;
+					System.out.println("The value " + stringNum +" cannot be used as a integer.");
+					e.getMessage();
+				}
+			}
+		}
+		if(!foundFood) {
+			System.out.println("Could not find any foods to make a meal");
+		}
+		else if (mealWeight > drone.getCargoWeight()) {
+			System.out.println("The meal being created is weighs too much");
+		}
+		else {
+			boolean mealSuccess = false;
+			Meal m = new Meal(foodList, 0);
+			String[] tempM = m.toString().split(" ");
+			List<String> tempNewList = Arrays.asList(tempM);
+			Collections.sort(tempNewList);	//sorts the new list
+
+			//check if potential new meal doesnt already exist
+			for(HBox hbox : mealView.getItems()) {	//loop through all the meals
+				mealSuccess = false;
+				Text temp = (Text)(hbox.getChildren().get(0));
+				String[] tempMeal = temp.getText().split(" ");
+				List<String> meal = Arrays.asList(tempMeal);
+				Collections.sort(meal);	//sorts the new list
+				if(meal.size() == tempNewList.size()) {
+					for(int i = 0; i<meal.size(); i++) {
+						if(!meal.get(i).equals(tempNewList.get(i))) {
+							mealSuccess = true;
+						}
+					}
+					if(mealSuccess == false) {
+						System.out.println("This meal already exists");
+						break;
+					}
+				}
+				else {
+					mealSuccess = true;
+				}
+			}
+			//create meal
+			if(mealSuccess){
+				//add new meal to display
+				TextField inputVal = new TextField(""+percentage);	//creates the textField
+				HBox hbox = new HBox();
+				//gets the food item as text
+				Text temp = new Text(m.toString());
+				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
+				mealView.getItems().remove(selectedMeal);
+				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
+				hbox.setPrefWidth(20);
+				m.setPercentage(percentage);
+
+				//alphabetizes the selected meal and the each meal in the list of meals and compares them 
+				String[] tempMeal = mealString.split(" ");
+				List<String> listedMeal = Arrays.asList(tempMeal);
+				Collections.sort(listedMeal);	//sorts the new list
+				//removes the selected meal
+				for(Meal meal : meals) {
+					boolean mealFound = true;
+					String[] tempMealArr = meal.toString().split(" ");
+					List<String> mealList = Arrays.asList(tempMealArr);
+					Collections.sort(mealList);	//sorts the new list
+					if(mealList.size() == listedMeal.size()) {
+						for(int i = 0; i<mealList.size(); i++) {
+							if(!mealList.get(i).equals(listedMeal.get(i))) {
+								mealFound = false;
+							}
+						}
+						if(mealFound == true) {
+							System.out.println("successfully deleted the meal");
+							meals.remove(meal);
+							//adds the changed meal into the list
+							meals.add(m);
+							System.out.println("meal edited!");
+							return true;
+						}
+					}
+				}	
+			}
+		}
+		return false;
+	}
 }
