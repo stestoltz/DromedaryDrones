@@ -2,8 +2,11 @@ package javaClasses;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public class ShiftDetails {
+public class ShiftDetails implements Serializable {
+	
+	private static final long serialVersionUID = 13456L;
 	
 	private int numberOfShifts;
 	private int hoursInShift;

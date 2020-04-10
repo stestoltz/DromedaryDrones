@@ -8,6 +8,8 @@ import java.util.Random;
 
 public class Location implements Serializable {
 	
+	private static final long serialVersionUID = 13456L;
+	
 	// hashmap of delivery points, each with a boolean value for active/not active
 	private Map<DeliveryPoint, Boolean> deliveryPoints;
 	private DeliveryPoint home;

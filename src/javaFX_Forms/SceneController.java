@@ -303,11 +303,15 @@ public class SceneController {
 		
 		if (file != null) {
 			try {
-			FileInputStream filein = new FileInputStream(file.getAbsolutePath());
-			ObjectInputStream objectIn = new ObjectInputStream(filein);
+			FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
+			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 			
 			Object obj = objectIn.readObject();
 			location = (Location) obj;
+			
+			//close streams
+			fileIn.close();
+			objectIn.close();
 			
 			objectIn.close();
 			} catch (Exception ex) {
@@ -330,7 +334,10 @@ public class SceneController {
 				FileOutputStream fileOut = new FileOutputStream(filepath);
 				ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
 				objectOut.writeObject(location);
+				
+				//close files
 				objectOut.close();
+				fileOut.close();
 
 			} catch (Exception ex) {
 				ex.printStackTrace();

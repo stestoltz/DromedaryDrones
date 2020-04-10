@@ -1,7 +1,11 @@
 package javaClasses;
 
-public class DeliveryPoint {
+import java.io.Serializable;
 
+public class DeliveryPoint implements Serializable {
+
+	private static final long serialVersionUID = 13456L;
+	
 	private String name;
 	private int x;
 	private int y;

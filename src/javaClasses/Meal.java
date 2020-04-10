@@ -1,7 +1,10 @@
 package javaClasses;
 import java.util.HashMap;
+import java.io.Serializable;
 
-public class Meal {
+public class Meal implements Serializable {
+	
+	private static final long serialVersionUID = 13456L;
 	
 	private HashMap<FoodItem, Integer> meal;
 	private double percentage;
