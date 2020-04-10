@@ -2,13 +2,19 @@ package javaFX_Forms;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javaClasses.DeliveryPoint;
-
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,9 +24,9 @@ import javafx.scene.layout.VBox;
 
 public class MapForm extends Form {
 	
-	private ListView<DeliveryPoint> pointsView;
+	private ListView<HBox> pointsView;
 	
-	private Map<DeliveryPoint, Boolean> points;
+	private List<DeliveryPoint> points;
 	
 	public MapForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
 		super(sc, layout);
@@ -44,12 +50,48 @@ public class MapForm extends Form {
 		listButtons.getChildren().add(delete);
 		
 		delete.setOnAction((event) -> {
-			DeliveryPoint selectedPoint = pointsView.getSelectionModel().getSelectedItem();
+			HBox hbox = pointsView.getSelectionModel().getSelectedItem();
 			
-			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
-			if (selectedPoint != null) {
+			if (hbox != null) {
+				DeliveryPoint selectedPoint = getDeliveryPoint(hbox);
+				
 				points.remove(selectedPoint);
-				pointsView.getItems().remove(selectedPoint);
+				pointsView.getItems().remove(hbox);
+			}
+		});
+		
+		edit.setOnAction((event) -> {
+			HBox hbox = pointsView.getSelectionModel().getSelectedItem();
+			
+			if (hbox != null) {
+				TextField text = (TextField) hbox.getChildren().get(0);
+				
+				String currentVal = text.getText();
+				
+				// temporarily listener to prevent empty strings in text fields
+				ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {
+				    @Override
+				    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
+				    	// lost focus
+						if (!newValue) {
+							if (text.getText().equals("")) {
+								// if empty, revert to old
+								text.setText(currentVal);
+								
+								// remove this listener
+								text.focusedProperty().removeListener(this);
+							}
+							
+							// change the name in the list
+							getDeliveryPoint(hbox).setName(text.getText());
+						}
+				    }
+				};
+				
+				text.focusedProperty().addListener(listener);		
+				
+				text.setEditable(true);
+				text.requestFocus();
 			}
 		});
 		
@@ -81,20 +123,70 @@ public class MapForm extends Form {
 		
 		save.setOnAction((event) -> {
 			
-			// if form is valid
+			Map<DeliveryPoint, Boolean> endPoints = new HashMap<>();
+
+			boolean atLeastOneActivePoint = false;
+			
+			for (HBox hbox : pointsView.getItems()) {
+				boolean active = getActive(hbox);
+				endPoints.put(getDeliveryPoint(hbox), active);
 				
-			this.sc.replaceDeliveryPoints(points);
-			this.sc.switchToHome();
+				if (active) {
+					atLeastOneActivePoint = true;
+				}
+			}
+			
+			if (atLeastOneActivePoint) {
+				this.sc.replaceDeliveryPoints(endPoints);
+				this.sc.switchToHome();
+			} else {
+				System.out.println("No active delivery points selected");
+			}
 		});
 	}
 	
 	public void loadPoints(Map<DeliveryPoint, Boolean> points) {
-		this.points = points;
+		this.points = new ArrayList<>();
 		
 		pointsView.getItems().clear();
 				
 		for (DeliveryPoint dp : points.keySet()) {
-			pointsView.getItems().add(dp);
+			
+			this.points.add(dp);
+			
+			HBox hbox = new HBox();
+			
+			TextField text = new TextField();
+			text.setText(dp.toString());
+			text.setEditable(false);
+			
+			CheckBox check = new CheckBox();
+			check.setSelected(points.get(dp));
+			
+			hbox.getChildren().addAll(text, check);
+			pointsView.getItems().add(hbox);
 		}
+	}
+	
+	public DeliveryPoint getDeliveryPoint(HBox hbox) {
+		for (int i = 0; i < points.size(); i++) {
+			if (hbox == pointsView.getItems().get(i)) {
+				return points.get(i);
+			}
+		}
+		
+		return null;
+	}
+	
+	public boolean getActive(HBox hbox) {
+		for (int i = 0; i < points.size(); i++) {
+			if (hbox == pointsView.getItems().get(i)) {
+				CheckBox check = (CheckBox) hbox.getChildren().get(1);
+				
+				return check.isSelected();
+			}
+		}
+		
+		return false;
 	}
 }

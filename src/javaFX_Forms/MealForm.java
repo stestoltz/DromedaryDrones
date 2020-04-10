@@ -1,6 +1,8 @@
 package javaFX_Forms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,13 +26,13 @@ import javafx.scene.control.Button;
 
 public class MealForm extends Form
 {
-	
+
 	private List<Meal> meals;
 	private List<FoodItem> foods;
 
 	private ListView<HBox> foodView;
 	private ListView<HBox> mealView;
-	
+
 	private Drone drone;
 
 	public MealForm(SceneController sc, BorderPane layout) {
@@ -38,25 +40,22 @@ public class MealForm extends Form
 
 		foodView = new ListView<>();
 		mealView = new ListView<>();
-		
-		
+
+
 		//makes the list be displayed vertically
 		foodView.setOrientation(Orientation.VERTICAL);
 		// Set the Size of the ListView
 		foodView.setPrefSize(120, 100);
-		
+
 		// Set the Orientation of the ListView
 		mealView.setOrientation(Orientation.VERTICAL);
 		// Set the Size of the ListView
 		mealView.setPrefSize(120, 100);
 
-		
-		
-		
-		
+
 		//create food label
 		Label newMealLabel = new Label("New Meal");		
-		
+
 		// Create the food VBox
 		VBox foodSelection = new VBox();
 		// Set Spacing to 10 pixels
@@ -64,10 +63,10 @@ public class MealForm extends Form
 		// Add the Label and the List to the VBox
 		foodSelection.getChildren().addAll(newMealLabel,foodView);
 		foodSelection.setPrefWidth(200);	//prevents a smooshed display
-		
+
 		//create meal label
 		Label mealLabel = new Label("Meals:");
-		
+
 		// Create the meal VBox
 		VBox mealSelection = new VBox();
 		// Set Spacing to 10 pixels
@@ -81,7 +80,7 @@ public class MealForm extends Form
 		// create a button 
 		Button edit = new Button("Edit"); 
 		Button delete = new Button("Delete");
-		
+
 		//button section on gui
 		VBox buttons = new VBox();
 		buttons.setSpacing(10);
@@ -90,13 +89,7 @@ public class MealForm extends Form
 		buttons.setPrefWidth(150);	//prevents buttons from showing up as "..."
 		/***************************finished list buttons**************************/
 
-		/****************************set up new order list***************************/
-
-
-		/***************************finished new order list**************************/
-
 		/****************************set up add area***************************/
-
 
 		Button addMeal = new Button("Add New Meal");
 
@@ -131,8 +124,6 @@ public class MealForm extends Form
 		});
 
 		edit.setOnAction((event) -> {
-			System.out.println("Temporarily threw this in to check "
-					+ "percentage total: (" +percentsValid(mealView)+")");
 			System.out.println("edit food");
 		});
 		/***************************finished add area**************************/
@@ -156,37 +147,41 @@ public class MealForm extends Form
 
 		layout.setCenter(pane);
 
-		
+
 		// get buttons and set event handlers
-		
+
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
-		
+
 		cancel.setOnAction((event) -> {
 			this.sc.switchToHome();
 		});
-		
+
 		save.setOnAction((event) -> {
-			
+
 			// if form is valid
-				
-			this.sc.replaceMeals(meals);
-			this.sc.switchToHome();
+			if(percentsValid(mealView)){
+				this.sc.replaceMeals(meals);
+				this.sc.switchToHome();
+			}
 		});
 	}
-	
+
 	public void addingEvent(ListView<HBox> foodView, ListView<HBox> mealView) {
-		HashMap<FoodItem,Integer> foodList = new HashMap<>();
-		double mealWeight = 0.0;
-		boolean foundFood = false;
-		for(HBox hbox : foodView.getItems()) {
+		HashMap<FoodItem,Integer> foodList = new HashMap<>();	//stores foods being added
+		double mealWeight = 0.0;	//total weight for the meal
+		boolean foundFood = false;	//if food was found or not
+
+		for(HBox hbox : foodView.getItems()) {	//loop through all the foods
+
 			Text temp = (Text)(hbox.getChildren().get(0));
-			String food = temp.getText();
+			String food = temp.getText();	//gets the food
 
 			TextField temp2 = (TextField)(hbox.getChildren().get(1));
-			String stringNum = temp2.getText();
-			temp2.setText("");
+			String stringNum = temp2.getText();	//gets the user's text
+			temp2.setText("");	//resets the text to be empty
+
 			if (!stringNum.equals("") && !stringNum.equals("0")) {
 				foundFood = true;
 				try{
@@ -199,10 +194,10 @@ public class MealForm extends Form
 							break;
 						}
 					}
-
 				}
 				//not a valid integer for preptime
 				catch(Exception e) {
+					foundFood = false;
 					System.out.println("The value " + stringNum +" cannot be used as a integer.");
 					e.getMessage();
 				}
@@ -215,18 +210,45 @@ public class MealForm extends Form
 			System.out.println("The meal being created is weighs too much");
 		}
 		else {
+			boolean mealSuccess = false;
+			Meal m = new Meal(foodList, 0);
+			String[] tempM = m.toString().split(" ");
+			List<String> tempNewList = Arrays.asList(tempM);
+			Collections.sort(tempNewList);	//sorts the new list
+						
+			//check if potential new meal doesnt already exist
+			for(HBox hbox : mealView.getItems()) {	//loop through all the foods
+				mealSuccess = false;
+				Text temp = (Text)(hbox.getChildren().get(0));
+				String[] tempMeal = temp.getText().split(" ");
+				List<String> meal = Arrays.asList(tempMeal);
+				Collections.sort(meal);	//sorts the new list
+				if(meal.size() == tempNewList.size()) {
+					for(int i = 0; i<meal.size(); i++) {
+						if(!meal.get(i).equals(tempNewList.get(i))) {
+							mealSuccess = true;
+						}
+					}
+					if(mealSuccess == false) {
+						System.out.println("This meal already exists");
+						break;
+					}
+				}
+				else {
+					mealSuccess = true;
+				}
+			}
 			//create meal
-			Meal meal = new Meal(foodList,0);
-			boolean mealAdded = meals.add(meal);	//add new meal to location's list
-			if(mealAdded){
+			if(mealSuccess){
 				//add new meal to display
 				TextField inputVal = new TextField("0");	//creates the textField
 				HBox hbox = new HBox();
 				//gets the food item as text
-				Text temp = new Text(meal.toString());
+				Text temp = new Text(m.toString());
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
 				hbox.setPrefWidth(20);
+				meals.add(m);
 				System.out.println("meal added!");
 			}
 		}
@@ -259,24 +281,26 @@ public class MealForm extends Form
 			return false;
 		}
 		//add correct (possibly new) percentages to each meal
+		int index = 0;
 		for(HBox selectedBox : mealView.getItems()) {
 			TextField temp = (TextField)(selectedBox.getChildren().get(1));
 			String stringP = temp.getText();
 
 			try{
-				double percent = Double.parseDouble(stringP);
+				meals.get(index).setPercentage(Double.parseDouble(stringP));
 			}
 			//not a valid double for percentage
 			catch(Exception e) {
 				System.out.println("The value " + stringP +" is not a valid percentage.");
 				e.getMessage();
 			}
+			index++;
 		}
 		return true;
 	}
 
 	public void loadMeals(List<Meal> meals, List<FoodItem> foods, Drone d) {
-		
+
 		this.meals = meals;
 		this.foods = foods;
 		this.drone = d;
@@ -296,15 +320,15 @@ public class MealForm extends Form
 			hbox.setPrefWidth(20);
 		}
 
+
 		//makes the arraylist of hboxes an observable list
 		ObservableList<HBox> foodsList = FXCollections.<HBox>observableArrayList(foodElements);
-		//makes the observable list a listview to be displayed
-		
+
 		// fill the food ListView
-		
+
 		foodView.getItems().clear();
 		foodView.getItems().addAll(foodsList);
-		
+
 		/****************************finished food list***************************/
 
 		/****************************set up meal list***************************/
@@ -325,11 +349,11 @@ public class MealForm extends Form
 		ObservableList<HBox> mealList = FXCollections.<HBox>observableArrayList(mealElements);
 
 		// fill the meal ListView
-		
+
 		mealView.getItems().clear();
 		mealView.getItems().addAll(mealList);
 
-		
+
 		/****************************finished meal list***************************/
 	}
 

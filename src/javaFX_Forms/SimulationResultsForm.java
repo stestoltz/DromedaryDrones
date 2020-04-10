@@ -1,5 +1,8 @@
 package javaFX_Forms;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -22,19 +25,33 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class SimulationResultsForm extends Form {
 
-	public SimulationResultsForm(SceneController sc, BorderPane layout, Location location) throws Exception {
+	private Results[] simResults;
+
+	public SimulationResultsForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
-		
+
+		// set up saveResults event handler
+		BorderPane bottom = (BorderPane) layout.getBottom();
+		Button save = (Button) bottom.getLeft();
+
+		save.setOnAction((event) -> {
+			saveResults();
+		});
+	}
+
+	public void runSimulation(Location location) throws Exception {
 		//run the simulation to get the results
 		Simulation sim = new Simulation(location);
-		
+
 		RoutingAlgorithm ra = new GreedyAlgorithm();
 		//RoutingAlgorithm ra = new BacktrackingSearch();
-		Results[] simResults = sim.runSimulation(ra);
-		
+		simResults = sim.runSimulation(ra);
+
 		//create the graph
 		NumberAxis xAxis = new NumberAxis();
 		NumberAxis yAxis = new NumberAxis();
@@ -55,13 +72,6 @@ public class SimulationResultsForm extends Form {
 
 			List<Double> times = r.getTimes();
 
-			for (int i = 0; i < times.size(); i++) {
-				if (times.get(i) > 100000) {
-					System.out.println("Giant time at index " + i + ": " + times.get(i));
-					times.set(i, 0.0);
-				}
-			}
-
 			Collections.sort(times);
 
 			double largestTime = times.get(times.size() - 1);
@@ -69,8 +79,6 @@ public class SimulationResultsForm extends Form {
 			for (int i = 0; i <= numBuckets; i++) {
 				buckets[i] = i * (largestTime / numBuckets);
 			}
-
-			System.out.println(Arrays.asList(buckets));
 
 			// build histogram
 			Iterator<Double> itr = times.iterator();
@@ -101,10 +109,10 @@ public class SimulationResultsForm extends Form {
 			lineChart.getData().addAll(series);
 		}
 		//graph has been created
-		
-		
+
+
 		//now set up the screen
-		
+
 		//contain results in this border pane
 		BorderPane insideResults = new BorderPane();
 		//put the chart in the center of the inside borderpane
@@ -114,15 +122,72 @@ public class SimulationResultsForm extends Form {
 		values.setAlignment(Pos.CENTER);
 		values.setSpacing(30);
 		Label fifo = new Label("FIFO Worst Time: " + simResults[0].worstTime() + "\n" +
-									"FIFO Average Time: " + simResults[0].averageTime());
+				"FIFO Average Time: " + simResults[0].averageTime());
 		Label knapsack = new Label("Knapsack Worst Time: " + simResults[1].worstTime() + "\n" +
-										"Knapsack Average Time: " + simResults[1].averageTime());
+				"Knapsack Average Time: " + simResults[1].averageTime());
 		values.getChildren().addAll(fifo, knapsack);
 		insideResults.setBottom(values);
-		
+
 		//put the results (graph, max, etc) in the middle of the screen
 		layout.setCenter(insideResults);
-		
+
+	}
+
+	public void saveResults() {
+		if (simResults != null) {
+			
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setInitialFileName("results");
+			fileChooser.setTitle("Save Results");
+			
+			ExtensionFilter csv = new ExtensionFilter("CSV (Comma delimited)", "*.csv");
+			fileChooser.getExtensionFilters().add(csv);
+			fileChooser.setSelectedExtensionFilter(csv);
+			
+			File file = fileChooser.showSaveDialog(null);
+
+			try {
+				FileWriter write = new FileWriter(file);
+				
+				StringBuilder sb = new StringBuilder();
+				
+				sb.append("FIFO\n");
+				
+				sb.append(simResults[0].getTimesString(","));
+				sb.append("\n");
+				sb.append("Worst,");
+				sb.append(simResults[0].worstTime());
+				sb.append("\n");
+				sb.append("Average,");
+				sb.append(simResults[0].averageTime());
+				sb.append("\n");
+				sb.append("\n");
+				
+				sb.append("Knapsack\n");
+				
+				sb.append(simResults[1].getTimesString(","));
+				sb.append("\n");
+				sb.append("Worst,");
+				sb.append(simResults[1].worstTime());
+				sb.append("\n");
+				sb.append("Average,");
+				sb.append(simResults[1].averageTime());
+				sb.append("\n");
+				sb.append("\n");
+				
+				write.write(sb.toString());
+				
+				write.close();
+				
+			} catch (IOException e) {
+				System.out.println("File error saving results; file name=" + file.getName());
+				e.printStackTrace();
+			} catch (Exception e) {
+				System.out.println("Results list empty in saveResults");
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 

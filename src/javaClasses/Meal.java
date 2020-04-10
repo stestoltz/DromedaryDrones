@@ -123,7 +123,7 @@ public class Meal {
 	}
 	
 	/**
-	 * returns a readable string giving the FoodItems, 
+	 * returns a readable string giving the FoodItems,
 	 * their quantities and their percentages
 	 */
 	public boolean stringEquals(String meal2) {

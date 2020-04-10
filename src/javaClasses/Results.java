@@ -23,6 +23,19 @@ public class Results {
 	}
 	
 	/**
+	 * @return a delimited string of the times
+	 */
+	public String getTimesString(String delim) {
+		List<String> timesAsStrings = new ArrayList<>();
+		
+		for (double t : times) {
+			timesAsStrings.add(Double.toString(t));
+		}
+		
+		return String.join(delim, timesAsStrings);
+	}
+	
+	/**
 	 * Add a time to the times list
 	 * @param time
 	 */
