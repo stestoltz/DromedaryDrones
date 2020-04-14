@@ -8,25 +8,25 @@ repository. There are no dependencies needed to be downloaded.
 
 ## Motivation
 This project was created in order to check the legitimacy and possibility of
-integrating a drone delivery system on campuses and other locations. The initial
-test is checking Grove City College's ability to run an effective delivery
-system.
+integrating a drone delivery system on college campuses with the option to
+extend to other locations. The initial test is checking Grove City College's
+ability to run an effective delivery system.
 
 ## Tech/Framework Used
 This project uses standard coding practices.
 
 __Built With__
- - Java
- - JavaFX
- - Eclipse IDE
+- Java
+- JavaFX
+- Eclipse IDE
 
 ## How to Use
 Once you have your copy of the project you can go ahead and run the
-main.java class in the javaForms folder. This will display the main form GUI
+main.java class in the javaForms package. This will display the main form GUI
 which will allow you to access several settings forms as well as run a
 simulation and view the results of that simulation.
 
-__ADD SCREENSHOT HERE__
+![](res/main_form_image.jpg)
 
 ## Credits
 This project was written by David Dray, Liz Frans, Nate Shaffer, and Stephen
