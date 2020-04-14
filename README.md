@@ -21,7 +21,7 @@ __Built With__
 
 ## How to Use
 Once you have your copy of the project you can go ahead and run the
-Main.java class in the javaFXForms package ([Found here](../src/javaFX_Forms/Main.java)). This will display the main form GUI which will allow you to access several settings forms as well as run a
+Main.java class in the javaFXForms package ([Found here](./src/javaFX_Forms/Main.java)). This will display the main form GUI which will allow you to access several settings forms as well as run a
 simulation and view the results of that simulation.
 
 ![](res/main_form_image.jpg)
