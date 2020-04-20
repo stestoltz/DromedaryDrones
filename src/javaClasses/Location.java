@@ -22,7 +22,7 @@ public class Location implements Serializable {
 	
 	
 	/**
-	 * constructor for a brand new location
+	 * constructor for a brand new location - defaults to default provided by project description
 	 * @param name - name of the location
 	 * @param homeName - name of the starting point/ origin
 	 */
@@ -143,6 +143,9 @@ public class Location implements Serializable {
 		return activePoints;
 	}
 	
+	/**
+	 * @return a copy of the delivery point map
+	 */
 	public Map<DeliveryPoint, Boolean> getDeliveryPointsMap() {
 		HashMap<DeliveryPoint, Boolean> pointsCopy = new HashMap<>();
 		
@@ -204,12 +207,6 @@ public class Location implements Serializable {
 	 */
 	public void deletePoint(DeliveryPoint dp) {
 		deliveryPoints.remove(dp);
-		
-		//Boolean removed = deliveryPoints.remove(dp);
-		
-		/*if (removed == null) {
-			// did not exist
-		}*/
 	}
 	
 	
@@ -303,7 +300,6 @@ public class Location implements Serializable {
 	public Meal getRandomMeal() {
 		double lowerBound = 0;
 		double upperBound = 0;
-		double indexDecimal;
 		
 		//gets random integer from 1-100
 		Random rand = new Random();

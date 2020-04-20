@@ -1,5 +1,4 @@
 package javaClasses;
-import java.util.List;
 
 public class DroneTrip {
 

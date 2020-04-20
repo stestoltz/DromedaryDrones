@@ -1,6 +1,6 @@
 package javaClasses;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -15,6 +15,11 @@ public class FIFOPacking extends PackingAlgorithm {
 		super(orders, drone);
 	}
 	
+	/**
+	 * next order builds the next order - pulls from queue until drone full or time passed
+	 * @param the time at which the drone wants to leave - only look at orders from before this time
+	 * @return the next order
+	 */
 	@Override
 	public List<Order> nextOrder(double time) {
 		List<Order> orders = new ArrayList<Order>();
@@ -35,10 +40,12 @@ public class FIFOPacking extends PackingAlgorithm {
 		return orders;
 	}
 	
+	@Override
 	public boolean hasNextOrder() {
 		return !shiftOrders.isEmpty();
 	}
 	
+	@Override
 	public double nextOrderTime() {
 		return shiftOrders.peek().getReadyTime();
 	}
