@@ -19,6 +19,9 @@ This project uses standard coding practices.
 - JavaFX
 - Eclipse IDE
 
+## Which Branch to Clone
+In order to get the sprint1 version of this repository, navigate to branch "sprint1" and either clone the repository or download it as a ZIP file.
+
 ## How to Use
 Once you have your copy of the project you can go ahead and run the
 Main.java class in the javaFXForms package ([Found here](./src/javaFX_Forms/Main.java)). This will display the main form GUI which will allow you to access several settings forms as well as run a
