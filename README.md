@@ -5,7 +5,8 @@ Dromedary Drones is a java project for running a simulation of a drone food deli
 ## Getting Started
 In order to get your own copy of this project up and running you will need to have eclipse (or another java IDE), java, and javaFX installed on your computer. Once you have those, all you need to do is clone the repository and you will be able to run the simulation. There are no dependencies needed to be downloaded.
 
-**Which Branch to Clone**
+**Which Branch to Clone:**
+
 In order to get the sprint1 version of this repository, navigate to branch "sprint1" and either clone the repository or download it as a ZIP file.
 
 ## Motivation
