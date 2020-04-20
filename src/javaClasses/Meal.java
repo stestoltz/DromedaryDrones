@@ -1,15 +1,19 @@
 package javaClasses;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.io.Serializable;
 
 public class Meal implements Serializable {
-	
+
 	private static final long serialVersionUID = 13456L;
-	
+
 	//variables
 	private HashMap<FoodItem, Integer> meal;	//map of foods corresponding to the number of them in the meal
 	private double percentage;					//likelyhood of meal being ordered
-	
+
 	/**
 	 * constructor used to make a meal when given a map (of foods) and a percentage
 	 * @param meal
@@ -19,7 +23,7 @@ public class Meal implements Serializable {
 		this.meal = meal;	//sets the global hashmap to the map given
 		this.percentage = percentage;	//sets the percentage to the given percentage
 	}
-	
+
 	/**
 	 * copy constructor
 	 * @param m - takes in a Meal object m
@@ -29,10 +33,10 @@ public class Meal implements Serializable {
 		HashMap<FoodItem, Integer> mCopy = new HashMap<FoodItem, Integer>();
 		for (HashMap.Entry<FoodItem,Integer> element : m.getMeal().entrySet()) { 
 			FoodItem key =  element.getKey(); //get food item
-            int value = element.getValue();	//get number of foods
-            
-            mCopy.put(key, value);	//add food to meal
-        }
+			int value = element.getValue();	//get number of foods
+
+			mCopy.put(key, value);	//add food to meal
+		}
 		//sets the global hashmap to be the copied hashmap
 		this.meal = mCopy;
 		this.percentage = m.percentage;	//sets the percentage to the copied meal's percent
@@ -69,8 +73,8 @@ public class Meal implements Serializable {
 	public void setPercentage(double percentage) {
 		this.percentage = percentage;
 	}
-	
-	
+
+
 	/**
 	 * adds a foodItem to the hashmap of foods with 'count' number of them in the meal
 	 * @param f - the foodItem being added
@@ -79,7 +83,7 @@ public class Meal implements Serializable {
 	public void addFood(FoodItem f, int count) {
 		meal.put(f, count);
 	}
-	
+
 	/**
 	 * deletes a food from the hashmap
 	 * @param f - takes in the FoodItem to delete
@@ -87,7 +91,7 @@ public class Meal implements Serializable {
 	public void deleteFood(FoodItem f) {
 		meal.remove(f);
 	}
-	
+
 	/**
 	 * edits the number of a FoodItem in a given meal
 	 * @param f - the FoodItem who's quantity is being changed
@@ -97,7 +101,7 @@ public class Meal implements Serializable {
 		meal.remove(f);
 		meal.put(f, count);
 	}
-	
+
 	/**
 	 * gets the weight of the entire meal
 	 * @return - returns the weight
@@ -110,7 +114,7 @@ public class Meal implements Serializable {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * gets the prep time of the meal
 	 * (this would be the longest prep time of all the foods)
@@ -128,7 +132,7 @@ public class Meal implements Serializable {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * returns a readable string giving the FoodItems and their quantities
 	 */
@@ -136,21 +140,44 @@ public class Meal implements Serializable {
 		String ret = "";
 		//loops through the map for each food
 		for (HashMap.Entry<FoodItem,Integer> element : meal.entrySet()) { 
-            FoodItem key =  element.getKey(); //get food item
-            int value = element.getValue();	//get number of foods
-  
-            ret += key.getName() + "("+ value +") "; 
-        }
+			FoodItem key =  element.getKey(); //get food item
+			int value = element.getValue();	//get number of foods
+
+			ret += key.getName() + "("+ value +") "; 
+		}
 		return ret;
 	}
-	
+
 	/**
-	 * returns true if the readable string of one meal is equal to another
+	 * Function for comparing a meal to a string (a string version of a meal)
+	 * 
+	 * @param mealString - meal as a string being compared to this's meal
+	 * @returns true if the two meals have the same foods
 	 */
-	public boolean stringEquals(String meal2) {
-		if(meal.toString().equals(meal2)) {
-			return true;
+	public boolean equals(String mealString) {
+		String[] foodArray = mealString.split(" ");
+		//if the meals arent the same size theyre not equal
+		if(meal.size() != foodArray.length) {
+			return false;
 		}
-		return false;
+		
+		//sort the two meals' foods alphabetically
+		List<String> myFoodList = new ArrayList<>();
+		for (HashMap.Entry<FoodItem,Integer> element : meal.entrySet()) { 
+			FoodItem key = element.getKey(); //get food item
+			myFoodList.add(key.toString());
+		}
+		Collections.sort(myFoodList);	//sorts the new list
+
+		List<String> otherFoodList = Arrays.asList(foodArray);
+		Collections.sort(otherFoodList);	//sorts the new list
+		
+		//check if each food (now sorted) is the same and break if any differ
+		for(int i = 0; i<meal.size(); i++) {
+			if(!myFoodList.get(i).equals(otherFoodList.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
