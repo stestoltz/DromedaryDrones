@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javaClasses.BacktrackingSearch;
 import javaClasses.GreedyAlgorithm;
 import javaClasses.Location;
 import javaClasses.Results;
@@ -50,8 +51,8 @@ public class SimulationResultsForm extends Form {
 		//run the simulation to get the results
 		Simulation sim = new Simulation(location);
 
-		RoutingAlgorithm ra = new GreedyAlgorithm();
-		//RoutingAlgorithm ra = new BacktrackingSearch();
+		//RoutingAlgorithm ra = new GreedyAlgorithm();
+		RoutingAlgorithm ra = new BacktrackingSearch();
 		simResults = sim.runSimulation(ra);
 
 		//create the graph
