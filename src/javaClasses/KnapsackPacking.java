@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Queue;
 
 public class KnapsackPacking extends PackingAlgorithm {
-
+	
+	private final double MAX_WEIGHT;
 	private List<Order> skippedOrders;
 	//note that items in skippedOrders are taken out of shiftOrders list
 	
@@ -20,6 +21,7 @@ public class KnapsackPacking extends PackingAlgorithm {
 	public KnapsackPacking(Queue<Order> orders, Drone drone) {
 		super(orders, drone);
 		this.skippedOrders = new ArrayList<>();
+		MAX_WEIGHT = Math.min(drone.getCargoWeight(), drone.getUserSpecifiedWeight());
 	}
 	
 	/**
@@ -50,7 +52,7 @@ public class KnapsackPacking extends PackingAlgorithm {
 			Iterator<Order> itr = skippedOrders.iterator();
 			while (itr.hasNext()) {
 				Order o = itr.next();
-				if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
+				if (o.getMeal().getMealWeight() + currentWeight <= MAX_WEIGHT) {
 					sendOut.add(o);
 					currentWeight += o.getMeal().getMealWeight();
 				}
@@ -59,11 +61,11 @@ public class KnapsackPacking extends PackingAlgorithm {
 			skippedOrders.removeAll(sendOut);
 			
 			//if there is room left then check to fill with other orders
-			if (currentWeight < drone.getCargoWeight() && !readyOrders.isEmpty()) {
+			if (currentWeight < MAX_WEIGHT && !readyOrders.isEmpty()) {
 				Iterator<Order> itr2 = readyOrders.iterator();
 				while (itr2.hasNext()) {
 					Order o = itr2.next();
-					if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
+					if (o.getMeal().getMealWeight() + currentWeight <= MAX_WEIGHT) {
 						sendOut.add(o);
 						currentWeight += o.getMeal().getMealWeight();
 						shiftOrders.remove(o);
@@ -83,7 +85,7 @@ public class KnapsackPacking extends PackingAlgorithm {
 			Iterator<Order> itr3 = readyOrders.iterator();
 			while (itr3.hasNext()) {
 				Order o = itr3.next();
-				if (o.getMeal().getMealWeight() + currentWeight <= drone.getCargoWeight()) {
+				if (o.getMeal().getMealWeight() + currentWeight <= MAX_WEIGHT) {
 					sendOut.add(o);
 					currentWeight += o.getMeal().getMealWeight();
 					shiftOrders.remove(o);

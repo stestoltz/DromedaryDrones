@@ -354,4 +354,8 @@ public class Location implements Serializable {
 		
 		return availablePoints.get(index);
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }
