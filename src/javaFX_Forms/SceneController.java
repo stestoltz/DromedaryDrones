@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.stage.FileChooser;
-
+import javafx.stage.Modality;
 import javaClasses.DeliveryPoint;
 import javaClasses.Drone;
 import javaClasses.FoodItem;
@@ -23,10 +23,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -194,15 +197,21 @@ public class SceneController {
 		Button startSimulation = new Button("Start Simulation");
 		Label loc = new Label("Location: " + location.getName());
 		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
+		Button changeName = new Button("Change Location Name");
 		Button uploadLocation = new Button("Upload Location");
 		Button saveLocation = new Button("Save Location");
+		
 		HBox editLocation = new HBox();
 		editLocation.setSpacing(10);
 		editLocation.getChildren().addAll(uploadLocation, saveLocation);
 		
+		HBox locationName = new HBox();
+		locationName.setSpacing(10);
+		locationName.getChildren().addAll(loc, changeName);
+		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setCenter(startSimulation);
-		bottom.setLeft(loc);
+		bottom.setLeft(locationName);
 		bottom.setRight(editLocation);
 		
 		uploadLocation.setOnAction((event) -> {
@@ -211,6 +220,10 @@ public class SceneController {
 		
 		saveLocation.setOnAction((event) -> {
 			saveLocation();
+		});
+		
+		changeName.setOnAction((event) -> {
+			changeLocationName();
 		});
 		
 		//create a menubar for the hamburger menu
@@ -350,6 +363,35 @@ public class SceneController {
 				ex.printStackTrace();
 			}
 		}
+	}
+	
+	private void changeLocationName() {
+		Label locationName = new Label("Location Name: ");
+		TextField textLocationName = new TextField(location.getName());
+		GridPane popUpPane = new GridPane();
+		
+		Button save = new Button("Save");
+		
+		HBox editLocation = new HBox();
+		editLocation.getChildren().addAll(locationName, textLocationName);
+		
+		VBox popUpColumn = new VBox();
+		popUpColumn.getChildren().addAll(editLocation, save);
+		
+		popUpPane.addColumn(0, popUpColumn);
+		Scene popUpScene = new Scene(popUpPane,300,100);
+		Stage namePopUp = new Stage();
+		namePopUp.setScene(popUpScene);
+		namePopUp.initModality(Modality.APPLICATION_MODAL);
+		
+		namePopUp.showAndWait();
+		
+		save.setOnAction((event) -> {
+			String newName = textLocationName.getText();
+			location.setName(newName);
+			
+			namePopUp.close();
+		});
 	}
 
 }

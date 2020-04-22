@@ -11,6 +11,7 @@ public class Drone implements Serializable {
 	private double maxFlightTime; /* default: 20 minutes */
 	private double turnAroundTime; /* default: 3 minutes */
 	private double deliveryTime; /* default: 30 seconds */
+	private double userSpecifiedWeight; /*default: equal to cargoWeight */
 	
 	/**
 	 * constructor
@@ -19,14 +20,16 @@ public class Drone implements Serializable {
 	 * @param maxFlightTime
 	 * @param turnAroundTime
 	 * @param defaultDeliveryTime
+	 * @param userSpecifiedWeight
 	 */
 	public Drone(double cargoWeight, double averageCruisingSpeed, double maxFlightTime, double turnAroundTime,
-			double defaultDeliveryTime) {
+			double defaultDeliveryTime, double userSpecifiedWeight) {
 		this.cargoWeight = cargoWeight;
 		this.averageCruisingSpeed = averageCruisingSpeed;
 		this.maxFlightTime = maxFlightTime;
 		this.turnAroundTime = turnAroundTime;
 		this.deliveryTime = defaultDeliveryTime;
+		this.userSpecifiedWeight = userSpecifiedWeight;
 	}
 	
 	/**
@@ -38,6 +41,7 @@ public class Drone implements Serializable {
 		this.maxFlightTime = 20;
 		this.turnAroundTime = 3;
 		this.deliveryTime = 30;
+		this.userSpecifiedWeight = cargoWeight;
 	}
 	
 	/**
@@ -129,5 +133,15 @@ public class Drone implements Serializable {
 		this.deliveryTime = defaultDeliveryTime;
 	}
 	
+	public double getUserSpecifiedWeight() {
+		return userSpecifiedWeight;
+	}
+	
+	/**
+	 * @param userSpecifiedWeight max weight for the drone as given by the user
+	 */
+	public void setUserSpecifiedWeight(double userSpecifiedWeight) {
+		this.userSpecifiedWeight = userSpecifiedWeight;
+	}
 	
 }
