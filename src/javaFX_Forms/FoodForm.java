@@ -86,6 +86,7 @@ public class FoodForm extends Form
 		/***************************finished buttons**************************/
 
 		/****************************set up add area***************************/
+		Label addLabel = new Label("Add New Food:");
 		//creates a text display alongside an editable textField for the 3 food parameters
 		Text nameTitle = new Text("Name: ");
 		TextField inputName = new TextField();
@@ -110,7 +111,7 @@ public class FoodForm extends Form
 		inputRow3.getChildren().addAll(prepTimeTitle,inputPrepTime);	//adds buttons to hbox
 		inputRow3.setPadding(new Insets(0, 10, 0, 0));
 
-		Button addFood = new Button("Add New Food");
+		Button addFood = new Button("Add");
 
 		//on click listener
 		addFood.setOnAction(event->{
@@ -124,7 +125,7 @@ public class FoodForm extends Form
 		//vBox for all the HBoxes and the button created above
 		VBox allFields = new VBox();
 		allFields.setSpacing(10);
-		allFields.getChildren().addAll(inputRow1,inputRow2,inputRow3,addFood);
+		allFields.getChildren().addAll(addLabel,inputRow1,inputRow2,inputRow3,addFood);
 		allFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
 		/***************************finished add area**************************/
 

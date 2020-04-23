@@ -148,8 +148,18 @@ public class MealForm extends Form
 
 		// Set the Style-properties of the GridPane
 		pane.setPadding(new Insets(25,25,25,25));
+		
+		BorderPane completePane = new BorderPane();
+		Label description = new Label("All meal options are shown to the left with food quantities in the parenthesis. "
+				+ "The likelihood of a meal being ordered can be edited\nin the textbox to the right of the meal. "
+				+ "All percentages must add up to 100 in order to save changes. "
+				+ "When creating a new meal,\nenter the quantities desired for each food. "
+				+ "Once you create the meal, it will be displayed in the list of meals on the left where its\n"
+				+ "percentage can be edited.");
+		completePane.setTop(description);
+		completePane.setCenter(pane);
 
-		layout.setCenter(pane);
+		layout.setCenter(completePane);
 
 
 		// get buttons and set event handlers
