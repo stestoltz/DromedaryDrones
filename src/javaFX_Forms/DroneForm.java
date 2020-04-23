@@ -15,6 +15,7 @@ public class DroneForm extends Form {
 	private TextField txtMaxFlightTime;
 	private TextField txtTurnAroundTime;
 	private TextField txtDeliveryTime;
+	private TextField txtUserSpecifiedWeight;
 
 	public DroneForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
@@ -43,8 +44,13 @@ public class DroneForm extends Form {
 		txtDeliveryTime = new TextField();
 
 		HBox line5 = new HBox(label5, txtDeliveryTime);
+		
+		Label label6 = new Label("Restricted cargo weight (lb): ");
+		txtUserSpecifiedWeight = new TextField();
 
-		VBox form = new VBox(line1, line2, line3, line4, line5);
+		HBox line6 = new HBox(label6, txtUserSpecifiedWeight);
+
+		VBox form = new VBox(line1, line2, line3, line4, line5, line6);
 
 		layout.setCenter(form);
 
@@ -85,6 +91,7 @@ public class DroneForm extends Form {
 		txtMaxFlightTime.setText(Double.toString(d.getMaxFlightTime()));
 		txtTurnAroundTime.setText(Double.toString(d.getTurnAroundTime()));
 		txtDeliveryTime.setText(Double.toString(d.getDeliveryTime()));
+		txtUserSpecifiedWeight.setText(Double.toString(d.getUserSpecifiedWeight()));
 	}
 
 	/**
@@ -99,9 +106,10 @@ public class DroneForm extends Form {
 			double maxFlightTime = Double.parseDouble(txtMaxFlightTime.getText());
 			double turnAroundTime = Double.parseDouble(txtTurnAroundTime.getText());
 			double deliveryTime = Double.parseDouble(txtDeliveryTime.getText());
+			double userSpecifiedWeight = Double.parseDouble(txtUserSpecifiedWeight.getText());
 
 			if (cargoWeight > 0 && cruisingSpeed > 0 && maxFlightTime > 0 && turnAroundTime >= 0 && deliveryTime >= 0) {
-				return new Drone(cargoWeight, cruisingSpeed, maxFlightTime, turnAroundTime, deliveryTime);
+				return new Drone(cargoWeight, cruisingSpeed, maxFlightTime, turnAroundTime, deliveryTime, userSpecifiedWeight);
 			}
 			
 			System.out.println("Negative input in DroneForm");
