@@ -200,10 +200,10 @@ public class Simulation {
 			// deliver order if not on trip back home
 			if (i < stops.length) {
 				
-				stops[i].setDeliveredTime(time);
-				
 				// add delivery time
 				time += location.getDrone().getDeliveryTime();
+				
+				stops[i].setDeliveredTime(time);
 			}
 		}
 		
