@@ -20,8 +20,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -114,7 +114,7 @@ public class MealForm extends Form
 			HBox selectedBox = (HBox) mealView.getSelectionModel().getSelectedItem();
 			Meal selectedMeal = null;
 			try {
-				Text temp = (Text)(selectedBox.getChildren().get(0));
+				Label temp = (Label)(selectedBox.getChildren().get(0));
 				String meal = temp.getText();
 
 				for(Meal m : meals) {
@@ -196,7 +196,7 @@ public class MealForm extends Form
 
 		for(HBox hbox : foodView.getItems()) {	//loop through all the foods
 
-			Text temp = (Text)(hbox.getChildren().get(0));
+			Label temp = (Label)(hbox.getChildren().get(0));
 			String food = temp.getText();	//gets the food
 
 			TextField temp2 = (TextField)(hbox.getChildren().get(1));
@@ -240,7 +240,7 @@ public class MealForm extends Form
 			//check if potential new meal doesnt already exist
 			for(HBox hbox : mealView.getItems()) {	//loop through all the foods
 				mealSuccess = false;
-				Text temp = (Text)(hbox.getChildren().get(0));
+				Label temp = (Label)(hbox.getChildren().get(0));
 				String[] tempMeal = temp.getText().split(" ");
 				List<String> meal = Arrays.asList(tempMeal);
 				Collections.sort(meal);	//sorts the new list
@@ -263,12 +263,14 @@ public class MealForm extends Form
 			if(mealSuccess){
 				//add new meal to display
 				TextField inputVal = new TextField("0");	//creates the textField
+				inputVal.setPrefWidth(40);
 				HBox hbox = new HBox();
 				//gets the food item as text
-				Text temp = new Text(m.toString());
+				Label temp = new Label(m.toString());
+				temp.setMaxWidth(220);
+				HBox.setHgrow(temp,Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
-				hbox.setPrefWidth(20);
 				meals.add(m);
 				System.out.println("meal added!");
 			}
@@ -340,13 +342,16 @@ public class MealForm extends Form
 		ArrayList<HBox> foodElements = new ArrayList<>();
 		for(int i=0; i<foods.size(); i++) {
 			TextField inputVal = new TextField();	//creates the textField
+			inputVal.setPrefWidth(30);
 
 			HBox hbox = new HBox();
 			//gets the food item as text
-			Text temp = new Text(foods.get(i).toString());
+			Label temp = new Label(foods.get(i).toString());
+			temp.setMaxWidth(220);
+			HBox.setHgrow(temp,Priority.ALWAYS);
+			
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 			foodElements.add(hbox);	//adds the hbox to the arraylist
-			hbox.setPrefWidth(20);
 		}
 
 
@@ -357,6 +362,7 @@ public class MealForm extends Form
 
 		foodView.getItems().clear();
 		foodView.getItems().addAll(foodsList);
+		foodView.setMaxWidth(150);
 
 		/****************************finished food list***************************/
 
@@ -364,15 +370,18 @@ public class MealForm extends Form
 
 		ArrayList<HBox> mealElements = new ArrayList<>();
 		for(int i=0; i<meals.size(); i++) {
+			HBox hbox = new HBox();
+			
 			//creates the textField
 			TextField inputVal = new TextField(""+meals.get(i).getPercentage());	
-
-			HBox hbox = new HBox();
+			inputVal.setPrefWidth(40);
 			//gets the food item as text
-			Text temp = new Text(meals.get(i).toString());
+			Label temp = new Label(meals.get(i).toString());
+			temp.setMaxWidth(210);
+			HBox.setHgrow(temp,Priority.ALWAYS);
+			
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 			mealElements.add(hbox);	//adds the hbox to the arraylist
-			hbox.setPrefWidth(20);
 		}
 
 		ObservableList<HBox> mealList = FXCollections.<HBox>observableArrayList(mealElements);
@@ -381,6 +390,7 @@ public class MealForm extends Form
 
 		mealView.getItems().clear();
 		mealView.getItems().addAll(mealList);
+		mealView.setMaxWidth(250);
 
 
 		/****************************finished meal list***************************/
@@ -395,7 +405,7 @@ public class MealForm extends Form
 
 			HBox hbox = new HBox();
 			//gets the food item as text
-			Text temp = new Text(foods.get(i).toString());
+			Label temp = new Label(foods.get(i).toString());
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 			foodElem.add(hbox);	//adds the hbox to the arraylist
 			hbox.setPrefWidth(20);
@@ -446,7 +456,7 @@ public class MealForm extends Form
 			HBox selectedBox = (HBox) mealView.getSelectionModel().getSelectedItem();
 			Meal selectedMeal = null;
 			try {
-				Text temp = (Text)(selectedBox.getChildren().get(0));
+				Label temp = (Label)(selectedBox.getChildren().get(0));
 				String meal = temp.getText();
 
 				//Loops through the meals and foods to grab the quantity of how many foodItems
@@ -455,7 +465,7 @@ public class MealForm extends Form
 					if(m.toString().equals(meal)) {
 						selectedMeal = m;
 						for(HBox fBox : foodElem) {
-							Text foodText = ((Text)fBox.getChildren().get(0));
+							Label foodText = ((Label)fBox.getChildren().get(0));
 							TextField foodField = ((TextField)fBox.getChildren().get(1));
 							if(meal.contains(foodText.getText())) {
 								boolean found = false;
@@ -502,7 +512,7 @@ public class MealForm extends Form
 		double percentage = 0.0;	//store the percent
 		HBox selectedMeal = (HBox) mealView.getSelectionModel().getSelectedItem();
 
-		Text tempMealText = (Text)(selectedMeal.getChildren().get(0));  
+		Label tempMealText = (Label)(selectedMeal.getChildren().get(0));  
 		String mealString = tempMealText.getText();  //selected meal as a string
 
 
@@ -517,7 +527,7 @@ public class MealForm extends Form
 
 		for(HBox hbox : popupList.getItems()) {	//loop through all the foods
 
-			Text temp = (Text)(hbox.getChildren().get(0));
+			Label temp = (Label)(hbox.getChildren().get(0));
 			String food = temp.getText();	//gets the food
 
 			TextField temp2 = (TextField)(hbox.getChildren().get(1));
@@ -563,7 +573,7 @@ public class MealForm extends Form
 			//check if potential new meal doesnt already exist
 			for(HBox hbox : mealView.getItems()) {	//loop through all the meals
 				mealSuccess = false;
-				Text temp = (Text)(hbox.getChildren().get(0));
+				Label temp = (Label)(hbox.getChildren().get(0));
 				String[] tempMeal = temp.getText().split(" ");
 				List<String> meal = Arrays.asList(tempMeal);
 				Collections.sort(meal);	//sorts the new list
@@ -591,7 +601,7 @@ public class MealForm extends Form
 				TextField inputVal = new TextField(""+percentage);	//creates the textField
 				HBox hbox = new HBox();
 				//gets the food item as text
-				Text temp = new Text(m.toString());
+				Label temp = new Label(m.toString());
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealView.getItems().remove(selectedMeal);
 				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
