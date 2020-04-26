@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 70%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+  </head>
+  <body>
+    <h1 id="testHead">Test</h1>
+    <div id="map"></div>
+    <script language="javascript">
+      var map;
+      var centerLat = 33;
+      var centerLng = -14;
+
+      var center;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: centerLat, lng: centerLng},
+          zoom: 8
+        });
+      }
+
+      function loadMap(latitude, longitude) {
+
+        center = new google.maps.LatLng({lat: latitude, lng: longitude});
+
+        map.setCenter(center);
+
+        var marker = new google.maps.Marker({
+          position: center,
+          map: map,
+          title: 'Hello World!'
+        });
+
+        map.addListener('click', function(e) {
+
+          var marker = new google.maps.Marker({
+            position: e.latLng,
+            map: map,
+            title: 'Hello World!'
+          });
+        });
+
+        document.getElementById("testHead").innerHTML = "DONE";
+      }
+
+      function getLat() {
+        return center.toString();
+      }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHfMk8fCY8gsFeb-RveV6mgLZnTyPETDA&callback=initMap"
+    async defer></script>
+  </body>
+</html>

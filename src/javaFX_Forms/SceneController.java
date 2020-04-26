@@ -126,7 +126,7 @@ public class SceneController {
 	}
 	
 	public void switchToMap() {
-		mapForm.loadPoints(location.getDeliveryPointsMap());
+		mapForm.loadPoints(location.getDeliveryPointsMap(), location.getHome());
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
