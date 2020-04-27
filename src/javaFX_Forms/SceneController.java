@@ -119,7 +119,7 @@ public class SceneController {
 	}
 	
 	public void switchToFood() {
-		foodForm.loadFoods(location.getFoods(), location.getDrone());
+		foodForm.loadFoods(location.getFoods(), location.getMeals(), location.getDrone());
 		stage.getScene().setRoot(getFoodLayout());
 	}
 	

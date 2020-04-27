@@ -1,10 +1,11 @@
 package javaFX_Forms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javaClasses.Drone;
 import javaClasses.FoodItem;
-
+import javaClasses.Meal;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -30,6 +31,7 @@ public class FoodForm extends Form
 	private List<FoodItem> displayedFoods;	//a copy of the listView of foods (in a regular list)
 	//this will eventually override the location's food list on save
 	private Drone drone;	//a drone object to get the weight the drone can carry
+	private List<Meal> meals; 	//meals for displaying on deletion of a food
 
 	/**
 	 * constructor used in main form for displaying the food form as needed
@@ -71,8 +73,7 @@ public class FoodForm extends Form
 			System.out.println("delete: " + selectedFood);
 			//if a food was selected, delete it
 			if (selectedFood != null) {
-				displayedFoods.remove(selectedFood);
-				foodView.getItems().remove(selectedFood);
+				deleteFood(selectedFood);
 			}
 		});
 
@@ -85,6 +86,7 @@ public class FoodForm extends Form
 		/***************************finished buttons**************************/
 
 		/****************************set up add area***************************/
+		Label addLabel = new Label("Add New Food:");
 		//creates a text display alongside an editable textField for the 3 food parameters
 		Text nameTitle = new Text("Name: ");
 		TextField inputName = new TextField();
@@ -109,7 +111,7 @@ public class FoodForm extends Form
 		inputRow3.getChildren().addAll(prepTimeTitle,inputPrepTime);	//adds buttons to hbox
 		inputRow3.setPadding(new Insets(0, 10, 0, 0));
 
-		Button addFood = new Button("Add New Food");
+		Button addFood = new Button("Add");
 
 		//on click listener
 		addFood.setOnAction(event->{
@@ -123,7 +125,7 @@ public class FoodForm extends Form
 		//vBox for all the HBoxes and the button created above
 		VBox allFields = new VBox();
 		allFields.setSpacing(10);
-		allFields.getChildren().addAll(inputRow1,inputRow2,inputRow3,addFood);
+		allFields.getChildren().addAll(addLabel,inputRow1,inputRow2,inputRow3,addFood);
 		allFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
 		/***************************finished add area**************************/
 
@@ -156,6 +158,7 @@ public class FoodForm extends Form
 		save.setOnAction((event) -> {
 			//saves changes (by replacement) and switches to home
 			this.sc.replaceFoods(displayedFoods);
+			this.sc.replaceMeals(meals);
 			this.sc.switchToHome();
 		});
 
@@ -239,9 +242,10 @@ public class FoodForm extends Form
 	 * @param foods - takes in a list of foods
 	 * @param d - takes in the drone (for carrying capacity checking)
 	 */
-	public void loadFoods(List<FoodItem> foods, Drone d) {
+	public void loadFoods(List<FoodItem> foods, List<Meal> meals, Drone d) {
 
 		this.drone = d;
+		this.meals = meals;
 
 		// given a list of foods, load it into the form
 		ObservableList<FoodItem> foodList = FXCollections.<FoodItem>observableArrayList(foods);
@@ -376,28 +380,28 @@ public class FoodForm extends Form
 			System.out.println("Name for a new food cannot be empty.");
 			errorFound = true;
 		}
-		
+
 		//check if the food already exists (and isnt the food being edited)
 		for(FoodItem f : displayedFoods) {	//go through all the foods
 			//if the foods are equal and not the food being edited
 			if(name.toLowerCase().equals(f.toString().toLowerCase())
 					&& !(name.toLowerCase().equals(selectedFood.toString().toLowerCase()))) {
-				
+
 				//inform user and dont add the food
 				System.out.println("This food (" + name + ") already exists");
 				errorFound = true;
 			}
 		}
-		
+
 		//if there were no errors
 		if(!errorFound){
 			//create the food
 			FoodItem newFood = new FoodItem(name, w, time);
-			
+
 			//display the edited food after removing the old version of it
 			foodView.getItems().remove(selectedFood);
 			foodView.getItems().add(newFood);
-			
+
 			//add the edited food to the list after removing the old version
 			displayedFoods.remove(selectedFood);
 			displayedFoods.add(newFood);
@@ -406,5 +410,91 @@ public class FoodForm extends Form
 			return true;	//return true since it added correctly
 		}
 		return false;		//could not add food so return false
+	}
+
+	private void deleteFood(FoodItem selectedFood) {
+		List<HBox> mealElements = new ArrayList<>();
+		List<Meal> tempMeals = new ArrayList<>();	//for storing meals that wont be deleted
+		//check which meals have the food being deleted to inform user (and add them to display)
+		for(int i=0; i<meals.size(); i++) {
+			if(meals.get(i).toString().contains(selectedFood.toString())){
+				//creates the textField
+				TextField inputVal = new TextField(""+meals.get(i).getPercentage());	
+
+				HBox hbox = new HBox();
+				//gets the food item as text
+				Text temp = new Text(meals.get(i).toString());
+				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
+				mealElements.add(hbox);	//adds the hbox to the arraylist
+				hbox.setPrefWidth(20);
+			}
+			else {
+				tempMeals.add(meals.get(i));
+			}
+		}
+		if(mealElements.size()==0) {
+			displayedFoods.remove(selectedFood);
+			foodView.getItems().remove(selectedFood);
+			return;
+		}
+		
+			
+		ListView<HBox> mealView = new ListView<>();
+
+		ObservableList<HBox> mealList = FXCollections.<HBox>observableArrayList(mealElements);
+
+		// fill the meal ListView
+
+		mealView.getItems().clear();
+		mealView.getItems().addAll(mealList);
+
+
+		GridPane popupPane = new GridPane();
+		Label mealsLabel = new Label("Meals that will be deleted:");
+
+
+		Button cancelButton = new Button("Cancel");
+		Button confirmButton = new Button("Confirm");
+		HBox popupButtons = new HBox();
+		popupButtons.getChildren().addAll(cancelButton, confirmButton);
+
+		VBox popupFields = new VBox();
+		popupFields.setSpacing(10);
+		popupFields.getChildren().addAll(mealsLabel, mealView, popupButtons);
+		popupFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
+		/***************************end popup buttons area**************************/
+		popupPane.addColumn(0, popupFields);
+		Scene scene2 = new Scene(popupPane,400,300);
+		Stage popup = new Stage();
+		popup.setScene(scene2);
+		popup.initModality(Modality.APPLICATION_MODAL);
+		popupPane.setPadding(new Insets(0,25,25,25));
+		
+		confirmButton.setOnAction(event->{
+			//deletes the meals displayed (from list stored here not location's list yet)
+			meals = tempMeals;	
+			
+			//update percentages to add to 100
+			double totalPercent = 0.0;
+			for(Meal m : meals) {
+				totalPercent += m.getPercentage();
+			}
+			if(totalPercent !=0) {
+				for(Meal m: meals) {
+					double temp = m.getPercentage();
+					m.setPercentage(temp* (100 / totalPercent));
+				}
+				System.out.println("Remaining meals' percentages have increased proportionately");
+			}
+			popup.close();
+			//deletes the food
+			displayedFoods.remove(selectedFood);
+			foodView.getItems().remove(selectedFood);
+		});
+		cancelButton.setOnAction(event->{
+			popup.close();
+		});
+		
+		popup.showAndWait();
 	}
 }
