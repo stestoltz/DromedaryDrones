@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 
 public class ShiftSettingsForm extends Form {
@@ -38,7 +39,7 @@ public class ShiftSettingsForm extends Form {
 
 		// create a pane
 		GridPane pane = new GridPane();
-		pane.setAlignment(Pos.TOP_LEFT);
+		pane.setAlignment(Pos.TOP_CENTER);
 		pane.setHgap(10);
 		pane.setVgap(10);
 		pane.setPadding(new Insets(25,25,25,25));
@@ -77,15 +78,18 @@ public class ShiftSettingsForm extends Form {
 
 		//create and add the labels to the gridpane
 		Label numShifts = new Label("Number of Shifts");
+		//numShifts.setFont
 		pane.add(numShifts, 0, 1);
 
 		numShiftsField = new TextField();
+		numShiftsField.setPrefWidth(40);
 		pane.add(numShiftsField, 1, 1);
 
 		Label hrsinShift = new Label("Hours in a Shift");
 		pane.add(hrsinShift, 0, 2);
 
 		hrsinShiftField = new TextField();
+		hrsinShiftField.setPrefWidth(40);
 		pane.add(hrsinShiftField, 1, 2);
 
 		Button saveHrs = new Button("Save");
@@ -137,9 +141,12 @@ public class ShiftSettingsForm extends Form {
 		// the current simulation
 		for(int i = 0; i < shiftDetails.getHoursInShift(); i++) {
 			TextField inputVal = new TextField();
+			inputVal.setPrefWidth(30);
 			inputVal.setText(Integer.toString(shiftDetails.getOrdersPerHour().get(i)));
 			HBox hbox = new HBox();
-			Text temp = new Text("Hour " + (i + 1));
+			Label temp = new Label("Hour " + (i + 1));
+			temp.setMaxWidth(100);
+			HBox.setHgrow(temp, Priority.ALWAYS);
 			hbox.getChildren().addAll(temp, inputVal);
 			orderElements.add(hbox);
 			hbox.setPrefWidth(20);
@@ -178,12 +185,15 @@ public class ShiftSettingsForm extends Form {
 		try {
 			for(int i = 0; i < Integer.parseInt(hrsinShiftField.getText()); i++) {
 				TextField inputVal = new TextField();
+				inputVal.setPrefWidth(30);
 				if(shift.getHoursInShift() > i) {
 					inputVal.setText(Integer.toString(shift.getOrdersPerHour().get(i)));
 				}
 
 				HBox hbox = new HBox();
-				Text temp = new Text("Hour " + (i + 1));
+				Label temp = new Label("Hour " + (i + 1));
+				temp.setMaxWidth(100);
+				HBox.setHgrow(temp, Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);
 				orderElements.add(hbox);
 				hbox.setPrefWidth(20);
