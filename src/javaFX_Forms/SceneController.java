@@ -152,6 +152,10 @@ public class SceneController {
 		this.location.setDrone(d);
 	}
 	
+	public void replaceNumDrones(int num) {
+		this.location.setNumDrones(num);
+	}
+	
 	public void replaceFoods(List<FoodItem> foods) {
 		this.location.setFoods(foods);
 	}

@@ -13,8 +13,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -79,22 +81,21 @@ public class ShiftSettingsForm extends Form {
 
 		//create and add the labels to the gridpane
 		Label numShifts = new Label("Number of Shifts");
-		pane.add(numShifts, 0, 3); //0,1
+		pane.add(numShifts, 0, 1); //0,1
 		
 		Label description = new Label("Number of shifts and hours in a shift can be edited on the left. "
 				+ "Clicking \"save hours\" updates the list on the right with a new entry for each hour. "
 				+ "Then orders per hour can be edited within that list.");
-		description.setFont(Font.font("Calibri", 15));
-		pane.add(description, 0, 0, 2, 4);
+		
 
 		numShiftsField = new TextField();
-		pane.add(numShiftsField, 1, 3); //1,1
+		pane.add(numShiftsField, 1, 1); //1,1
 
 		Label hrsinShift = new Label("Hours in a Shift");
-		pane.add(hrsinShift, 0, 4); //0,2
+		pane.add(hrsinShift, 0, 2); //0,2
 
 		hrsinShiftField = new TextField();
-		pane.add(hrsinShiftField, 1, 4); //1,2
+		pane.add(hrsinShiftField, 1, 2); //1,2
 
 		Button saveHrs = new Button("Save Hours");
 
@@ -107,20 +108,23 @@ public class ShiftSettingsForm extends Form {
 		});
 
 		//adds the save button to the form
-		pane.add(saveHrs, 0, 5); //0,3
+		pane.add(saveHrs, 0, 3); //0,3
 
 
 		//create and set up the orders per hour list and add
 		//it to the gridpane
 		Label ordersPerHour = new Label("Orders Per Hour");
-		pane.add(ordersPerHour, 4,3); //4,1
+		pane.add(ordersPerHour, 4, 1); //4,1
 
 		order = new ListView<>();
 		order.setPrefSize(120,  100);
 
-		pane.add(order, 4, 5); //4,3
-
-		layout.setCenter(pane);
+		pane.add(order, 4, 2); //4,3
+		
+		VBox allItems = new VBox();
+		
+		allItems.getChildren().addAll(description, pane);
+		layout.setCenter(allItems);
 	}
 
 	/**

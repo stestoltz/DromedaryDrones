@@ -19,6 +19,7 @@ public class Location implements Serializable {
 	private Drone drone;
 	private List<FoodItem> foods;		//list of all foods  (for this location)
 	private ShiftDetails shiftDetails;
+	private int numDrones;
 	
 	
 	/**
@@ -99,6 +100,9 @@ public class Location implements Serializable {
 		// create default drone and default shift details
 		this.drone = new Drone();
 		this.shiftDetails = new ShiftDetails();
+		
+		//default is to have one drone
+		numDrones = 1;
 	}
 	
 	/**
@@ -111,7 +115,7 @@ public class Location implements Serializable {
 	 * @param foods - list of all available foods
 	 */
 	public Location(String name, String homeName, HashMap<DeliveryPoint, Boolean> deliveryPoints,
-			ArrayList<Meal> meals,Drone drone, ArrayList<FoodItem> foods, ShiftDetails shiftDetails) {
+			ArrayList<Meal> meals,Drone drone, ArrayList<FoodItem> foods, ShiftDetails shiftDetails, int numDrones) {
 		
 		this.deliveryPoints = deliveryPoints;
 		this.home = new DeliveryPoint(homeName, 0, 0);
@@ -120,6 +124,7 @@ public class Location implements Serializable {
 		this.drone = drone;
 		this.foods = foods;		
 		this.shiftDetails = shiftDetails;
+		this.numDrones = numDrones;
 	}
 
 	/**
@@ -170,6 +175,13 @@ public class Location implements Serializable {
 		return new DeliveryPoint(home);
 	}
 	
+	public int getNumDrones() {
+		return numDrones;
+	}
+	
+	public void setNumDrones(int num) {
+		this.numDrones = num;
+	}
 	/**
 	 * method adds a point to the hashmap
 	 * assume that points added are automatically turned on

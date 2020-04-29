@@ -16,9 +16,14 @@ public class DroneForm extends Form {
 	private TextField txtTurnAroundTime;
 	private TextField txtDeliveryTime;
 	private TextField txtUserSpecifiedWeight;
+	private TextField txtNumberOfDrones;
 
 	public DroneForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
+		
+		Label description = new Label("All drone restrictions can be edited here. "
+				+ "The restricted cargo weight can be lowered below the drone's carrying "
+				+ "weight in order to extend battery life or drone life if desired.");
 
 		Label label1 = new Label("Cargo weight (lb): ");
 		txtCargoWeight = new TextField();
@@ -50,7 +55,7 @@ public class DroneForm extends Form {
 
 		HBox line6 = new HBox(label6, txtUserSpecifiedWeight);
 
-		VBox form = new VBox(line1, line2, line3, line4, line5, line6);
+		VBox form = new VBox(description, line1, line2, line3, line4, line5, line6);
 
 		layout.setCenter(form);
 
@@ -68,7 +73,7 @@ public class DroneForm extends Form {
 
 			Drone d = getFormData();
 
-			if (d != null) {
+			if (d != null){
 
 				this.sc.replaceDrone(d);
 
