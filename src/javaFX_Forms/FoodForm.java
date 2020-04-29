@@ -132,6 +132,8 @@ public class FoodForm extends Form
 
 		// Create the GridPane
 		GridPane pane = new GridPane();
+		// Set the form to be displayed in the top center
+		pane.setAlignment(Pos.TOP_CENTER);
 		// Set the horizontal and vertical gaps between children
 		pane.setHgap(10);
 		pane.setVgap(5);

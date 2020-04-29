@@ -292,7 +292,7 @@ public class SceneController {
 		BorderPane bottom = new BorderPane();
 		
 		Label header = new Label(headerText);
-		header.setFont(new Font("Comic Sans", 30));
+		header.setFont(new Font("Verdana", 30));
 		
 		ImageView imageView = new ImageView(logo);
 		imageView.setPreserveRatio(true);
