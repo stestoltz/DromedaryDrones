@@ -28,11 +28,11 @@ public class Location implements Serializable {
 	 */
 	public Location(String name, String homeName) {
 		deliveryPoints = new HashMap<>();
-		this.home = new DeliveryPoint(homeName, 0, 0);
+		this.home = new DeliveryPoint(homeName, 41.154808488498865, -80.07775153085983);
 		this.name = name;
 		
 		// add real delivery points
-		addPoint(new DeliveryPoint("PEW", 115, -510));
+		addPoint(new DeliveryPoint("PEW", 41.152881903411874, -80.07758203606872));
 		addPoint(new DeliveryPoint("HAL", 40, -70));
 		addPoint(new DeliveryPoint("Soccer Field", 0, 1100));
 		addPoint(new DeliveryPoint("PLC", -160, 440));

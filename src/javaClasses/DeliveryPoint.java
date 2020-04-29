@@ -7,8 +7,8 @@ public class DeliveryPoint implements Serializable {
 	private static final long serialVersionUID = 13456L;
 	
 	private String name;
-	private int x;
-	private int y;
+	private double lat;
+	private double lng;
 	
 	/**
 	 * constructor
@@ -16,10 +16,39 @@ public class DeliveryPoint implements Serializable {
 	 * @param y
 	 * @param name
 	 */
-	public DeliveryPoint(String name, int x, int y) {
+	public DeliveryPoint(String name, double lat, double lng) {
 		this.name = name;
-		this.x = x;
-		this.y = y;
+		this.lat = lat;
+		this.lng = lng;
+	}
+	
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+
+	/**
+	 * Calculates the distance between two points
+	 * @param a the first point
+	 * @param b the second point
+	 * @return the distance between the two points
+	 */
+	public double distanceInFeet(DeliveryPoint b) {
+		double latDist = getLatitudeDistanceInFeet(b);
+		double longDist = getLongitudeDistanceInFeet(b);
+		
+		return Math.sqrt(latDist * latDist + longDist * longDist);
 	}
 	
 	/**
@@ -27,24 +56,17 @@ public class DeliveryPoint implements Serializable {
 	 * @param other
 	 */
 	public DeliveryPoint(DeliveryPoint other) {
-		this.x = other.x;
-		this.y = other.y;
+		this.lat = other.lat;
+		this.lng = other.lng;
 		this.name = other.name;
 	}
 	
-	public int getX() {
-		return x;
-	}
-	public void setX(int x) {
-		this.x = x;
+	public double getLatitudeDistanceInFeet(DeliveryPoint b) {
+		return 0;
 	}
 	
-	public int getY() {
-		return y;
-	}
-	
-	public void setY(int y) {
-		this.y = y;
+	public double getLongitudeDistanceInFeet(DeliveryPoint b) {
+		return 0;
 	}
 	
 	public String getName() {

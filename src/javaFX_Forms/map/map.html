@@ -8,7 +8,7 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 70%;
+        height: 100%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -20,7 +20,6 @@
 
   </head>
   <body>
-    <h1 id="testHead">Test</h1>
     <div id="map"></div>
     <script language="javascript">
       var map;
@@ -29,12 +28,66 @@
 
       var center;
 
+      var geocoder;
+
+      var markers = [];
+
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: centerLat, lng: centerLng},
-          zoom: 8
+          zoom: 16,
+          mapTypeId: 'hybrid'
         });
+
+        geocoder = new google.maps.Geocoder();
       }
+
+      function addMarker(latitude, longitude, name) {
+        
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng({lat: latitude, lng: longitude}),
+          map: map,
+          title: name
+        });
+
+        markers.push(marker);
+      }
+
+      function deleteMarker(name) {
+        java.log("delete marker " + name);
+        index = -1;
+
+        for (i = 0; i < markers.length; i++) {
+          m = markers[i];
+
+          java.log("checking marker with name " + m.name);
+
+          if (m.title === name) {
+            java.log("found a marker!");
+
+            m.setMap(null);
+
+            index = i;
+            break;
+          }
+        }
+
+        // remove from index, move rest of array down
+        markers.splice(index, 1);
+      }
+
+      function editMarker(oldName, newName) {
+          java.log("editing marker " + oldName + " to " + newName);
+
+          for (i = 0; i < markers.length; i++) {
+            m = markers[i];
+
+            if (m.title === oldName) {
+              m.title = newName;
+              break;
+            }
+          }
+        }
 
       function loadMap(latitude, longitude) {
 
@@ -42,22 +95,43 @@
 
         map.setCenter(center);
 
+        /*
         var marker = new google.maps.Marker({
           position: center,
           map: map,
           title: 'Hello World!'
         });
 
+        markers.push(marker);
+
+        */
+
         map.addListener('click', function(e) {
 
-          var marker = new google.maps.Marker({
-            position: e.latLng,
+          /*var marker = new google.maps.Marker({
+            position: new google.maps.LatLng({lat: e.latLng.lat(), lng: e.latLng.lng()}),
             map: map,
-            title: 'Hello World!'
+            title: "test"
           });
-        });
 
-        document.getElementById("testHead").innerHTML = "DONE";
+          markers.push(marker);*/
+
+          addMarker(e.latLng.lat(), e.latLng.lng(), "test");
+
+          java.addDeliveryPoint(e.latLng.toString());
+        });
+        
+      }
+
+      function geocode(locationName) {
+        geocoder.geocode({'address': locationName}, function(results, status) {
+          if (status === 'OK') {
+            map.setCenter(results[0].geometry.location);
+            java.log("geocoded to " + results[0].geometry.location.toString);
+          } else {
+            java.log('Geocode was not successful for the following reason: ' + status);
+          }
+        });
       }
 
       function getLat() {

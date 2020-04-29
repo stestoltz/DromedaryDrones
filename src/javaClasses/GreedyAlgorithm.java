@@ -21,7 +21,7 @@ public class GreedyAlgorithm implements RoutingAlgorithm{
 			Order closest = null;
 			// looks at each order still left in the list and finds the closest order
 			for(Order o : orders) {
-				double distance = distance(o.getDeliveryPoint(), previous);
+				double distance = o.getDeliveryPoint().distanceInFeet(previous);
 				// updates the value of closest to o and the minDistance to distance
 				if(distance < minDistance) {
 					closest = o;
