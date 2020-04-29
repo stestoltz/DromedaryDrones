@@ -17,6 +17,7 @@ import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
 import javaClasses.ShiftDetails;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class SceneController {
@@ -226,10 +228,6 @@ public class SceneController {
 			saveLocation();
 		});
 		
-		changeName.setOnAction((event) -> {
-			changeLocationName();
-		});
-		
 		//create a menubar for the hamburger menu
 		MenuBar menuBar = new MenuBar();
 		
@@ -368,34 +366,36 @@ public class SceneController {
 			}
 		}
 	}
+
+	public Location getLocation() {
+		return location;
+	}
 	
-	private void changeLocationName() {
-		Label locationName = new Label("Location Name: ");
-		TextField textLocationName = new TextField(location.getName());
+	public void runErrorPopUp(String errorText) {
+		Label error = new Label(errorText);
+		error.setWrapText(true);
+		error.setTextAlignment(TextAlignment.CENTER);
+		
 		GridPane popUpPane = new GridPane();
+		popUpPane.setAlignment(Pos.CENTER);
 			
-		Button save = new Button("Save");
+		Button ok = new Button("Ok");
+		ok.setAlignment(Pos.CENTER);
 			
-		HBox editLocation = new HBox();
-		editLocation.getChildren().addAll(locationName, textLocationName);
-			
-		VBox popUpColumn = new VBox();
-		popUpColumn.getChildren().addAll(editLocation, save);
+		VBox popUpColumn = new VBox(30);
+		popUpColumn.getChildren().addAll(error, ok);
+		popUpColumn.setAlignment(Pos.CENTER);
 			
 		popUpPane.addColumn(0, popUpColumn);
 		Scene popUpScene = new Scene(popUpPane,300,100);
-		Stage namePopUp = new Stage();
-		namePopUp.setScene(popUpScene);
-		namePopUp.initModality(Modality.APPLICATION_MODAL);
+		Stage errorPopUp = new Stage();
+		errorPopUp.setScene(popUpScene);
+		errorPopUp.initModality(Modality.APPLICATION_MODAL);
 			
-		save.setOnAction((event) -> {
-			location.setName(textLocationName.getText());
-		
-			namePopUp.close();
-			buildHomeBorderPane();
+		ok.setOnAction((event) -> {
+			errorPopUp.close();
 		});
 			
-		namePopUp.showAndWait();
+		errorPopUp.showAndWait();
 	}
-
 }
