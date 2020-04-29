@@ -57,7 +57,7 @@ public class SceneController {
 		
 		this.stage = stage;
 		
-		logo = new Image(new FileInputStream("res/Temp_logo.jpg"));
+		logo = new Image(new FileInputStream("res/Dromedary_drones_logo.png"));
 		
 		homeForm = new HomeForm(this, buildHomeBorderPane());
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
