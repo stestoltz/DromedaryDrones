@@ -52,7 +52,7 @@ public class ShiftSettingsForm extends Form {
 		Button save = ((Button) bottom.getRight());
 		
 		Label description = new Label("Number of shifts and hours in a shift can " 
-				+ "be edited on the left. Clicking \"save hours\" updates the list "
+				+ "be edited on the left. Clicking \"Save Hours\" updates the list "
 				+ "on the right with a new entry for each hour. Then orders per hour " 
 				+ "can be edited within that list");
 		
