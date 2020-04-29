@@ -16,7 +16,6 @@ public class DroneForm extends Form {
 	private TextField txtTurnAroundTime;
 	private TextField txtDeliveryTime;
 	private TextField txtUserSpecifiedWeight;
-	private TextField txtNumberOfDrones;
 
 	public DroneForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
