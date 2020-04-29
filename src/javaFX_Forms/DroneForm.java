@@ -111,16 +111,26 @@ public class DroneForm extends Form {
 			double turnAroundTime = Double.parseDouble(txtTurnAroundTime.getText());
 			double deliveryTime = Double.parseDouble(txtDeliveryTime.getText());
 			double userSpecifiedWeight = Double.parseDouble(txtUserSpecifiedWeight.getText());
+			
+			if (userSpecifiedWeight > cargoWeight) {
+				this.sc.runErrorPopUp("The specified weight must be less than or equal to the max cargo weight of the drone.");
+				return null;
+			}
+			
+			if (userSpecifiedWeight <= 0 || cargoWeight <= 0) {
+				this.sc.runErrorPopUp("Drone cargo weight and specified weight must be above zero.");
+				return null;
+			}
 
-			if (cargoWeight > 0 && cruisingSpeed > 0 && maxFlightTime > 0 && turnAroundTime >= 0 && deliveryTime >= 0) {
+			if (cargoWeight > 0 && cruisingSpeed > 0 && maxFlightTime > 0 && turnAroundTime >= 0 && deliveryTime >= 0 && userSpecifiedWeight >= 0) {
 				return new Drone(cargoWeight, cruisingSpeed, maxFlightTime, turnAroundTime, deliveryTime, userSpecifiedWeight);
 			}
 			
-			System.out.println("Negative input in DroneForm");
+			this.sc.runErrorPopUp("All values in the drone form must be positive values.");
 			return null;
 
 		} catch (Exception ex) {
-			System.out.println("Nonnumerical input in DroneForm");
+			this.sc.runErrorPopUp("All values in the drone form must be valid numbers.");
 			return null;
 		}
 	}
