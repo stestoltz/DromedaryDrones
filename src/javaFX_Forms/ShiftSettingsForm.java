@@ -103,7 +103,7 @@ public class ShiftSettingsForm extends Form {
 		hrsinShiftField.setPrefWidth(40);
 		pane.add(hrsinShiftField, 1, 2);
 
-		Button saveHrs = new Button("Save");
+		Button saveHrs = new Button("Save Hours");
 
 
 		//creates a button that allows the user to update the 
