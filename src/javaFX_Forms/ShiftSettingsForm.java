@@ -16,7 +16,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class ShiftSettingsForm extends Form {
 
@@ -48,6 +50,15 @@ public class ShiftSettingsForm extends Form {
 		BorderPane bottom = (BorderPane) layout.getBottom();
 		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
+		
+		Label description = new Label("Number of shifts and hours in a shift can " 
+				+ "be edited on the left. Clicking \"save hours\" updates the list "
+				+ "on the right with a new entry for each hour. Then orders per hour " 
+				+ "can be edited within that list");
+		
+		description.setPrefWidth(300);
+		description.setWrapText(true);
+		description.setTextAlignment(TextAlignment.CENTER);
 
 		cancel.setOnAction((event) -> {
 			this.sc.switchToHome();
@@ -115,8 +126,12 @@ public class ShiftSettingsForm extends Form {
 		order.setPrefSize(120,  100);
 
 		pane.add(order, 4, 2);
+		
+		VBox middleItems = new VBox();
+		middleItems.getChildren().addAll(description, pane);
+		middleItems.setAlignment(Pos.TOP_CENTER);
 
-		layout.setCenter(pane);
+		layout.setCenter(middleItems);
 	}
 
 	/**

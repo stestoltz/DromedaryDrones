@@ -152,6 +152,10 @@ public class SceneController {
 		this.location.setDrone(d);
 	}
 	
+	public void replaceNumDrones(int num) {
+		this.location.setNumDrones(num);
+	}
+	
 	public void replaceFoods(List<FoodItem> foods) {
 		this.location.setFoods(foods);
 	}
@@ -369,29 +373,29 @@ public class SceneController {
 		Label locationName = new Label("Location Name: ");
 		TextField textLocationName = new TextField(location.getName());
 		GridPane popUpPane = new GridPane();
-		
+			
 		Button save = new Button("Save");
-		
+			
 		HBox editLocation = new HBox();
 		editLocation.getChildren().addAll(locationName, textLocationName);
-		
+			
 		VBox popUpColumn = new VBox();
 		popUpColumn.getChildren().addAll(editLocation, save);
-		
+			
 		popUpPane.addColumn(0, popUpColumn);
 		Scene popUpScene = new Scene(popUpPane,300,100);
 		Stage namePopUp = new Stage();
 		namePopUp.setScene(popUpScene);
 		namePopUp.initModality(Modality.APPLICATION_MODAL);
-		
-		namePopUp.showAndWait();
-		
-		save.setOnAction((event) -> {
-			String newName = textLocationName.getText();
-			location.setName(newName);
 			
+		save.setOnAction((event) -> {
+			location.setName(textLocationName.getText());
+		
 			namePopUp.close();
+			buildHomeBorderPane();
 		});
+			
+		namePopUp.showAndWait();
 	}
 
 }
