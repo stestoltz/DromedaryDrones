@@ -3,13 +3,22 @@ package javaFX_Forms;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class HomeForm extends Form {
 	
@@ -85,17 +94,53 @@ public class HomeForm extends Form {
 		drone.setFitWidth(50);
 		droneItem.setGraphic(drone);
 		
-		droneItem.setOnAction((event)->{
+		droneItem.setOnAction((event)-> {
 			this.sc.switchToDrone();
 		});
 		
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		Button startSimulation = ((Button) bottom.getCenter());
+		HBox editLocation = ((HBox) bottom.getLeft());
+		Button changeName = ((Button) editLocation.getChildren().get(1));
 		
 		startSimulation.setOnAction((event) -> {
 			this.sc.switchToResults();
 		});
+		
+		changeName.setOnAction((event) -> {
+			changeLocationName();
+		});
+	}
+	
+	private void changeLocationName() {
+		Label locationName = new Label("Location Name: ");
+		TextField textLocationName = new TextField(this.sc.getLocation().getName());
+		GridPane popUpPane = new GridPane();
+		popUpPane.setAlignment(Pos.CENTER);
+			
+		Button save = new Button("Save");
+			
+		HBox editLocation = new HBox();
+		editLocation.getChildren().addAll(locationName, textLocationName);
+			
+		VBox popUpColumn = new VBox();
+		popUpColumn.getChildren().addAll(editLocation, save);
+			
+		popUpPane.addColumn(0, popUpColumn);
+		Scene popUpScene = new Scene(popUpPane,300,100);
+		Stage namePopUp = new Stage();
+		namePopUp.setScene(popUpScene);
+		namePopUp.initModality(Modality.APPLICATION_MODAL);
+			
+		save.setOnAction((event) -> {
+			this.sc.getLocation().setName(textLocationName.getText());
+			
+			namePopUp.close();
+			this.sc.switchToHome();
+		});
+			
+		namePopUp.showAndWait();
 	}
 
 }

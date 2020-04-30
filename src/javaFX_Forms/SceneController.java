@@ -17,6 +17,7 @@ import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
 import javaClasses.ShiftDetails;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class SceneController {
@@ -57,7 +59,7 @@ public class SceneController {
 		
 		this.stage = stage;
 		
-		logo = new Image(new FileInputStream("res/Temp_logo.jpg"));
+		logo = new Image(new FileInputStream("res/Dromedary_drones_logo.png"));
 		
 		homeForm = new HomeForm(this, buildHomeBorderPane());
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
@@ -152,6 +154,10 @@ public class SceneController {
 		this.location.setDrone(d);
 	}
 	
+	public void replaceNumDrones(int num) {
+		this.location.setNumDrones(num);
+	}
+	
 	public void replaceFoods(List<FoodItem> foods) {
 		this.location.setFoods(foods);
 	}
@@ -220,10 +226,6 @@ public class SceneController {
 		
 		saveLocation.setOnAction((event) -> {
 			saveLocation();
-		});
-		
-		changeName.setOnAction((event) -> {
-			changeLocationName();
 		});
 		
 		//create a menubar for the hamburger menu
@@ -364,34 +366,36 @@ public class SceneController {
 			}
 		}
 	}
+
+	public Location getLocation() {
+		return location;
+	}
 	
-	private void changeLocationName() {
-		Label locationName = new Label("Location Name: ");
-		TextField textLocationName = new TextField(location.getName());
+	public void runErrorPopUp(String errorText) {
+		Label error = new Label(errorText);
+		error.setWrapText(true);
+		error.setTextAlignment(TextAlignment.CENTER);
+		
 		GridPane popUpPane = new GridPane();
-		
-		Button save = new Button("Save");
-		
-		HBox editLocation = new HBox();
-		editLocation.getChildren().addAll(locationName, textLocationName);
-		
-		VBox popUpColumn = new VBox();
-		popUpColumn.getChildren().addAll(editLocation, save);
-		
+		popUpPane.setAlignment(Pos.CENTER);
+			
+		Button ok = new Button("Ok");
+		ok.setAlignment(Pos.CENTER);
+			
+		VBox popUpColumn = new VBox(30);
+		popUpColumn.getChildren().addAll(error, ok);
+		popUpColumn.setAlignment(Pos.CENTER);
+			
 		popUpPane.addColumn(0, popUpColumn);
 		Scene popUpScene = new Scene(popUpPane,300,100);
-		Stage namePopUp = new Stage();
-		namePopUp.setScene(popUpScene);
-		namePopUp.initModality(Modality.APPLICATION_MODAL);
-		
-		namePopUp.showAndWait();
-		
-		save.setOnAction((event) -> {
-			String newName = textLocationName.getText();
-			location.setName(newName);
+		Stage errorPopUp = new Stage();
+		errorPopUp.setScene(popUpScene);
+		errorPopUp.initModality(Modality.APPLICATION_MODAL);
 			
-			namePopUp.close();
+		ok.setOnAction((event) -> {
+			errorPopUp.close();
 		});
+			
+		errorPopUp.showAndWait();
 	}
-
 }

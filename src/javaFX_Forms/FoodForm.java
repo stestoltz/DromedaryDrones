@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -293,32 +294,32 @@ public class FoodForm extends Form
 		catch(Exception e) {
 			errorFound = true;	//food will not be added since there was an error
 			//inform user
-			System.out.println("Prep time was not a recognizable number.");
+			this.sc.runErrorPopUp("Prep time is not a recognizable number.");
 		}
 		try{
 			w = Double.parseDouble(weight);
 			//check if weight is under drone carrying capacity
 			if(w> drone.getCargoWeight()) {
 				errorFound = true;	//if the food is too large dont add its
-				System.out.println("the weight is too much for a drone");
+				this.sc.runErrorPopUp("The weight entered is too much for the drone given.");
 			}
 		}
 		//not a valid double for weight
 		catch(Exception e) {
 			errorFound = true;
 			//inform user weight wasnt valid
-			System.out.println("Weight was not a recognizable number.");
+			this.sc.runErrorPopUp("Weight entered is not a recognizable number.");
 		}
 		//empty name - if name is nothing then dont add the food
 		if(name.isEmpty()) {
-			System.out.println("Name for a new food cannot be empty.");
+			this.sc.runErrorPopUp("Name for a new food cannot be empty.");
 			errorFound = true;
 		}
 		//check if the food already exists
 		for(FoodItem f : displayedFoods) {
 			//convert foods to lowercase and see if the name of the food matches an existing food
 			if(name.toLowerCase().equals(f.toString().toLowerCase())) {
-				System.out.println("This food (" + name + ") already exists");
+				this.sc.runErrorPopUp("This food (" + name + ") already exists");
 				errorFound = true;
 			}
 		}
@@ -369,25 +370,27 @@ public class FoodForm extends Form
 		catch(Exception e) {
 			errorFound = true;	//food will not be added since there was an error
 			//inform user
-			System.out.println("Prep time was not a recognizable number.");
+			this.sc.runErrorPopUp("Prep time is not a recognizable number.");
 		}
 		try{
 			w = Double.parseDouble(weight);
 			//check if weight is under drone carrying capacity
 			if(w> drone.getCargoWeight()) {
 				errorFound = true;	//if the food is too large dont add its
-				System.out.println("the weight is too much for a drone");
+				//System.out.println("the weight is too much for a drone");
+				this.sc.runErrorPopUp("The weight entered is too much for the drone given");
 			}
 		}
 		//not a valid double for weight
 		catch(Exception e) {
 			errorFound = true;
 			//inform user weight wasnt valid
-			System.out.println("Weight was not a recognizable number.");
+			//System.out.println("Weight was not a recognizable number.");
+			this.sc.runErrorPopUp("The weight entered is not a recognizable number");
 		}
 		//empty name - if name is nothing then dont add the food
 		if(name.isEmpty()) {
-			System.out.println("Name for a new food cannot be empty.");
+			this.sc.runErrorPopUp("The name for a new food cannot be empty.");
 			errorFound = true;
 		}
 
@@ -398,7 +401,7 @@ public class FoodForm extends Form
 					&& !(name.toLowerCase().equals(selectedFood.toString().toLowerCase()))) {
 
 				//inform user and dont add the food
-				System.out.println("This food (" + name + ") already exists");
+				this.sc.runErrorPopUp("This food (" + name + ") already exists");
 				errorFound = true;
 			}
 		}
@@ -416,7 +419,7 @@ public class FoodForm extends Form
 			displayedFoods.remove(selectedFood);
 			displayedFoods.add(newFood);
 			//inform user
-			System.out.println("successfully edited " + name);
+			this.sc.runErrorPopUp("Successfully edited " + name + "!");
 			return true;	//return true since it added correctly
 		}
 		return false;		//could not add food so return false
@@ -494,7 +497,7 @@ public class FoodForm extends Form
 					double temp = m.getPercentage();
 					m.setPercentage(temp* (100 / totalPercent));
 				}
-				System.out.println("Remaining meals' percentages have increased proportionately");
+				this.sc.runErrorPopUp("Remaining meals' percentages have increased proportionately");
 			}
 			popup.close();
 			//deletes the food
@@ -507,4 +510,6 @@ public class FoodForm extends Form
 		
 		popup.showAndWait();
 	}
+	
+	
 }

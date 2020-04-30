@@ -124,7 +124,7 @@ public class MealForm extends Form
 				}
 			}
 			catch(NullPointerException e) {
-				System.out.println("no meal selected");
+				this.sc.runErrorPopUp("No meal selected.");
 			}
 			//if (selectedLocation.getDeliveryPoints().contains(selectedPoint)) {
 			if (selectedMeal != null) {
@@ -217,16 +217,16 @@ public class MealForm extends Form
 				//not a valid integer for preptime
 				catch(Exception e) {
 					foundFood = false;
-					System.out.println("The value " + stringNum +" cannot be used as a integer.");
+					this.sc.runErrorPopUp("The value " + stringNum +" cannot be used as a integer.");
 					e.getMessage();
 				}
 			}
 		}
 		if(!foundFood) {
-			System.out.println("Could not find any foods to make a meal");
+			this.sc.runErrorPopUp("Could not find any foods to make a meal");
 		}
 		else if (mealWeight > drone.getCargoWeight()) {
-			System.out.println("The meal being created is weighs too much");
+			this.sc.runErrorPopUp("The meal being created weighs too much for the drone.");
 		}
 		else {
 			boolean mealSuccess = false;
@@ -249,7 +249,7 @@ public class MealForm extends Form
 						}
 					}
 					if(mealSuccess == false) {
-						System.out.println("This meal already exists");
+						this.sc.runErrorPopUp("This meal already exists");
 						break;
 					}
 				}
@@ -270,7 +270,7 @@ public class MealForm extends Form
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
 				meals.add(m);
-				System.out.println("meal added!");
+				this.sc.runErrorPopUp("Meal added successfully!");
 			}
 		}
 	}
@@ -291,13 +291,13 @@ public class MealForm extends Form
 			}
 			//not a valid double for percentage
 			catch(Exception e) {
-				System.out.println("The value " + stringP +" is not a valid number.");
+				this.sc.runErrorPopUp("The value " + stringP +" is not a valid number.");
 				e.getMessage();
 			}
 
 		}
 		if (pTotal != 100) {
-			System.out.println("The percentages do not add up to 100");
+			this.sc.runErrorPopUp("The percentages need to add up to 100 percent.");
 			return false;
 		}
 		//add correct (possibly new) percentages to each meal
@@ -312,7 +312,7 @@ public class MealForm extends Form
 			}
 			//not a valid double for percentage
 			catch(Exception e) {
-				System.out.println("The value " + stringP +" is not a valid percentage.");
+				this.sc.runErrorPopUp("The value " + stringP +" is not a valid percentage.");
 				e.getMessage();
 			}
 			index++;
@@ -431,7 +431,7 @@ public class MealForm extends Form
 		popupFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
 		/***************************end popup buttons area**************************/
 		popupPane.addColumn(0, popupFields);
-		Scene scene2 = new Scene(popupPane,200,200);
+		Scene scene2 = new Scene(popupPane,300,200);
 		Stage popup = new Stage();
 		popup.setScene(scene2);
 		popup.initModality(Modality.APPLICATION_MODAL);
@@ -445,7 +445,7 @@ public class MealForm extends Form
 				popup.close();
 			}
 			else {
-				System.out.println("Could not save the edit made");
+				this.sc.runErrorPopUp("Could not save the edit made.");
 			}
 
 		});
@@ -490,10 +490,9 @@ public class MealForm extends Form
 				}
 			}
 			catch(NullPointerException e) {
-				System.out.println("no meal selected");
+				this.sc.runErrorPopUp("Please select a meal.");
 			}
 			if (selectedMeal != null) {
-				System.out.println("edit: " + selectedMeal);
 				popup.showAndWait();
 			}
 
@@ -523,7 +522,7 @@ public class MealForm extends Form
 			percentage = Double.parseDouble(temp.getText());	//gets the percentage
 
 		}catch(Exception e) {
-			System.out.println("Could not get the percentage");
+			this.sc.runErrorPopUp("There was an error in retrieving the percentage.");
 		}
 
 		for(HBox hbox : popupList.getItems()) {	//loop through all the foods
@@ -550,16 +549,16 @@ public class MealForm extends Form
 				//user entered invalid input
 				catch(Exception e) {
 					foundFood = false;
-					System.out.println("The value " + stringNum +" cannot be used as a integer.");
+					this.sc.runErrorPopUp("The value " + stringNum +" cannot be used as an integer.");
 					e.getMessage();
 				}
 			}
 		}
 		if(!foundFood) {
-			System.out.println("Could not find any foods to make a meal");
+			this.sc.runErrorPopUp("Could not find any foods to make a meal.");
 		}
 		else if (mealWeight > drone.getCargoWeight()) {
-			System.out.println("The meal being created is weighs too much");
+			this.sc.runErrorPopUp("The meal being created weighs too much for the drone.");
 		}
 		
 		//if there were no errors
@@ -588,7 +587,7 @@ public class MealForm extends Form
 						}
 					}
 					if(mealSuccess == false) {
-						System.out.println("This meal already exists");
+						this.sc.runErrorPopUp("This meal already exists.");
 						break;
 					}
 				}
@@ -631,11 +630,10 @@ public class MealForm extends Form
 							}
 						}
 						if(mealFound == true) {
-							System.out.println("successfully deleted the meal");
 							meals.remove(meal);
 							//adds the changed meal into the list
 							meals.add(m);
-							System.out.println("meal edited!");
+							this.sc.runErrorPopUp("Meal edited successfully!");
 							return true;
 						}
 					}
