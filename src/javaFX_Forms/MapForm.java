@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import javaClasses.DeliveryPoint;
+import javaFX_Styling.StyleButton;
+import javaFX_Styling.StyleLabel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -33,20 +35,21 @@ public class MapForm extends Form {
 		super(sc, layout);
 		
 		pointsView = new ListView<>();
+		pointsView.setStyle("-fx-font-size: 10pt;");
 
 		//create map
 		Image map = new Image(new FileInputStream("res/map2.jpg"));
 		ImageView mapView = new ImageView(map);
 		mapView.setPreserveRatio(true);
-		mapView.setFitWidth(900);
+		mapView.setFitWidth(700);
 		
 		mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
 			System.out.println(event.getX() + " " + event.getY());
 		});
 		
 		HBox listButtons = new HBox();
-		Button edit = new Button("Edit");
-		Button delete = new Button("Delete");
+		Button edit = new StyleButton("Edit");
+		Button delete = new StyleButton("Delete");
 		listButtons.getChildren().add(edit);
 		listButtons.getChildren().add(delete);
 		
@@ -101,10 +104,11 @@ public class MapForm extends Form {
 		left.getChildren().add(listButtons);
 		
 		//description
-		Label description = new Label("Double click the map at a given coordinate that you wish to add. "
+		Label description = new StyleLabel("Double click the map at a given coordinate that you wish to add. "
 				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
 				+ "and off using the checkboxes.\n"
 				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
+		description.setWrapText(true);
 		VBox center = new VBox();
 		center.getChildren().addAll(description,mapView);
 		layout.setCenter(center);

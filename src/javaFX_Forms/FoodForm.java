@@ -1,11 +1,15 @@
 package javaFX_Forms;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Meal;
+import javaFX_Styling.StyleButton;
+import javaFX_Styling.StyleLabel;
+import javaFX_Styling.StyleTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -49,12 +53,13 @@ public class FoodForm extends Form
 		// Set the Orientation of the ListView
 		foodView.setOrientation(Orientation.VERTICAL);
 		// Set the Size of the ListView
-		foodView.setPrefSize(120, 100);
+		foodView.setPrefSize(120, 200);
 
 		VBox foodSelection = new VBox();
 
 		//create food label
-		Label foodLabel = new Label("Current Foods:");
+		Label foodLabel = new StyleLabel("Current Foods:");
+		foodLabel.setStyle("-fx-font-size: 15pt;");
 
 		// Set Spacing to 10 pixels
 		foodSelection.setSpacing(10);
@@ -64,8 +69,9 @@ public class FoodForm extends Form
 
 		/****************************set up buttons***************************/
 		// create a button 
-		Button edit = new Button("Edit"); 
-		Button delete = new Button("Delete");
+		Button edit = new StyleButton("Edit");
+		Button delete = new StyleButton("Delete");
+
 
 		//edit set on action is done in popup section of code (below)
 		//delete button action:
@@ -83,37 +89,46 @@ public class FoodForm extends Form
 		VBox buttons = new VBox();
 		buttons.setSpacing(10);
 		buttons.getChildren().addAll(edit,delete);	//adds buttons to vbox
-		buttons.setPadding(new Insets(50, 10, 0, 0));	//above,right,below,left
+		buttons.setPadding(new Insets(40, 10, 0, 0));	//above,right,below,left
 		buttons.setPrefWidth(150);	//prevents buttons from showing up as "..."
 		/***************************finished buttons**************************/
 
 		/****************************set up add area***************************/
-		Label addLabel = new Label("Add New Food:");
+		Label addLabel = new StyleLabel("Add New Food:");
+		addLabel.setStyle("-fx-font-size: 15pt;");
 		//creates a text display alongside an editable textField for the 3 food parameters
-		Text nameTitle = new Text("Name: ");
-		TextField inputName = new TextField();
-		Text weightTitle = new Text("Weight: ");
-		TextField inputWeight = new TextField();
-		Text prepTimeTitle = new Text("Prep Time: ");
-		TextField inputPrepTime = new TextField();
+		Label nameTitle = new StyleLabel("Name: ");
+		TextField inputName = new StyleTextField();
+		Label weightTitle = new StyleLabel("Weight: ");
+		TextField inputWeight = new StyleTextField();
+		Label prepTimeTitle = new StyleLabel("Prep Time: ");
+		TextField inputPrepTime = new StyleTextField();
+
+
 
 		//creates an HBox for each of the fields
+		nameTitle.setMaxWidth(100);
+		HBox.setHgrow(nameTitle,Priority.ALWAYS);
 		HBox inputRow1 = new HBox();
 		inputRow1.setSpacing(10);
 		inputRow1.getChildren().addAll(nameTitle,inputName);	//adds buttons to hbox
 		inputRow1.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
 
+		weightTitle.setMaxWidth(100);
+		HBox.setHgrow(weightTitle,Priority.ALWAYS);
 		HBox inputRow2 = new HBox();
 		inputRow2.setSpacing(10);
 		inputRow2.getChildren().addAll(weightTitle,inputWeight);	//adds buttons to hbox
 		inputRow2.setPadding(new Insets(0, 10, 0, 0));
 
+		prepTimeTitle.setMaxWidth(100);
+		HBox.setHgrow(prepTimeTitle,Priority.ALWAYS);
 		HBox inputRow3 = new HBox();
 		inputRow3.setSpacing(10);
 		inputRow3.getChildren().addAll(prepTimeTitle,inputPrepTime);	//adds buttons to hbox
 		inputRow3.setPadding(new Insets(0, 10, 0, 0));
 
-		Button addFood = new Button("Add");
+		Button addFood = new StyleButton("Add");
 
 		//on click listener
 		addFood.setOnAction(event->{
@@ -128,14 +143,14 @@ public class FoodForm extends Form
 		VBox allFields = new VBox();
 		allFields.setSpacing(10);
 		allFields.getChildren().addAll(addLabel,inputRow1,inputRow2,inputRow3,addFood);
-		allFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
+		allFields.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
 		/***************************finished add area**************************/
 
 		// Create the GridPane
 		GridPane pane = new GridPane();
 		// Set the horizontal and vertical gaps between children
 		pane.setHgap(10);
-		pane.setVgap(5);
+		pane.setVgap(10);
 		// Add the gui components
 		pane.addColumn(0, foodSelection);
 		pane.addColumn(1, buttons);
@@ -143,6 +158,7 @@ public class FoodForm extends Form
 
 		// Set the Style-properties of the GridPane
 		pane.setPadding(new Insets(25,25,25,25));
+		pane.setAlignment(Pos.TOP_CENTER);
 
 		layout.setCenter(pane);
 
@@ -168,38 +184,36 @@ public class FoodForm extends Form
 		GridPane popupPane = new GridPane();
 		/****************************set up popup buttons area***************************/
 		//same setup as the add new food area but inside the popup
-		Label editLabel = new Label("Edit Food Item:");
-		Label namePopup = new Label("Name: ");
-		TextField input1 = new TextField();
-		input1.setPrefWidth(80);
-		Label weightPopup = new Label("Weight: ");
-		TextField input2 = new TextField();
-		input2.setPrefWidth(80);
-		Label prepTimePopup = new Label("Prep Time: ");
-		TextField input3 = new TextField();
-		input3.setPrefWidth(80);
+		Label editLabel = new StyleLabel("Edit Food Item:");
+		editLabel.setStyle("-fx-font-size: 15pt;");
+		Label namePopup = new StyleLabel("Name: ");
+		TextField input1 = new StyleTextField();
+		Label weightPopup = new StyleLabel("Weight: ");
+		TextField input2 = new StyleTextField();
+		Label prepTimePopup = new StyleLabel("Prep Time: ");
+		TextField input3 = new StyleTextField();
 
 		//add all textboxes and fields to Hboxes
-		namePopup.setMaxWidth(100);
+		namePopup.setMaxWidth(120);
 		HBox.setHgrow(namePopup,Priority.ALWAYS);
 		HBox popupRow1 = new HBox();
 		popupRow1.setSpacing(10);
 		popupRow1.getChildren().addAll(namePopup,input1);	//adds buttons to vbox
 		popupRow1.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
-		weightPopup.setMaxWidth(100);
+		weightPopup.setMaxWidth(120);
 		HBox.setHgrow(weightPopup,Priority.ALWAYS);
 		HBox popupRow2 = new HBox();
 		popupRow2.setSpacing(10);
 		popupRow2.getChildren().addAll(weightPopup,input2);	//adds buttons to vbox
 		popupRow2.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
-		prepTimePopup.setMaxWidth(100);
+		prepTimePopup.setMaxWidth(120);
 		HBox.setHgrow(prepTimePopup,Priority.ALWAYS);
 		HBox popupRow3 = new HBox();
 		popupRow3.setSpacing(10);
 		popupRow3.getChildren().addAll(prepTimePopup,input3);	//adds buttons to vbox
 		popupRow3.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
 
-		Button editSave = new Button("Save");	//save edit button
+		Button editSave = new StyleButton("Save");	//save edit button
 
 		//add hboxes to the vbox
 		VBox popupFields = new VBox();
@@ -209,7 +223,7 @@ public class FoodForm extends Form
 		/***************************end popup buttons area**************************/
 		//setup popup to display in a column
 		popupPane.addColumn(0, popupFields);
-		Scene scene2 = new Scene(popupPane,350,350);	//set size of popup
+		Scene scene2 = new Scene(popupPane,300,300);	//set size of popup
 		Stage popup = new Stage();
 		popup.setScene(scene2);
 		popup.initModality(Modality.APPLICATION_MODAL);	//makes it popup instead of new scene
@@ -265,6 +279,7 @@ public class FoodForm extends Form
 		// reset the items in the foodView
 		foodView.getItems().clear();
 		foodView.getItems().addAll(foodList);
+		foodView.setStyle("-fx-font-size: 12pt;");
 	}
 
 	/**
@@ -408,6 +423,7 @@ public class FoodForm extends Form
 
 		//if there were no errors
 		if(!errorFound){
+			
 			//create the food
 			FoodItem newFood = new FoodItem(name, w, time);
 
@@ -450,8 +466,8 @@ public class FoodForm extends Form
 			foodView.getItems().remove(selectedFood);
 			return;
 		}
-		
-			
+
+
 		ListView<HBox> mealView = new ListView<>();
 
 		ObservableList<HBox> mealList = FXCollections.<HBox>observableArrayList(mealElements);
@@ -482,11 +498,11 @@ public class FoodForm extends Form
 		popup.setScene(scene2);
 		popup.initModality(Modality.APPLICATION_MODAL);
 		popupPane.setPadding(new Insets(0,25,25,25));
-		
+
 		confirmButton.setOnAction(event->{
 			//deletes the meals displayed (from list stored here not location's list yet)
 			meals = tempMeals;	
-			
+
 			//update percentages to add to 100
 			double totalPercent = 0.0;
 			for(Meal m : meals) {
@@ -507,9 +523,9 @@ public class FoodForm extends Form
 		cancelButton.setOnAction(event->{
 			popup.close();
 		});
-		
+
 		popup.showAndWait();
 	}
-	
-	
+
+
 }
