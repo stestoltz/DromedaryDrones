@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -167,22 +168,31 @@ public class FoodForm extends Form
 		/****************************set up popup buttons area***************************/
 		//same setup as the add new food area but inside the popup
 		Label editLabel = new Label("Edit Food Item:");
-		Text namePopup = new Text("Name: ");
+		Label namePopup = new Label("Name: ");
 		TextField input1 = new TextField();
-		Text weightPopup = new Text("Weight: ");
+		input1.setPrefWidth(80);
+		Label weightPopup = new Label("Weight: ");
 		TextField input2 = new TextField();
-		Text prepTimePopup = new Text("Prep Time: ");
+		input2.setPrefWidth(80);
+		Label prepTimePopup = new Label("Prep Time: ");
 		TextField input3 = new TextField();
+		input3.setPrefWidth(80);
 
 		//add all textboxes and fields to Hboxes
+		namePopup.setMaxWidth(100);
+		HBox.setHgrow(namePopup,Priority.ALWAYS);
 		HBox popupRow1 = new HBox();
 		popupRow1.setSpacing(10);
 		popupRow1.getChildren().addAll(namePopup,input1);	//adds buttons to vbox
 		popupRow1.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
+		weightPopup.setMaxWidth(100);
+		HBox.setHgrow(weightPopup,Priority.ALWAYS);
 		HBox popupRow2 = new HBox();
 		popupRow2.setSpacing(10);
 		popupRow2.getChildren().addAll(weightPopup,input2);	//adds buttons to vbox
 		popupRow2.setPadding(new Insets(0, 10, 0, 0));	//above,right,below,left
+		prepTimePopup.setMaxWidth(100);
+		HBox.setHgrow(prepTimePopup,Priority.ALWAYS);
 		HBox popupRow3 = new HBox();
 		popupRow3.setSpacing(10);
 		popupRow3.getChildren().addAll(prepTimePopup,input3);	//adds buttons to vbox
@@ -198,7 +208,7 @@ public class FoodForm extends Form
 		/***************************end popup buttons area**************************/
 		//setup popup to display in a column
 		popupPane.addColumn(0, popupFields);
-		Scene scene2 = new Scene(popupPane,200,200);	//set size of popup
+		Scene scene2 = new Scene(popupPane,350,350);	//set size of popup
 		Stage popup = new Stage();
 		popup.setScene(scene2);
 		popup.initModality(Modality.APPLICATION_MODAL);	//makes it popup instead of new scene

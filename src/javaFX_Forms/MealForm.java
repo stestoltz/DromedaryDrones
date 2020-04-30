@@ -181,8 +181,6 @@ public class MealForm extends Form
 			}
 		});
 
-		/***************************popup section******************************/
-
 	}
 
 
@@ -306,6 +304,7 @@ public class MealForm extends Form
 		int index = 0;
 		for(HBox selectedBox : mealView.getItems()) {
 			TextField temp = (TextField)(selectedBox.getChildren().get(1));
+			
 			String stringP = temp.getText();
 
 			try{
@@ -402,10 +401,12 @@ public class MealForm extends Form
 		ArrayList<HBox> foodElem = new ArrayList<>();
 		for(int i=0; i<foods.size(); i++) {
 			TextField inputVal = new TextField();	//creates the textField
-
+			inputVal.setPrefWidth(30);
 			HBox hbox = new HBox();
 			//gets the food item as text
 			Label temp = new Label(foods.get(i).toString());
+			temp.setMaxWidth(220);
+			HBox.setHgrow(temp,Priority.ALWAYS);
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 			foodElem.add(hbox);	//adds the hbox to the arraylist
 			hbox.setPrefWidth(20);
@@ -599,9 +600,12 @@ public class MealForm extends Form
 			if(mealSuccess){
 				//add new meal to display
 				TextField inputVal = new TextField(""+percentage);	//creates the textField
+				inputVal.setPrefWidth(40);
 				HBox hbox = new HBox();
 				//gets the food item as text
 				Label temp = new Label(m.toString());
+				temp.setMaxWidth(220);
+				HBox.setHgrow(temp,Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealView.getItems().remove(selectedMeal);
 				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
