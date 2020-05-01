@@ -1,22 +1,17 @@
 package javaFX_Forms;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
 
-import javafx.stage.FileChooser;
-
+import javafx.stage.Modality;
 import javaClasses.DeliveryPoint;
 import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
 import javaClasses.ShiftDetails;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,9 +21,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class SceneController {
@@ -47,14 +45,12 @@ public class SceneController {
 	private ShiftSettingsForm shiftForm;
 	private SimulationResultsForm resultsForm;
 	
-	private FileChooser chooser;
-	
 	public SceneController(Stage stage) throws Exception {
 		location = new Location("Grove City", "SAC");
 		
 		this.stage = stage;
 		
-		logo = new Image(new FileInputStream("res/Temp_logo.jpg"));
+		logo = new Image(new FileInputStream("res/Dromedary_drones_logo.png"));
 		
 		homeForm = new HomeForm(this, buildHomeBorderPane());
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
@@ -68,9 +64,6 @@ public class SceneController {
 		
 		Scene scene = new Scene(homeForm.getLayout());
 		stage.setScene(scene);
-		
-		chooser = new FileChooser();
-		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt", "*.txt"));
 	}
 	
 	// each form has a getLayout() method to get its layout,
@@ -111,12 +104,12 @@ public class SceneController {
 	}
 	
 	public void switchToDrone() {
-		droneForm.loadDrone(location.getDrone());
+		droneForm.loadForm(location.getDrone());
 		stage.getScene().setRoot(getDroneLayout());
 	}
 	
 	public void switchToFood() {
-		foodForm.loadFoods(location.getFoods(), location.getDrone());
+		foodForm.loadFoods(location.getFoods(), location.getMeals(), location.getDrone());
 		stage.getScene().setRoot(getFoodLayout());
 	}
 	
@@ -143,7 +136,6 @@ public class SceneController {
 			System.out.println("Results list was empty");
 		}
 	}
-	
 	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
@@ -195,24 +187,22 @@ public class SceneController {
 		Button startSimulation = new Button("Start Simulation");
 		Label loc = new Label("Location: " + location.getName());
 		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
-		Button uploadLocation = new Button("Upload Location");
+		Button changeName = new Button("Change Location Name");
+		Button changeLocation = new Button("Change Location");
 		Button saveLocation = new Button("Save Location");
+		
 		HBox editLocation = new HBox();
 		editLocation.setSpacing(10);
-		editLocation.getChildren().addAll(uploadLocation, saveLocation);
+		editLocation.getChildren().addAll(changeLocation, saveLocation);
+		
+		HBox locationName = new HBox();
+		locationName.setSpacing(10);
+		locationName.getChildren().addAll(loc, changeName);
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setCenter(startSimulation);
-		bottom.setLeft(loc);
+		bottom.setLeft(locationName);
 		bottom.setRight(editLocation);
-		
-		uploadLocation.setOnAction((event) -> {
-			changeLocation();
-		});
-		
-		saveLocation.setOnAction((event) -> {
-			saveLocation();
-		});
 		
 		//create a menubar for the hamburger menu
 		MenuBar menuBar = new MenuBar();
@@ -299,58 +289,44 @@ public class SceneController {
 		return layout;
 		
 	}	
+
+	public Location getLocation() {
+		return location;
+	}
 	
-	/**
-	 * this method lets the user upload a file to change the location object
-	 * then the location object details are all updated to match the file
-	 * @throws FileNotFoundException 
-	 */
-	private void changeLocation() {
-		chooser.setTitle("Choose Location File");
-		File file = chooser.showOpenDialog(null);
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+	public Stage getStage() {
+		return stage;
+	}
+	
+	public void runErrorPopUp(String errorText) {
+		Label error = new Label(errorText);
+		error.setWrapText(true);
+		error.setTextAlignment(TextAlignment.CENTER);
 		
-		if (file != null) {
-			try {
-			FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
-			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+		GridPane popUpPane = new GridPane();
+		popUpPane.setAlignment(Pos.CENTER);
 			
-			Object obj = objectIn.readObject();
-			location = (Location) obj;
+		Button ok = new Button("Ok");
+		ok.setAlignment(Pos.CENTER);
 			
-			//close streams
-			fileIn.close();
-			objectIn.close();
+		VBox popUpColumn = new VBox(30);
+		popUpColumn.getChildren().addAll(error, ok);
+		popUpColumn.setAlignment(Pos.CENTER);
 			
-			objectIn.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
+		popUpPane.addColumn(0, popUpColumn);
+		Scene popUpScene = new Scene(popUpPane,300,100);
+		Stage errorPopUp = new Stage();
+		errorPopUp.setScene(popUpScene);
+		errorPopUp.initModality(Modality.APPLICATION_MODAL);
+			
+		ok.setOnAction((event) -> {
+			errorPopUp.close();
+		});
+			
+		errorPopUp.showAndWait();
 	}
-	
-	
-	/**
-	 * this method saves the location to an object file
-	 */
-	private void saveLocation() {
-		chooser.setTitle("Choose a Save Location");
-		File saveFile = chooser.showSaveDialog(stage);
-
-		if (saveFile != null) {
-			String filepath = saveFile.getAbsolutePath();
-			try {
-				FileOutputStream fileOut = new FileOutputStream(filepath);
-				ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-				objectOut.writeObject(location);
-				
-				//close files
-				objectOut.close();
-				fileOut.close();
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-
 }

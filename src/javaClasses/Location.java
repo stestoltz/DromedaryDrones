@@ -19,6 +19,7 @@ public class Location implements Serializable {
 	private Drone drone;
 	private List<FoodItem> foods;		//list of all foods  (for this location)
 	private ShiftDetails shiftDetails;
+	private int numberOfDrones;
 	
 	
 	/**
@@ -99,6 +100,9 @@ public class Location implements Serializable {
 		// create default drone and default shift details
 		this.drone = new Drone();
 		this.shiftDetails = new ShiftDetails();
+		
+		//default is to have one drone
+		numberOfDrones = 1;
 	}
 	
 	/**
@@ -110,8 +114,16 @@ public class Location implements Serializable {
 	 * @param drone - drone options
 	 * @param foods - list of all available foods
 	 */
-	public Location(String name, String homeName, HashMap<DeliveryPoint, Boolean> deliveryPoints,
-			ArrayList<Meal> meals,Drone drone, ArrayList<FoodItem> foods, ShiftDetails shiftDetails) {
+	public Location(
+			String name, 
+			String homeName, 
+			HashMap<DeliveryPoint, 
+			Boolean> deliveryPoints,
+			ArrayList<Meal> meals,
+			Drone drone, 
+			ArrayList<FoodItem> foods, 
+			ShiftDetails shiftDetails, 
+			int numberOfDrones) {
 		
 		this.deliveryPoints = deliveryPoints;
 		this.home = new DeliveryPoint(homeName, 0, 0);
@@ -120,6 +132,18 @@ public class Location implements Serializable {
 		this.drone = drone;
 		this.foods = foods;		
 		this.shiftDetails = shiftDetails;
+		this.numberOfDrones = numberOfDrones;
+	}
+	
+	public Location(Location loc) {
+		this.deliveryPoints = loc.deliveryPoints;
+		this.home = loc.home;
+		this.name = loc.name;
+		this.meals = loc.meals;
+		this.drone = loc.drone;
+		this.foods = loc.foods;		
+		this.shiftDetails = loc.shiftDetails;
+		this.numberOfDrones = loc.numberOfDrones;
 	}
 
 	/**
@@ -174,6 +198,14 @@ public class Location implements Serializable {
 		this.home = home;
 	}
 	
+	public int getNumberOfDrones() {
+		return numberOfDrones;
+	}
+	
+	public void setNumberOfDrones(int num) {
+		this.numberOfDrones = num;
+	}
+
 	/**
 	 * method adds a point to the hashmap
 	 * assume that points added are automatically turned on
@@ -357,5 +389,9 @@ public class Location implements Serializable {
 		int index = rand.nextInt(availablePoints.size());
 		
 		return availablePoints.get(index);
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

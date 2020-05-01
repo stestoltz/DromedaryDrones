@@ -6,6 +6,8 @@ import java.util.Queue;
 
 public class FIFOPacking extends PackingAlgorithm {
 	
+	private final double MAX_WEIGHT;
+	
 	/**
 	 * constructor
 	 * @param orders
@@ -13,6 +15,7 @@ public class FIFOPacking extends PackingAlgorithm {
 	 */
 	public FIFOPacking(Queue<Order> orders, Drone drone) {
 		super(orders, drone);
+		MAX_WEIGHT = Math.min(drone.getCargoWeight(), drone.getUserSpecifiedWeight());
 	}
 	
 	/**
@@ -30,7 +33,7 @@ public class FIFOPacking extends PackingAlgorithm {
 		// then run until the next order overfills the drone or was ordered later than now
 		// returns the orders that were removed from the queue
 		while(hasNextOrder() && 
-				(shiftOrders.peek().getMeal().getMealWeight() + weight) <= drone.getCargoWeight() &&
+				(shiftOrders.peek().getMeal().getMealWeight() + weight) <= MAX_WEIGHT &&
 				shiftOrders.peek().getOrderedTime() <= time
 				) {
 			Order justRemoved = shiftOrders.remove();

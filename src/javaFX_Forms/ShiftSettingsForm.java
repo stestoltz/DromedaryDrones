@@ -15,7 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 
 public class ShiftSettingsForm extends Form {
 
@@ -38,7 +40,7 @@ public class ShiftSettingsForm extends Form {
 
 		// create a pane
 		GridPane pane = new GridPane();
-		pane.setAlignment(Pos.TOP_LEFT);
+		pane.setAlignment(Pos.TOP_CENTER);
 		pane.setHgap(10);
 		pane.setVgap(10);
 		pane.setPadding(new Insets(25,25,25,25));
@@ -47,55 +49,92 @@ public class ShiftSettingsForm extends Form {
 		BorderPane bottom = (BorderPane) layout.getBottom();
 		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
+		
+		Label description = new Label("Number of shifts and hours in a shift can " 
+				+ "be edited on the left. Clicking \"Save Hours\" updates the list "
+				+ "on the right with a new entry for each hour. Then orders per hour " 
+				+ "can be edited within that list");
+		
+		description.setPrefWidth(300);
+		description.setWrapText(true);
+		description.setTextAlignment(TextAlignment.CENTER);
 
 		cancel.setOnAction((event) -> {
 			this.sc.switchToHome();
 		});
 
 		save.setOnAction((event) -> {
-
-			//Whatever is inputed into the textField is updated and changed
+			
+			boolean badInput = false;
+			
+			//check that number of orders is greater than or equal to zero
 			try {
-				shift.setNumberOfShifts(Integer.parseInt(numShiftsField.getText()));
-				shift.setHoursInShift(Integer.parseInt(hrsinShiftField.getText()));
-				List<Integer> editOrderPerHour = new ArrayList<Integer>();
-				for(HBox o : order.getItems()) {
+				for (HBox o : order.getItems()) {
 					TextField inputVal = (TextField)o.getChildren().get(1);
-					editOrderPerHour.add(Integer.parseInt(inputVal.getText()));
+					int number = Integer.parseInt(inputVal.getText());
+					if (number < 0) {
+						this.sc.runErrorPopUp("Number of orders per hour must be greater than or equal to zero.");
+						badInput = true;
+					}
 				}
-				shift.setOrdersPerHour(editOrderPerHour);
-				this.sc.replaceShift(shift);
-				this.sc.switchToHome();
-			}
-
-			//if the user does not put in an integer than tells
-			//the user they need to make it an integer
+			} 
 			catch(Exception e) {
-				System.out.println("Not a valid integer input");
+				badInput = true;
+				this.sc.runErrorPopUp("All values must be valid integers.");
+			}
+			
+			if (!badInput) {
+			//Whatever is inputed into the textField is updated and changed
+				try {
+					shift.setNumberOfShifts(Integer.parseInt(numShiftsField.getText()));
+					shift.setHoursInShift(Integer.parseInt(hrsinShiftField.getText()));
+					List<Integer> editOrderPerHour = new ArrayList<Integer>();
+					for(HBox o : order.getItems()) {
+						TextField inputVal = (TextField)o.getChildren().get(1);
+						editOrderPerHour.add(Integer.parseInt(inputVal.getText()));
+					}
+					shift.setOrdersPerHour(editOrderPerHour);
+					this.sc.replaceShift(shift);
+					this.sc.switchToHome();
+				}
+	
+				//if the user does not put in an integer than tells
+				//the user they need to make it an integer
+				catch(Exception e) {
+					this.sc.runErrorPopUp("All values must be valid integers.");
+				}
 			}
 		});
 
 		//create and add the labels to the gridpane
 		Label numShifts = new Label("Number of Shifts");
+		//numShifts.setFont
 		pane.add(numShifts, 0, 1);
 
 		numShiftsField = new TextField();
+		numShiftsField.setPrefWidth(40);
 		pane.add(numShiftsField, 1, 1);
 
 		Label hrsinShift = new Label("Hours in a Shift");
 		pane.add(hrsinShift, 0, 2);
 
 		hrsinShiftField = new TextField();
+		hrsinShiftField.setPrefWidth(40);
 		pane.add(hrsinShiftField, 1, 2);
 
-		Button saveHrs = new Button("Save");
+		Button saveHrs = new Button("Save Hours");
 
 
 		//creates a button that allows the user to update the 
 		//hours in a shift and populates the order per hours list
 		//after the user clicks the save button
 		saveHrs.setOnAction(event->{
-			shiftHrs(hrsinShiftField,numShiftsField);
+			if (Integer.parseInt(hrsinShiftField.getText()) <= 0 || 
+					Integer.parseInt(numShiftsField.getText()) <= 0) {
+				this.sc.runErrorPopUp("Number of shifts and hours in a shift must be greater than zero.");
+			} else {
+				shiftHrs(hrsinShiftField,numShiftsField);
+			}
 		});
 
 		//adds the save button to the form
@@ -111,8 +150,12 @@ public class ShiftSettingsForm extends Form {
 		order.setPrefSize(120,  100);
 
 		pane.add(order, 4, 2);
+		
+		VBox middleItems = new VBox();
+		middleItems.getChildren().addAll(description, pane);
+		middleItems.setAlignment(Pos.TOP_CENTER);
 
-		layout.setCenter(pane);
+		layout.setCenter(middleItems);
 	}
 
 	/**
@@ -124,7 +167,7 @@ public class ShiftSettingsForm extends Form {
 	 * settings form
 	 */
 	public void loadShift(ShiftDetails shiftDetails) {
-		//cretes an ArrayList of HBox's that holds the data
+		//creates an ArrayList of HBox's that holds the data
 		//from shiftDetails
 		// if hours > length of list, fill with empty slots
 		while (shiftDetails.getHoursInShift() > shiftDetails.getOrdersPerHour().size()) {
@@ -137,9 +180,12 @@ public class ShiftSettingsForm extends Form {
 		// the current simulation
 		for(int i = 0; i < shiftDetails.getHoursInShift(); i++) {
 			TextField inputVal = new TextField();
+			inputVal.setPrefWidth(30);
 			inputVal.setText(Integer.toString(shiftDetails.getOrdersPerHour().get(i)));
 			HBox hbox = new HBox();
-			Text temp = new Text("Hour " + (i + 1));
+			Label temp = new Label("Hour " + (i + 1));
+			temp.setMaxWidth(100);
+			HBox.setHgrow(temp, Priority.ALWAYS);
 			hbox.getChildren().addAll(temp, inputVal);
 			orderElements.add(hbox);
 			hbox.setPrefWidth(20);
@@ -170,7 +216,7 @@ public class ShiftSettingsForm extends Form {
 	 */
 	public void shiftHrs(TextField hrsinShiftField, TextField numShiftsField) {
 
-		//cretes an ArrayList of HBox's
+		//creates an ArrayList of HBox's
 		ArrayList<HBox> orderElements = new ArrayList<>();
 
 		//Loop that goes through the shifts to create the orders per hour
@@ -178,12 +224,15 @@ public class ShiftSettingsForm extends Form {
 		try {
 			for(int i = 0; i < Integer.parseInt(hrsinShiftField.getText()); i++) {
 				TextField inputVal = new TextField();
+				inputVal.setPrefWidth(30);
 				if(shift.getHoursInShift() > i) {
 					inputVal.setText(Integer.toString(shift.getOrdersPerHour().get(i)));
 				}
 
 				HBox hbox = new HBox();
-				Text temp = new Text("Hour " + (i + 1));
+				Label temp = new Label("Hour " + (i + 1));
+				temp.setMaxWidth(100);
+				HBox.setHgrow(temp, Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);
 				orderElements.add(hbox);
 				hbox.setPrefWidth(20);
@@ -191,7 +240,7 @@ public class ShiftSettingsForm extends Form {
 		}
 
 		catch(Exception e) {
-			System.out.println("Hours in a shift could not be converted to an integer");
+			this.sc.runErrorPopUp("Hours in a shift could not be converted to an integer");
 		}
 
 		//makes the observable list a listview to be displayed

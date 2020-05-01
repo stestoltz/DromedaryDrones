@@ -14,6 +14,7 @@ import javafx.concurrent.Worker.State;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -129,7 +130,14 @@ public class MapForm extends Form {
 		left.getChildren().add(pointsView);
 		left.getChildren().add(listButtons);
 		
-		//layout.setCenter(mapView);
+		//description
+		Label description = new Label("Click the map at a given coordinate that you wish to add. "
+				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
+				+ "and off using the checkboxes.\n"
+				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
+		VBox center = new VBox();
+		center.getChildren().addAll(description,mapView);
+		layout.setCenter(center);
 		layout.setLeft(left);
 		
 		layout.setPadding(new Insets(10, 10, 10, 10));
