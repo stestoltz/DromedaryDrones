@@ -119,7 +119,7 @@ public class SceneController {
 	}
 	
 	public void switchToMap() {
-		mapForm.loadPoints(location.getDeliveryPointsMap());
+		mapForm.loadPoints(location.getDeliveryPointsMap(), location.getHome(), location.getName());
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
@@ -149,8 +149,9 @@ public class SceneController {
 		this.location.setMeals(meals);
 	}
 	
-	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
+	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points, DeliveryPoint home) {
 		this.location.setDeliveryPoints(points);
+		this.location.setHome(home);
 	}
 	
 	public void replaceShift(ShiftDetails shift) {
@@ -185,7 +186,7 @@ public class SceneController {
 		
 		Button startSimulation = new Button("Start Simulation");
 		Label loc = new Label("Location: " + location.getName());
-		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
+		loc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		Button changeName = new Button("Change Location Name");
 		Button changeLocation = new Button("Change Location");
 		Button saveLocation = new Button("Save Location");
@@ -267,7 +268,7 @@ public class SceneController {
 		BorderPane bottom = new BorderPane();
 		
 		Label header = new Label(headerText);
-		header.setFont(new Font("Comic Sans", 30));
+		header.setFont(new Font("Verdana", 30));
 		
 		ImageView imageView = new ImageView(logo);
 		imageView.setPreserveRatio(true);

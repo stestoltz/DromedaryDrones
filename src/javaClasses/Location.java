@@ -29,40 +29,40 @@ public class Location implements Serializable {
 	 */
 	public Location(String name, String homeName) {
 		deliveryPoints = new HashMap<>();
-		this.home = new DeliveryPoint(homeName, 0, 0);
+		this.home = new DeliveryPoint(homeName, 41.154808488498865, -80.07775153085983);
 		this.name = name;
 		
 		// add real delivery points
-		addPoint(new DeliveryPoint("PEW", 115, -510));
-		addPoint(new DeliveryPoint("HAL", 40, -70));
-		addPoint(new DeliveryPoint("Soccer Field", 0, 1100));
-		addPoint(new DeliveryPoint("PLC", -160, 440));
-		addPoint(new DeliveryPoint("MEP", -225, 550));
-		addPoint(new DeliveryPoint("STEM", -300, 180));
-		addPoint(new DeliveryPoint("Harker", -315, 390));
-		addPoint(new DeliveryPoint("Hoyt", -350, -70));
-		addPoint(new DeliveryPoint("Hicks", -360, -440));
-		addPoint(new DeliveryPoint("TLC", -420, -400));
-		addPoint(new DeliveryPoint("Baseball Field", -475, -170));
-		addPoint(new DeliveryPoint("Library", -475, -170));
-		addPoint(new DeliveryPoint("Rockwell", -480, 290));
-		addPoint(new DeliveryPoint("Map", -560, 860));
-		addPoint(new DeliveryPoint("Rathburn", -675, 985));
-		addPoint(new DeliveryPoint("Hopeman", -715, -225));
-		addPoint(new DeliveryPoint("Lincoln", -780, -70));
-		addPoint(new DeliveryPoint("Ketler Recreation", -800, 155));
-		addPoint(new DeliveryPoint("Chapel", -860, 680));
-		addPoint(new DeliveryPoint("Softball Field", -930, 1420));
-		addPoint(new DeliveryPoint("Zerbe", -940, -135));
-		addPoint(new DeliveryPoint("Crawford", -975, 485));
-		addPoint(new DeliveryPoint("Memorial", -1160, 100));
-		addPoint(new DeliveryPoint("President's House", -1280, -30));
-		addPoint(new DeliveryPoint("Field House", -1625, 1000));
-		addPoint(new DeliveryPoint("Tennis Courts", -1880, 1210));
-		addPoint(new DeliveryPoint("Football Field", -2065, 885));
-		addPoint(new DeliveryPoint("Colonial Apartments", -2330, 770));
-		addPoint(new DeliveryPoint("Carnegie Hall", -2455, 835));
-
+		addPoint(new DeliveryPoint("PEW", 41.152881903411874, -80.07758203606872));
+		addPoint(new DeliveryPoint("HAL", 41.15467560850118, -80.07749045574086));
+		addPoint(new DeliveryPoint("Soccer Field", 41.158550264091765, -80.07740477043758));
+		addPoint(new DeliveryPoint("PLC", 41.1559095899193, -80.07835384017163));
+		addPoint(new DeliveryPoint("MEP", 41.15666590257303, -80.07862836407985));
+		addPoint(new DeliveryPoint("STEM", 41.15510275699408, -80.07911920832957));
+		addPoint(new DeliveryPoint("Harker", 41.155963085811415, -80.07914616148645));
+		addPoint(new DeliveryPoint("Hoyt", 41.1546035027463, -80.07901830412852));
+		addPoint(new DeliveryPoint("Hicks", 41.153299367569964, -80.07874418401852));
+		addPoint(new DeliveryPoint("TLC", 41.15375838554398, -80.07926083656726));
+		addPoint(new DeliveryPoint("Baseball Field", 41.15839619045162, -80.07934393694319));
+		addPoint(new DeliveryPoint("Library", 41.15431005663642, -80.07945147948362));
+		addPoint(new DeliveryPoint("Rockwell", 41.15553724553622, -80.07945498721149));
+		addPoint(new DeliveryPoint("Map", 41.15634090277309, -80.07992987184225));
+		addPoint(new DeliveryPoint("Rathburn", 41.15738496547057, -80.08028928785025));
+		addPoint(new DeliveryPoint("Hopeman", 41.15428201087024, -80.08066345600783));
+		addPoint(new DeliveryPoint("Lincoln", 41.15485555861438, -80.08044619707762));
+		addPoint(new DeliveryPoint("Ketler Recreation", 41.15524107111898, -80.08068493869966));
+		addPoint(new DeliveryPoint("Chapel", 41.15668501610066, -80.0808744035746));
+		addPoint(new DeliveryPoint("Softball Field", 41.15856934057094, -80.08119794326178));
+		addPoint(new DeliveryPoint("Zerbe", 41.1542919610577, -80.08127341817142));
+		addPoint(new DeliveryPoint("Crawford", 41.15582881514225, -80.08158187220813));
+		addPoint(new DeliveryPoint("Memorial", 41.15514147765253, -80.08213022048878));
+		addPoint(new DeliveryPoint("President's House", 41.15468383521992, -80.08242774396987));
+		addPoint(new DeliveryPoint("Field House", 41.15781060717677, -80.08391673836604));
+		addPoint(new DeliveryPoint("Tennis Courts", 41.15805345127432, -80.08502627945477));
+		addPoint(new DeliveryPoint("Football Field", 41.15688053608965, -80.08466665710328));
+		addPoint(new DeliveryPoint("Colonial Apartments", 41.15695121305507, -80.08621938896987));
+		addPoint(new DeliveryPoint("Carnegie Hall", 41.157314636651144, -80.08678326120625));
+		
 		this.foods = new ArrayList<FoodItem>();	
 		// add default foods
 		FoodItem burger = new FoodItem("Burger", 6.0 / 16.0, 0);
@@ -194,6 +194,10 @@ public class Location implements Serializable {
 		return new DeliveryPoint(home);
 	}
 	
+	public void setHome(DeliveryPoint home) {
+		this.home = home;
+	}
+	
 	public int getNumberOfDrones() {
 		return numberOfDrones;
 	}
@@ -201,6 +205,7 @@ public class Location implements Serializable {
 	public void setNumberOfDrones(int num) {
 		this.numberOfDrones = num;
 	}
+
 	/**
 	 * method adds a point to the hashmap
 	 * assume that points added are automatically turned on

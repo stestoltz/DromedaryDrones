@@ -43,7 +43,7 @@ public class HomeForm extends Form {
 		Image map = new Image(new FileInputStream("res/map.jfif"));
 		ImageView mapView = new ImageView(map);
 		mapView.setPreserveRatio(true);
-		mapView.setFitHeight(500);
+		mapView.setFitHeight(400);
 		
 		layout.setCenter(mapView);
 		

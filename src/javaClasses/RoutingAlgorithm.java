@@ -11,15 +11,4 @@ public interface RoutingAlgorithm {
 	 */
 	public DroneTrip createTrip(List<Order> orders, DeliveryPoint home);
 	
-	/**
-	 * Calculates the distance between two points
-	 * @param a the first point
-	 * @param b the second point
-	 * @return the distance between the two points
-	 */
-	default double distance(DeliveryPoint a, DeliveryPoint b) {
-		return Math.sqrt(((a.getX() - b.getX()) * (a.getX() - b.getX())) + 
-						((a.getY() - b.getY()) * (a.getY() - b.getY())));
-	}
-	
 }
