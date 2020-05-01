@@ -1,12 +1,16 @@
 package javaFX_Forms;
 
 import javaClasses.Drone;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 public class DroneForm extends Form {
 
@@ -24,33 +28,40 @@ public class DroneForm extends Form {
 		Label description = new Label("All drone restrictions can be edited here. "
 				+ "The restricted cargo weight can be lowered below the drone's carrying "
 				+ "weight in order to extend battery life or drone life if desired.");
+		description.setFont(new Font("Verdana", 14));
 
 		Label label1 = new Label("Cargo weight (lb): ");
+		label1.setFont(new Font("Verdana", 18));
 		txtCargoWeight = new TextField();
 
 		HBox line1 = new HBox(label1, txtCargoWeight);
 
 		Label label2 = new Label("Average cruising speed (mph): ");
+		label2.setFont(new Font("Verdana", 18));
 		txtCruisingSpeed = new TextField();
 
 		HBox line2 = new HBox(label2, txtCruisingSpeed);
 
 		Label label3 = new Label("Maximum flight time (min): ");
+		label3.setFont(new Font("Verdana", 18));
 		txtMaxFlightTime = new TextField();
 
 		HBox line3 = new HBox(label3, txtMaxFlightTime);
 
 		Label label4 = new Label("Turn around time (min): ");
+		label4.setFont(new Font("Verdana", 18));
 		txtTurnAroundTime = new TextField();
 
 		HBox line4 = new HBox(label4, txtTurnAroundTime);
 
 		Label label5 = new Label("Delivery time (s): ");
+		label5.setFont(new Font("Verdana", 18));
 		txtDeliveryTime = new TextField();
 
 		HBox line5 = new HBox(label5, txtDeliveryTime);
 		
 		Label label6 = new Label("Restricted cargo weight (lb): ");
+		label6.setFont(new Font("Verdana", 18));
 		txtUserSpecifiedWeight = new TextField();
 
 		HBox line6 = new HBox(label6, txtUserSpecifiedWeight);
@@ -59,10 +70,20 @@ public class DroneForm extends Form {
 		txtNumberOfDrones = new TextField();
 		
 		HBox line7 = new HBox(label7, txtNumberOfDrones);
-
+		
 		VBox form = new VBox(description, line1, line2, line3, line4, line5, line6, line7);
+		// Create a gridpane for displaying the form VBox
+		GridPane pane = new GridPane();
+		
+		// Set the form to be displayed in the top center
+		pane.setAlignment(Pos.TOP_CENTER);
+		
+		// Add the form info to the pane
+		pane.addColumn(0, form);
+		
+		
 
-		layout.setCenter(form);
+		layout.setCenter(pane);
 
 		// get buttons and set event handlers
 

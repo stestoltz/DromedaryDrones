@@ -186,7 +186,7 @@ public class SceneController {
 		
 		Button startSimulation = new Button("Start Simulation");
 		Label loc = new Label("Location: " + location.getName());
-		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
+		loc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		Button changeName = new Button("Change Location Name");
 		Button changeLocation = new Button("Change Location");
 		Button saveLocation = new Button("Save Location");
@@ -268,7 +268,7 @@ public class SceneController {
 		BorderPane bottom = new BorderPane();
 		
 		Label header = new Label(headerText);
-		header.setFont(new Font("Comic Sans", 30));
+		header.setFont(new Font("Verdana", 30));
 		
 		ImageView imageView = new ImageView(logo);
 		imageView.setPreserveRatio(true);
