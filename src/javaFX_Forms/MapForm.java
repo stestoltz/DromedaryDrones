@@ -28,8 +28,14 @@ import netscape.javascript.JSObject;
 
 public class MapForm extends Form {
 	
+	private String ACTIVE_ICON = "red-dot";
+	private String INACTIVE_ICON = "grey";
+	private String HOME_ICON = "green";
+	
 	private ListView<HBox> pointsView;
 	
+	private DeliveryPoint home;
+	private HBox homeHBox;
 	private List<DeliveryPoint> points;
 	
 	private Connector connector;
@@ -68,10 +74,13 @@ public class MapForm extends Form {
 				if (hbox != null) {
 					DeliveryPoint selectedPoint = getDeliveryPoint(hbox);
 					
-					points.remove(selectedPoint);
-					pointsView.getItems().remove(hbox);
+					if (selectedPoint != home) {
 					
-					jsObject.call("deleteMarker", selectedPoint.getName());
+						points.remove(selectedPoint);
+						pointsView.getItems().remove(hbox);
+						
+						jsObject.call("deleteMarker", selectedPoint.getName());
+					}
 				}
 			}
 		});
@@ -90,12 +99,9 @@ public class MapForm extends Form {
 				    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
 				    	// lost focus
 						if (!newValue) {
-							if (text.getText().equals("")) {
+							if (text.getText().equals("") || isNameTaken(text.getText())) {
 								// if empty, revert to old
 								text.setText(currentVal);
-								
-								// remove this listener
-								text.focusedProperty().removeListener(this);
 							} else {
 							
 								// change the name in the list
@@ -103,6 +109,9 @@ public class MapForm extends Form {
 								
 								jsObject.call("editMarker", currentVal, text.getText());
 							}
+
+							// remove this listener
+							text.focusedProperty().removeListener(this);
 						}
 				    }
 				};
@@ -146,17 +155,23 @@ public class MapForm extends Form {
 
 			boolean atLeastOneActivePoint = false;
 			
-			for (HBox hbox : pointsView.getItems()) {
-				boolean active = getActive(hbox);
-				endPoints.put(getDeliveryPoint(hbox), active);
+			for (int i = 0; i < pointsView.getItems().size(); i++) {
+				HBox hbox = pointsView.getItems().get(i);
+				DeliveryPoint dp = getDeliveryPoint(hbox);
 				
-				if (active) {
-					atLeastOneActivePoint = true;
+				if (dp != home) {
+				
+					boolean active = getActive(hbox);
+					endPoints.put(getDeliveryPoint(hbox), active);
+					
+					if (active) {
+						atLeastOneActivePoint = true;
+					}
 				}
 			}
 			
 			if (atLeastOneActivePoint) {
-				this.sc.replaceDeliveryPoints(endPoints);
+				this.sc.replaceDeliveryPoints(endPoints, home);
 				this.sc.switchToHome();
 			} else {
 				System.out.println("No active delivery points selected");
@@ -164,37 +179,46 @@ public class MapForm extends Form {
 		});
 	}
 	
+	public boolean isNameTaken(String name) {
+		if (name.equals(home.getName())) {
+			return true;
+		}
+		
+		for (DeliveryPoint dp : points) {
+			if (name.equals(dp.getName())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * load a hashmap of delivery points into the ListView<HBox>
 	 * @param points
 	 */
-	public void loadPoints(Map<DeliveryPoint, Boolean> points, DeliveryPoint home, String locationName) {
+	public void loadPoints(Map<DeliveryPoint, Boolean> pointsMap, DeliveryPoint home, String locationName) {
 		this.points = new ArrayList<>();
 		
 		pointsView.getItems().clear();
 		
 		this.locationName = locationName;
 		
-		// add the home point
-		this.points.add(home);
+		this.home = home;
 		
-		HBox hboxHome = new HBox();
+		homeHBox = new HBox();
 		
 		TextField textHome = new TextField();
 		textHome.setText(home.toString());
 		textHome.setEditable(false);
 		
-		hboxHome.getChildren().addAll(textHome);
-		pointsView.getItems().add(hboxHome);
+		homeHBox.getChildren().addAll(textHome);
+		pointsView.getItems().add(homeHBox);
 		
 		
 		WebView webView = new WebView();
 		WebEngine webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
-        
-        /*webView.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-			System.out.println(event.getX() + " " + event.getY());
-		});*/
         
         // listener for when engine is loaded
         webEngine.getLoadWorker().stateProperty().addListener(
@@ -204,30 +228,24 @@ public class MapForm extends Form {
 	                	
 	            		jsObject = (JSObject) webEngine.executeScript("window");
 	            		
-	            		jsObject.call("loadMap", home.getLat(), home.getLng());
+	            		jsObject.call("loadMap", home.getLat(), home.getLng(), ACTIVE_ICON);
 	            		
 	            		jsObject.call("geocode", locationName);
 	            		
 	            		jsObject.setMember("java", connector);
 	                	
 	                	// add the home point to the map
-	            		jsObject.call("addMarker", home.getLat(), home.getLng(), home.getName());
+	            		jsObject.call("addMarker", home.getLat(), home.getLng(), home.getName(), HOME_ICON);
 	                	
 	                	// loop to add delivery points to the map
-	            		for (DeliveryPoint dp : points.keySet()) {
-	            			addDeliveryPoint(dp, points.get(dp));
+	            		for (DeliveryPoint dp : pointsMap.keySet()) {
+	            			addDeliveryPoint(dp, pointsMap.get(dp));
 	            			
-	            			jsObject.call("addMarker", dp.getLat(), dp.getLng(), dp.getName());
+	            			String iconType = pointsMap.get(dp) ? ACTIVE_ICON : INACTIVE_ICON;
+	            			
+	            			jsObject.call("addMarker", dp.getLat(), dp.getLng(), dp.getName(), iconType);
 	            		}
-	            		
-	            		// TODO: send JS all of the current delivery points
-	            		
-	            		
-	            		String string = (String) webEngine.executeScript("getLat()");
 
-	            		double[] latLng = parseLatLngFromJS(string);
-	            		
-	            		System.out.println("Listener: " + latLng[0] + " " + latLng[1]);
 	                }
 	            }
 	        });
@@ -243,9 +261,14 @@ public class MapForm extends Form {
 	 * @return
 	 */
 	public DeliveryPoint getDeliveryPoint(HBox hbox) {
-		for (int i = 0; i < points.size(); i++) {
+		// if first hbox - home delivery point
+		if (hbox == homeHBox) {
+			return home;
+		}
+		
+		for (int i = 0; i < pointsView.getItems().size(); i++) {
 			if (hbox == pointsView.getItems().get(i)) {
-				return points.get(i);
+				return points.get(i - 1);
 			}
 		}
 		
@@ -264,6 +287,14 @@ public class MapForm extends Form {
 		CheckBox check = new CheckBox();
 		check.setSelected(active);
 		
+		check.setOnAction((event) -> {
+			if (check.isSelected()) {
+				jsObject.call("setMarkerColor", dp.getName(), ACTIVE_ICON);
+			} else {
+				jsObject.call("setMarkerColor", dp.getName(), INACTIVE_ICON);
+			}
+		});
+		
 		hbox.getChildren().addAll(text, check);
 		pointsView.getItems().add(hbox);
 	}
@@ -274,9 +305,8 @@ public class MapForm extends Form {
 	 * @return
 	 */
 	public boolean getActive(HBox hbox) {
-		// start at one - home point is never active
-		for (int i = 1; i < points.size(); i++) {
-			if (hbox == pointsView.getItems().get(i)) {
+		for (int i = 0; i < points.size(); i++) {
+			if (hbox == pointsView.getItems().get(i + 1)) {
 				CheckBox check = (CheckBox) hbox.getChildren().get(1);
 				
 				return check.isSelected();
@@ -309,14 +339,15 @@ public class MapForm extends Form {
 			this.parent = parent;
 		}
 		
-	    public void addDeliveryPoint(Object msg) {
+	    public void addDeliveryPoint(Object coords, Object name) {
 	    	System.out.println("Connector called");
 	    	
-	    	String string = (String) msg;
+	    	String coordsString = (String) coords;
+	    	String pointName = (String) name;
 	    	
-	    	double[] latLng = parent.parseLatLngFromJS(string);
+	    	double[] latLng = parent.parseLatLngFromJS(coordsString);
 	    	
-	    	DeliveryPoint dp = new DeliveryPoint("test", latLng[0], latLng[1]);
+	    	DeliveryPoint dp = new DeliveryPoint(pointName, latLng[0], latLng[1]);
 	    	
 	    	parent.addDeliveryPoint(dp, true);
     		

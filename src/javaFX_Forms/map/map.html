@@ -42,12 +42,50 @@
         geocoder = new google.maps.Geocoder();
       }
 
-      function addMarker(latitude, longitude, name) {
+      function uniqueName() {
+        newPointName = "Delivery Point ";
+        newPointIndex = 0;
+
+        var found = false;
+
+        while (!found) {
+          newPointIndex += 1;
+
+          var nameInList = false;
+
+          for (i = 0; i < markers.length; i++) {
+            m = markers[i];
+
+            if (m.title === (newPointName + newPointIndex)) {
+              nameInList = true;
+            }
+          }
+
+          if (!nameInList) {
+            found = true;
+          }
+        }
+
+        return newPointName + newPointIndex;
+      }
+
+      function addMarker(latitude, longitude, name, color) {
+
+        var infowindow = new google.maps.InfoWindow({
+          content: name
+        });
         
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng({lat: latitude, lng: longitude}),
           map: map,
-          title: name
+          title: name,
+          icon: {
+            url: colorURL(color)
+          }
+        });
+
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
         });
 
         markers.push(marker);
@@ -77,48 +115,49 @@
       }
 
       function editMarker(oldName, newName) {
-          java.log("editing marker " + oldName + " to " + newName);
+        java.log("editing marker " + oldName + " to " + newName);
 
-          for (i = 0; i < markers.length; i++) {
-            m = markers[i];
+        for (i = 0; i < markers.length; i++) {
+          m = markers[i];
 
-            if (m.title === oldName) {
-              m.title = newName;
-              break;
-            }
+          if (m.title === oldName) {
+            m.title = newName;
+            break;
           }
         }
+      }
 
-      function loadMap(latitude, longitude) {
+      function setMarkerColor(name, color) {
+        java.log("changing color of marker " + name + " to " + color);
+
+        for (i = 0; i < markers.length; i++) {
+          m = markers[i];
+
+          if (m.title === name) {
+            m.setIcon({url: colorURL(color)})
+            
+            break;
+          }
+        }
+      }
+
+      function colorURL(color) {
+        return "http://maps.google.com/mapfiles/ms/icons/" + color + ".png";
+      }
+
+      function loadMap(latitude, longitude, newColor) {
 
         center = new google.maps.LatLng({lat: latitude, lng: longitude});
 
         map.setCenter(center);
 
-        /*
-        var marker = new google.maps.Marker({
-          position: center,
-          map: map,
-          title: 'Hello World!'
-        });
-
-        markers.push(marker);
-
-        */
-
         map.addListener('click', function(e) {
 
-          /*var marker = new google.maps.Marker({
-            position: new google.maps.LatLng({lat: e.latLng.lat(), lng: e.latLng.lng()}),
-            map: map,
-            title: "test"
-          });
+          pointName = uniqueName();
+          
+          addMarker(e.latLng.lat(), e.latLng.lng(), pointName, newColor);
 
-          markers.push(marker);*/
-
-          addMarker(e.latLng.lat(), e.latLng.lng(), "test");
-
-          java.addDeliveryPoint(e.latLng.toString());
+          java.addDeliveryPoint(e.latLng.toString(), pointName);
         });
         
       }
@@ -132,10 +171,6 @@
             java.log('Geocode was not successful for the following reason: ' + status);
           }
         });
-      }
-
-      function getLat() {
-        return center.toString();
       }
 
     </script>

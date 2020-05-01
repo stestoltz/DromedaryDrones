@@ -157,8 +157,9 @@ public class SceneController {
 		this.location.setMeals(meals);
 	}
 	
-	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
+	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points, DeliveryPoint home) {
 		this.location.setDeliveryPoints(points);
+		this.location.setHome(home);
 	}
 	
 	public void replaceShift(ShiftDetails shift) {
