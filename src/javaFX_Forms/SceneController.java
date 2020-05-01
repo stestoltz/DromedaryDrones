@@ -1,15 +1,9 @@
 package javaFX_Forms;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
 
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javaClasses.DeliveryPoint;
 import javaClasses.Drone;
@@ -52,7 +46,7 @@ public class SceneController {
 	private ShiftSettingsForm shiftForm;
 	private SimulationResultsForm resultsForm;
 	
-	private FileChooser chooser;
+	private MenuItem mappingMenuItem;
 	
 	public SceneController(Stage stage) throws Exception {
 		location = new Location("Grove City", "SAC");
@@ -73,9 +67,6 @@ public class SceneController {
 		
 		Scene scene = new Scene(homeForm.getLayout(), Color.LIGHTGOLDENRODYELLOW);
 		stage.setScene(scene);
-		
-		chooser = new FileChooser();
-		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt", "*.txt"));
 	}
 	
 	// each form has a getLayout() method to get its layout,
@@ -110,13 +101,13 @@ public class SceneController {
 		return resultsForm.getLayout();
 	}
 	
-	
 	public void switchToHome() {
+		homeForm.loadHomeForm(location);
 		stage.getScene().setRoot(getHomeLayout());
 	}
 	
 	public void switchToDrone() {
-		droneForm.loadDrone(location.getDrone());
+		droneForm.loadForm(location.getDrone());
 		stage.getScene().setRoot(getDroneLayout());
 	}
 	
@@ -130,8 +121,13 @@ public class SceneController {
 		stage.getScene().setRoot(getMealLayout());
 	}
 	
+	public void switchToNewMap(String locationName) {
+		mapForm.loadEmptyLocation(locationName);
+		stage.getScene().setRoot(getMapLayout());
+	}
+	
 	public void switchToMap() {
-		mapForm.loadPoints(location.getDeliveryPointsMap());
+		mapForm.loadPoints(location.getDeliveryPointsMap(), location.getHome(), location.getName());
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
@@ -149,13 +145,8 @@ public class SceneController {
 		}
 	}
 	
-	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
-	}
-	
-	public void replaceNumDrones(int num) {
-		this.location.setNumDrones(num);
 	}
 	
 	public void replaceFoods(List<FoodItem> foods) {
@@ -166,8 +157,9 @@ public class SceneController {
 		this.location.setMeals(meals);
 	}
 	
-	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
+	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points, DeliveryPoint home) {
 		this.location.setDeliveryPoints(points);
+		this.location.setHome(home);
 	}
 	
 	public void replaceShift(ShiftDetails shift) {
@@ -205,14 +197,14 @@ public class SceneController {
 		
 		Button startSimulation = new Button("Start Simulation");
 		Label loc = new Label("Location: " + location.getName());
-		loc.setFont(Font.font("Comic Sans", FontWeight.BOLD, 20));
+		loc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		Button changeName = new Button("Change Location Name");
-		Button uploadLocation = new Button("Upload Location");
+		Button changeLocation = new Button("Change Location");
 		Button saveLocation = new Button("Save Location");
 		
 		HBox editLocation = new HBox();
 		editLocation.setSpacing(10);
-		editLocation.getChildren().addAll(uploadLocation, saveLocation);
+		editLocation.getChildren().addAll(changeLocation, saveLocation);
 		
 		HBox locationName = new HBox();
 		locationName.setSpacing(10);
@@ -222,14 +214,6 @@ public class SceneController {
 		bottom.setCenter(startSimulation);
 		bottom.setLeft(locationName);
 		bottom.setRight(editLocation);
-		
-		uploadLocation.setOnAction((event) -> {
-			changeLocation();
-		});
-		
-		saveLocation.setOnAction((event) -> {
-			saveLocation();
-		});
 		
 		//create a menubar for the hamburger menu
 		MenuBar menuBar = new MenuBar();
@@ -251,8 +235,18 @@ public class SceneController {
 		BorderPane top = ((BorderPane) layout.getTop());
 		top.setRight(menuBar);
 		
+		// disable mapping until Google Maps loads in
+		mappingMenuItem = menuItem1;
+		menuItem1.setDisable(true);
+		
 		return layout;
 	}
+	
+	public void enableMapping() {
+		mappingMenuItem.setDisable(false);
+	}
+	
+	
 	
 	/**
 	 * builds the simulation results border pane
@@ -295,7 +289,7 @@ public class SceneController {
 		BorderPane bottom = new BorderPane();
 		
 		Label header = new Label(headerText);
-		header.setFont(new Font("Comic Sans", 30));
+		header.setFont(new Font("Verdana", 30));
 		
 		ImageView imageView = new ImageView(logo);
 		imageView.setPreserveRatio(true);
@@ -316,62 +310,17 @@ public class SceneController {
 		return layout;
 		
 	}	
-	
-	/**
-	 * this method lets the user upload a file to change the location object
-	 * then the location object details are all updated to match the file
-	 * @throws FileNotFoundException 
-	 */
-	private void changeLocation() {
-		chooser.setTitle("Choose Location File");
-		File file = chooser.showOpenDialog(null);
-		
-		if (file != null) {
-			try {
-			FileInputStream fileIn = new FileInputStream(file.getAbsolutePath());
-			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-			
-			Object obj = objectIn.readObject();
-			location = (Location) obj;
-			
-			//close streams
-			fileIn.close();
-			objectIn.close();
-			
-			objectIn.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-	
-	
-	/**
-	 * this method saves the location to an object file
-	 */
-	private void saveLocation() {
-		chooser.setTitle("Choose a Save Location");
-		File saveFile = chooser.showSaveDialog(stage);
-
-		if (saveFile != null) {
-			String filepath = saveFile.getAbsolutePath();
-			try {
-				FileOutputStream fileOut = new FileOutputStream(filepath);
-				ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-				objectOut.writeObject(location);
-				
-				//close files
-				objectOut.close();
-				fileOut.close();
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
 
 	public Location getLocation() {
 		return location;
+	}
+	
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+	public Stage getStage() {
+		return stage;
 	}
 	
 	public void runErrorPopUp(String errorText) {

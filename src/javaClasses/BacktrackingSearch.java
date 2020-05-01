@@ -42,7 +42,7 @@ public class BacktrackingSearch implements RoutingAlgorithm {
 		if (ordersLeft.isEmpty()) {
 			
 			// done with orders - go back home
-			updateBestRoute(distance + distance(current, home), route);
+			updateBestRoute(distance + current.distanceInFeet(home), route);
 			
 		} else {
 		
@@ -54,7 +54,7 @@ public class BacktrackingSearch implements RoutingAlgorithm {
 				route.add(currentOrder);
 				
 				// distance if we deliver this order next
-				double currentDistance = distance + distance(current, currentOrder.getDeliveryPoint());
+				double currentDistance = distance + current.distanceInFeet(currentOrder.getDeliveryPoint());
 				
 				// backtrack for this order
 				backtrack(ordersLeft, route, currentOrder.getDeliveryPoint(), currentDistance, home);

@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -23,6 +24,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -83,7 +86,7 @@ public class MealForm extends Form
 		//create meal label
 		Label mealLabel = new StyleLabel("Meals:");
 		mealLabel.setStyle("-fx-font-size: 15pt;");
-
+		
 		// Create the meal VBox
 		VBox mealSelection = new VBox();
 		// Set Spacing to 10 pixels
@@ -131,6 +134,8 @@ public class MealForm extends Form
 
 		// Create the GridPane
 		GridPane pane = new GridPane();
+		// Set the pane to the top center of the display
+		pane.setAlignment(Pos.TOP_CENTER);
 		// Set the horizontal and vertical gaps between children
 		pane.setHgap(10);
 		pane.setVgap(5);
@@ -149,6 +154,7 @@ public class MealForm extends Form
 				+ "When creating a new meal,\nenter the quantities desired for each food. "
 				+ "Once you create the meal, it will be displayed in the list of meals on the left where its\n"
 				+ "percentage can be edited.");
+		
 		completePane.setTop(description);
 		completePane.setCenter(pane);
 
@@ -390,9 +396,11 @@ public class MealForm extends Form
 		GridPane popupPane = new GridPane();
 		/****************************set up popup buttons area***************************/
 		ListView<HBox> popupList = new ListView<HBox>();
+
 		popupList.setStyle("-fx-font-size: 12pt;");
 		Label editMeal = new StyleLabel("Edit Meal");
 		editMeal.setStyle("-fx-font-size: 15pt;");
+
 		//creates arraylist to store all hboxes going into the listview
 		ArrayList<HBox> foodElem = new ArrayList<>();
 		for(int i=0; i<foods.size(); i++) {
