@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div id="map"></div>
+    <script language="javascript">
+      var map;
+      var centerLat = 33;
+      var centerLng = -14;
+
+      var center;
+
+      var geocoder;
+
+      var markers = [];
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: centerLat, lng: centerLng},
+          zoom: 16,
+          mapTypeId: 'hybrid'
+        });
+
+        geocoder = new google.maps.Geocoder();
+      }
+
+      function uniqueName() {
+        newPointName = "Delivery Point ";
+        newPointIndex = 0;
+
+        var found = false;
+
+        while (!found) {
+          newPointIndex += 1;
+
+          var nameInList = getMarker(newPointName + newPointIndex);
+          
+          if (!nameInList) {
+            found = true;
+          }
+        }
+
+        return newPointName + newPointIndex;
+      }
+
+      function addMarker(latitude, longitude, name, color) {
+
+        java.log("Adding marker...");
+
+        var infowindow = new google.maps.InfoWindow({
+          content: name
+        });
+        
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng({lat: latitude, lng: longitude}),
+          map: map,
+          title: name,
+          icon: {
+            url: colorURL(color)
+          },
+          draggable: true
+        });
+
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+        marker.addListener('dragend', function(e) {
+          java.moveDeliveryPoint(e.latLng.toString(), name);
+        })
+
+        markers.push(marker);
+
+        java.log("Added marker " + name + " at " + latitude + ", " + longitude);
+
+        return marker;
+      }
+
+      function deleteMarker(name) {
+        java.log("delete marker " + name);
+        index = -1;
+
+        for (i = 0; i < markers.length; i++) {
+          m = markers[i];
+
+          if (m.title === name) {
+
+            m.setMap(null);
+
+            index = i;
+            break;
+          }
+        }
+
+        // remove from index, move rest of array down
+        markers.splice(index, 1);
+      }
+
+      function editMarker(oldName, newName) {
+        java.log("editing marker " + oldName + " to " + newName);
+
+        var m = getMarker(oldName);
+
+        m.title = newName;
+      }
+
+      function setMarkerColor(name, color) {
+        java.log("changing color of marker " + name + " to " + color);
+
+        var m = getMarker(name);
+
+        m.setIcon({url: colorURL(color)});
+      }
+
+      function colorURL(color) {
+        return "http://maps.google.com/mapfiles/ms/icons/" + color + ".png";
+      }
+
+      function getMarker(name) {
+        for (i = 0; i < markers.length; i++) {
+          m = markers[i];
+
+          if (m.title === name) {
+            return m;
+          }
+        }
+
+        return null;
+      }
+
+      function loadMap(latitude, longitude, newColor) {
+
+        center = new google.maps.LatLng({lat: latitude, lng: longitude});
+
+        map.setCenter(center);
+
+        google.maps.event.clearListeners(map, 'click');
+
+        map.addListener('click', function(e) {
+
+          pointName = uniqueName();
+          
+          addMarker(e.latLng.lat(), e.latLng.lng(), pointName, newColor);
+
+          java.addDeliveryPoint(e.latLng.toString(), pointName);
+        });
+        
+      }
+
+      function geocodeNewLocation(locationName, newColor, homeColor) {
+        geocoder.geocode({'address': locationName}, function(results, status) {
+          if (status === 'OK') {
+
+            loadMap(results[0].geometry.location.lat(), results[0].geometry.location.lng(), newColor);
+
+            addMarker(center.lat(), center.lng(), locationName, homeColor);
+
+            java.addHomePointToEmptyLocation(center.toString(), locationName);
+
+            java.log("geocoded to " + results[0].geometry.location.toString());
+          } else {
+            java.log('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+
+      function clearMap() {
+        for (i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+
+        markers = [];
+      }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHfMk8fCY8gsFeb-RveV6mgLZnTyPETDA&callback=initMap"
+    async defer></script>
+  </body>
+</html>

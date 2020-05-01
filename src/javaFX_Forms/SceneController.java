@@ -45,6 +45,8 @@ public class SceneController {
 	private ShiftSettingsForm shiftForm;
 	private SimulationResultsForm resultsForm;
 	
+	private MenuItem mappingMenuItem;
+	
 	public SceneController(Stage stage) throws Exception {
 		location = new Location("Grove City", "SAC");
 		
@@ -116,6 +118,11 @@ public class SceneController {
 	public void switchToMeal() {
 		mealForm.loadMeals(location.getMeals(), location.getFoods(), location.getDrone());
 		stage.getScene().setRoot(getMealLayout());
+	}
+	
+	public void switchToNewMap(String locationName) {
+		mapForm.loadEmptyLocation(locationName);
+		stage.getScene().setRoot(getMapLayout());
 	}
 	
 	public void switchToMap() {
@@ -224,8 +231,18 @@ public class SceneController {
 		BorderPane top = ((BorderPane) layout.getTop());
 		top.setRight(menuBar);
 		
+		// disable mapping until Google Maps loads in
+		mappingMenuItem = menuItem1;
+		menuItem1.setDisable(true);
+		
 		return layout;
 	}
+	
+	public void enableMapping() {
+		mappingMenuItem.setDisable(false);
+	}
+	
+	
 	
 	/**
 	 * builds the simulation results border pane
