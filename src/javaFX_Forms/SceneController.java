@@ -98,8 +98,8 @@ public class SceneController {
 		return resultsForm.getLayout();
 	}
 	
-	
 	public void switchToHome() {
+		homeForm.loadHomeForm(location);
 		stage.getScene().setRoot(getHomeLayout());
 	}
 	
