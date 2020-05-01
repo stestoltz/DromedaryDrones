@@ -31,6 +31,8 @@ public class HomeForm extends Form {
 	
 	private FileChooser chooser;
 	
+	private Label locationNameLabel;
+	
 	public HomeForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
 		super(sc, layout);
 		
@@ -111,10 +113,11 @@ public class HomeForm extends Form {
 		});
 		
 		
-		BorderPane bottom = ((BorderPane) layout.getBottom());
-		Button startSimulation = ((Button) bottom.getCenter());
-		HBox locationName = ((HBox) bottom.getLeft());
-		Button changeName = ((Button) locationName.getChildren().get(1));
+		BorderPane bottom = (BorderPane) layout.getBottom();
+		Button startSimulation = (Button) bottom.getCenter();
+		HBox locationName = (HBox) bottom.getLeft();
+		Button changeName = (Button) locationName.getChildren().get(1);
+		locationNameLabel = (Label) locationName.getChildren().get(0);
 		
 		HBox editLocation = ((HBox) bottom.getRight());
 		Button changeLocation = ((Button) editLocation.getChildren().get(0));
@@ -146,6 +149,14 @@ public class HomeForm extends Form {
 	}
 	
 	/**
+	 * 
+	 */
+	public void loadHomeForm(Location location) {
+		locationNameLabel.setText("Location: " + location.getName());
+	}
+	
+	
+ 	/**
 	 * this method allows the user to change the name of the location through 
 	 * 		a pop up
 	 */
@@ -271,6 +282,7 @@ public class HomeForm extends Form {
 			objectIn.close();
 			
 			this.sc.runErrorPopUp("Location file uploaded successfully!");
+			this.sc.switchToHome();
 			
 			} catch (Exception ex) {
 				this.sc.runErrorPopUp("There was a problem loading the file.");

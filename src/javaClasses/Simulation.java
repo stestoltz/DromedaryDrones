@@ -200,10 +200,10 @@ public class Simulation {
 			// deliver order if not on trip back home
 			if (i < stops.length) {
 				
-				stops[i].setDeliveredTime(time);
-				
 				// add delivery time
 				time += location.getDrone().getDeliveryTime();
+				
+				stops[i].setDeliveredTime(time);
 			}
 		}
 		
@@ -218,15 +218,10 @@ public class Simulation {
 	 * @return
 	 */
 	private double calcTime(DeliveryPoint origin, DeliveryPoint destination) {
-		double distance = distance(origin, destination);
+		double distance = origin.distanceInFeet(destination);
 		
 		// D = RT, so T = D / R
 		return distance / location.getDrone().getAverageCruisingSpeedFeetPerSecond();
-	}
-	
-	private double distance(DeliveryPoint a, DeliveryPoint b) {
-		return Math.sqrt(((a.getX() - b.getX()) * (a.getX() - b.getX())) + 
-				((a.getY() - b.getY()) * (a.getY() - b.getY())));
 	}
 	
 	/**

@@ -98,8 +98,8 @@ public class SceneController {
 		return resultsForm.getLayout();
 	}
 	
-	
 	public void switchToHome() {
+		homeForm.loadHomeForm(location);
 		stage.getScene().setRoot(getHomeLayout());
 	}
 	
@@ -119,7 +119,7 @@ public class SceneController {
 	}
 	
 	public void switchToMap() {
-		mapForm.loadPoints(location.getDeliveryPointsMap());
+		mapForm.loadPoints(location.getDeliveryPointsMap(), location.getHome(), location.getName());
 		stage.getScene().setRoot(getMapLayout());
 	}
 	
@@ -149,8 +149,9 @@ public class SceneController {
 		this.location.setMeals(meals);
 	}
 	
-	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points) {
+	public void replaceDeliveryPoints(Map<DeliveryPoint, Boolean> points, DeliveryPoint home) {
 		this.location.setDeliveryPoints(points);
+		this.location.setHome(home);
 	}
 	
 	public void replaceShift(ShiftDetails shift) {
