@@ -37,6 +37,8 @@ public class MapForm extends Form {
 	
 	private ListView<HBox> pointsView;
 	
+	private Label description;
+	
 	private DeliveryPoint home;
 	private HBox homeHBox;
 	private List<DeliveryPoint> points;
@@ -52,16 +54,6 @@ public class MapForm extends Form {
 		pointsView = new ListView<>();
 		
 		connector = new Connector(this);
-
-		//create map
-		Image map = new Image(new FileInputStream("res/map2.jpg"));
-		ImageView mapView = new ImageView(map);
-		mapView.setPreserveRatio(true);
-		mapView.setFitWidth(900);
-		
-		mapView.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-			System.out.println(event.getX() + " " + event.getY());
-		});
 		
 		HBox listButtons = new HBox();
 		Button edit = new Button("Edit");
@@ -131,13 +123,11 @@ public class MapForm extends Form {
 		left.getChildren().add(listButtons);
 		
 		//description
-		Label description = new Label("Click the map at a given coordinate that you wish to add. "
+		description = new Label("Click the map at a given coordinate that you wish to add. "
 				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
 				+ "and off using the checkboxes.\n"
 				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
-		VBox center = new VBox();
-		center.getChildren().addAll(description,mapView);
-		layout.setCenter(center);
+		
 		layout.setLeft(left);
 		
 		layout.setPadding(new Insets(10, 10, 10, 10));
@@ -304,7 +294,9 @@ public class MapForm extends Form {
 		
 		webEngine.load(getClass().getResource("/javaFX_Forms/map/map.html").toString());
 		
-		layout.setCenter(webView);
+		VBox center = new VBox();
+		center.getChildren().addAll(description, webView);
+		layout.setCenter(center);
 	}
 	
 	/**
