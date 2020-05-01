@@ -31,6 +31,8 @@ public class MapForm extends Form {
 	private String ACTIVE_ICON = "red-dot";
 	private String INACTIVE_ICON = "grey";
 	private String HOME_ICON = "green";
+	private String HIGHLIGHT_ACTIVE = "yellow-dot";
+	private String HIGHLIGHT_INACTIVE = "yellow";
 	
 	private ListView<HBox> pointsView;
 	
@@ -116,7 +118,7 @@ public class MapForm extends Form {
 				    }
 				};
 				
-				text.focusedProperty().addListener(listener);		
+				text.focusedProperty().addListener(listener);
 				
 				text.setEditable(true);
 				text.requestFocus();
@@ -125,7 +127,7 @@ public class MapForm extends Form {
 		
 		VBox left = new VBox();
 		left.getChildren().add(pointsView);
-		left.getChildren().add(listButtons);		
+		left.getChildren().add(listButtons);
 		
 		//layout.setCenter(mapView);
 		layout.setLeft(left);
@@ -215,6 +217,48 @@ public class MapForm extends Form {
 		homeHBox.getChildren().addAll(textHome);
 		pointsView.getItems().add(homeHBox);
 		
+		pointsView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<HBox>() {
+		    @Override
+		    public void changed(ObservableValue<? extends HBox> observable, HBox oldValue, HBox newValue) {
+		        
+		    	//set color for old highlighted hbox
+		    	if (oldValue != null) {
+		    		if (oldValue == homeHBox) {
+				        
+				        jsObject.call("setMarkerColor", home.getName(), HOME_ICON);
+		    			
+		    		} else {
+				    	DeliveryPoint dp = getDeliveryPoint(oldValue);
+				    	
+				        Boolean active = getActive(oldValue);
+				        String color = active ? ACTIVE_ICON : INACTIVE_ICON;
+				        
+				        jsObject.call("setMarkerColor", dp.getName(), color);
+		    		}
+		    	}
+		    	
+		    	
+		    	// set color for newly highlighted hbox
+		    	DeliveryPoint dp = getDeliveryPoint(newValue);
+		        
+		        Boolean active = getActive(newValue);
+		        String color = active ? HIGHLIGHT_ACTIVE : HIGHLIGHT_INACTIVE;
+		        
+		        jsObject.call("setMarkerColor", dp.getName(), color);
+		    }
+		});
+		
+		ChangeListener<Boolean> homeListener = new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
+		    	// gained focus
+				if (newValue) {
+					pointsView.getSelectionModel().select(homeHBox);
+				}
+		    }
+		};
+		
+		textHome.focusedProperty().addListener(homeListener);
 		
 		WebView webView = new WebView();
 		WebEngine webEngine = webView.getEngine();
@@ -230,7 +274,7 @@ public class MapForm extends Form {
 	            		
 	            		jsObject.call("loadMap", home.getLat(), home.getLng(), ACTIVE_ICON);
 	            		
-	            		jsObject.call("geocode", locationName);
+	            		//jsObject.call("geocode", locationName);
 	            		
 	            		jsObject.setMember("java", connector);
 	                	
@@ -275,6 +319,20 @@ public class MapForm extends Form {
 		return null;
 	}
 	
+	private DeliveryPoint getDeliveryPoint(String name) {
+		if (home.getName().equals(name)) {
+			return home;
+		}
+		
+		for (DeliveryPoint dp : points) {
+			if (dp.getName().equals(name)) {
+				return dp;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void addDeliveryPoint(DeliveryPoint dp, boolean active) {
 		this.points.add(dp);
 		
@@ -288,12 +346,40 @@ public class MapForm extends Form {
 		check.setSelected(active);
 		
 		check.setOnAction((event) -> {
-			if (check.isSelected()) {
-				jsObject.call("setMarkerColor", dp.getName(), ACTIVE_ICON);
+			
+			boolean isActive = check.isSelected();
+			boolean isHighlighted = hbox == pointsView.getSelectionModel().getSelectedItem();
+			
+			String color;
+			
+			if (isActive) {
+				if (isHighlighted) {
+					color = HIGHLIGHT_ACTIVE;
+				} else {
+					color = ACTIVE_ICON;
+				}
 			} else {
-				jsObject.call("setMarkerColor", dp.getName(), INACTIVE_ICON);
+				if (isHighlighted) {
+					color = HIGHLIGHT_INACTIVE;
+				} else {
+					color = INACTIVE_ICON;
+				}
 			}
+			
+			jsObject.call("setMarkerColor", dp.getName(), color);
 		});
+		
+		ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
+		    	// gained focus
+				if (newValue) {
+					pointsView.getSelectionModel().select(hbox);
+				}
+		    }
+		};
+		
+		text.focusedProperty().addListener(listener);
 		
 		hbox.getChildren().addAll(text, check);
 		pointsView.getItems().add(hbox);
@@ -340,7 +426,7 @@ public class MapForm extends Form {
 		}
 		
 	    public void addDeliveryPoint(Object coords, Object name) {
-	    	System.out.println("Connector called");
+	    	System.out.println("Connector called: addDeliveryPoint");
 	    	
 	    	String coordsString = (String) coords;
 	    	String pointName = (String) name;
@@ -351,7 +437,26 @@ public class MapForm extends Form {
 	    	
 	    	parent.addDeliveryPoint(dp, true);
     		
-    		System.out.println("Connector: " + latLng[0] + " " + latLng[1]);
+    		System.out.println("Added point: " + latLng[0] + " " + latLng[1]);
+	    }
+	    
+	    public void moveDeliveryPoint(Object coords, Object name) {
+	    	System.out.println("Connector called: moveDeliveryPoint");
+	    	
+	    	String coordsString = (String) coords;
+	    	String pointName = (String) name;
+	    	
+	    	double[] latLng = parent.parseLatLngFromJS(coordsString);
+	    	
+	    	DeliveryPoint dp = getDeliveryPoint(pointName);
+	    	
+	    	if (dp != null) {
+	    		dp.setLat(latLng[0]);
+	    		dp.setLng(latLng[1]);
+	    	}
+    		
+    		System.out.println("Moved point: " + latLng[0] + " " + latLng[1]);
+	    	
 	    }
 	    
 	    public void log(Object msg) {

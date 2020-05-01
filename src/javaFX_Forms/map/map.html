@@ -51,16 +51,8 @@
         while (!found) {
           newPointIndex += 1;
 
-          var nameInList = false;
-
-          for (i = 0; i < markers.length; i++) {
-            m = markers[i];
-
-            if (m.title === (newPointName + newPointIndex)) {
-              nameInList = true;
-            }
-          }
-
+          var nameInList = getMarker(newPointName + newPointIndex);
+          
           if (!nameInList) {
             found = true;
           }
@@ -81,12 +73,17 @@
           title: name,
           icon: {
             url: colorURL(color)
-          }
+          },
+          draggable: true
         });
 
         marker.addListener('click', function() {
           infowindow.open(map, marker);
         });
+
+        marker.addListener('dragend', function(e) {
+          java.moveDeliveryPoint(e.latLng.toString(), name);
+        })
 
         markers.push(marker);
       }
@@ -98,10 +95,7 @@
         for (i = 0; i < markers.length; i++) {
           m = markers[i];
 
-          java.log("checking marker with name " + m.name);
-
           if (m.title === name) {
-            java.log("found a marker!");
 
             m.setMap(null);
 
@@ -117,32 +111,33 @@
       function editMarker(oldName, newName) {
         java.log("editing marker " + oldName + " to " + newName);
 
-        for (i = 0; i < markers.length; i++) {
-          m = markers[i];
+        var m = getMarker(oldName);
 
-          if (m.title === oldName) {
-            m.title = newName;
-            break;
-          }
-        }
+        m.title = newName;
       }
 
       function setMarkerColor(name, color) {
         java.log("changing color of marker " + name + " to " + color);
 
-        for (i = 0; i < markers.length; i++) {
-          m = markers[i];
+        var m = getMarker(name);
 
-          if (m.title === name) {
-            m.setIcon({url: colorURL(color)})
-            
-            break;
-          }
-        }
+        m.setIcon({url: colorURL(color)});
       }
 
       function colorURL(color) {
         return "http://maps.google.com/mapfiles/ms/icons/" + color + ".png";
+      }
+
+      function getMarker(name) {
+        for (i = 0; i < markers.length; i++) {
+          m = markers[i];
+
+          if (m.title === name) {
+            return m;
+          }
+        }
+
+        return null;
       }
 
       function loadMap(latitude, longitude, newColor) {
