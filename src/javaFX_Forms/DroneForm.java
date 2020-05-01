@@ -29,6 +29,7 @@ public class DroneForm extends Form {
 				+ "The restricted cargo weight can be lowered below the drone's carrying "
 				+ "weight in order to extend battery life or drone life if desired.");
 		description.setFont(new Font("Verdana", 14));
+		description.setWrapText(true);
 
 		Label label1 = new Label("Cargo weight (lb): ");
 		label1.setFont(new Font("Verdana", 18));

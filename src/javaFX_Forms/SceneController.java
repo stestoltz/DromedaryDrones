@@ -1,6 +1,7 @@
 package javaFX_Forms;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +23,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -165,6 +164,9 @@ public class SceneController {
 		this.location.setShiftDetails(shift);
 	}
 	
+	public Image getLogo() {
+		return logo;
+	}
 	
 	/**
 	 * builds a settings border pane
@@ -187,29 +189,31 @@ public class SceneController {
 	/**
 	 * builds the home border pane
 	 * @return
+	 * @throws FileNotFoundException 
 	 */
-	public BorderPane buildHomeBorderPane() {
-		BorderPane layout = buildBaseBorderPane("Dromedary Drones");
+	public BorderPane buildHomeBorderPane() throws FileNotFoundException {
+		BorderPane layout = new BorderPane();
 		
-		Button startSimulation = new Button("Start Simulation");
-		Label loc = new Label("Location: " + location.getName());
-		loc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-		Button changeName = new Button("Change Location Name");
-		Button changeLocation = new Button("Change Location");
-		Button saveLocation = new Button("Save Location");
+		BorderPane top = new BorderPane();
+		BorderPane bottom = new BorderPane();
 		
-		HBox editLocation = new HBox();
-		editLocation.setSpacing(10);
-		editLocation.getChildren().addAll(changeLocation, saveLocation);
+		layout.setBottom(bottom);
+		layout.setTop(top);
 		
-		HBox locationName = new HBox();
-		locationName.setSpacing(10);
-		locationName.getChildren().addAll(loc, changeName);
+		// Set the padding of the layout
+		layout.setStyle("-fx-padding: 10;" +
+				"-fx-border-width: 2;" +
+				"-fx-border-insets: 5;" +
+				"-fx-border-radius: 5;");
 		
-		BorderPane bottom = ((BorderPane) layout.getBottom());
+		Image simulationIcon = new Image(new FileInputStream("res/sim_clipart.png"));
+		ImageView simImage = new ImageView(simulationIcon);
+		simImage.setFitHeight(50);
+		simImage.setFitWidth(50);
+		Button startSimulation = new Button("Start Simulation", simImage);
+		startSimulation.setPrefSize(200, 50);
+		
 		bottom.setCenter(startSimulation);
-		bottom.setLeft(locationName);
-		bottom.setRight(editLocation);
 		
 		//create a menubar for the hamburger menu
 		MenuBar menuBar = new MenuBar();
@@ -228,7 +232,6 @@ public class SceneController {
 		menu1.getItems().add(menuItem4);
 		menu1.getItems().add(menuItem5);
 		
-		BorderPane top = ((BorderPane) layout.getTop());
 		top.setRight(menuBar);
 		
 		// disable mapping until Google Maps loads in
@@ -241,7 +244,6 @@ public class SceneController {
 	public void enableMapping() {
 		mappingMenuItem.setDisable(false);
 	}
-	
 	
 	
 	/**
