@@ -1,6 +1,5 @@
 package javaFX_Forms;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +16,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -29,24 +25,21 @@ import netscape.javascript.JSObject;
 
 public class MapForm extends Form {
 	
-	private String ACTIVE_ICON = "red-dot";
-	private String INACTIVE_ICON = "grey";
-	private String HOME_ICON = "green";
-	private String HIGHLIGHT_ACTIVE = "yellow-dot";
-	private String HIGHLIGHT_INACTIVE = "yellow";
+	private final String ACTIVE_ICON = "red-dot";
+	private final String INACTIVE_ICON = "grey";
+	private final String HOME_ICON = "green";
+	private final String HIGHLIGHT_ACTIVE = "yellow-dot";
+	private final String HIGHLIGHT_INACTIVE = "yellow";
 	
 	private ListView<HBox> pointsView;
-	
-	private Label description;
 	
 	private DeliveryPoint home;
 	private HBox homeHBox;
 	private List<DeliveryPoint> points;
 	
+	private WebEngine webEngine;
 	private Connector connector;
-	private JSObject jsObject;
-	
-	private String locationName;
+	private JSObject javascript;
 	
 	public MapForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
 		super(sc, layout);
@@ -54,6 +47,37 @@ public class MapForm extends Form {
 		pointsView = new ListView<>();
 		
 		connector = new Connector(this);
+		
+		WebView webView = new WebView();
+		webEngine = webView.getEngine();
+        webEngine.setJavaScriptEnabled(true);
+        
+        // listener for when engine is loaded
+        webEngine.getLoadWorker().stateProperty().addListener(
+	        new ChangeListener<State>() {
+	            public void changed(ObservableValue<? extends State> ov, State oldState, State newState) {
+	                if (newState == State.SUCCEEDED) {
+	                	
+	            		javascript = (JSObject) webEngine.executeScript("window");
+	            		
+	            		javascript.setMember("java", connector);
+	            		
+	            		sc.enableMapping();
+	                }
+	            }
+	        });
+		
+		webEngine.load(getClass().getResource("/javaFX_Forms/map/map.html").toString());
+
+		//description
+		Label description = new Label("Click the map at a given coordinate that you wish to add. "
+				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
+				+ "and off using the checkboxes.\n"
+				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
+		
+		VBox center = new VBox();
+		center.getChildren().addAll(description, webView);
+		layout.setCenter(center);
 		
 		HBox listButtons = new HBox();
 		Button edit = new Button("Edit");
@@ -63,7 +87,7 @@ public class MapForm extends Form {
 		
 		delete.setOnAction((event) -> {
 			
-			if (jsObject != null) {
+			if (javascript != null) {
 				HBox hbox = pointsView.getSelectionModel().getSelectedItem();
 				
 				if (hbox != null) {
@@ -74,7 +98,7 @@ public class MapForm extends Form {
 						points.remove(selectedPoint);
 						pointsView.getItems().remove(hbox);
 						
-						jsObject.call("deleteMarker", selectedPoint.getName());
+						javascript.call("deleteMarker", selectedPoint.getName());
 					}
 				}
 			}
@@ -102,7 +126,7 @@ public class MapForm extends Form {
 								// change the name in the list
 								getDeliveryPoint(hbox).setName(text.getText());
 								
-								jsObject.call("editMarker", currentVal, text.getText());
+								javascript.call("editMarker", currentVal, text.getText());
 							}
 
 							// remove this listener
@@ -121,13 +145,6 @@ public class MapForm extends Form {
 		VBox left = new VBox();
 		left.getChildren().add(pointsView);
 		left.getChildren().add(listButtons);
-		
-		//description
-		description = new Label("Click the map at a given coordinate that you wish to add. "
-				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
-				+ "and off using the checkboxes.\n"
-				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
-		
 		layout.setLeft(left);
 		
 		layout.setPadding(new Insets(10, 10, 10, 10));
@@ -146,6 +163,7 @@ public class MapForm extends Form {
 		bottom.setPadding(new Insets(10, 10, 10, 10));
 		
 		cancel.setOnAction((event) -> {
+			javascript.call("clearMap");
 			this.sc.switchToHome();
 		});
 		
@@ -171,11 +189,49 @@ public class MapForm extends Form {
 			}
 			
 			if (atLeastOneActivePoint) {
+				javascript.call("clearMap");
 				this.sc.replaceDeliveryPoints(endPoints, home);
 				this.sc.switchToHome();
 			} else {
 				System.out.println("No active delivery points selected");
 			}
+		});
+		
+		pointsView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<HBox>() {
+		    @Override
+		    public void changed(ObservableValue<? extends HBox> observable, HBox oldValue, HBox newValue) {
+		        
+		    	//set color for old highlighted hbox
+		    	if (oldValue != null) {
+		    		if (oldValue == homeHBox) {
+				        
+				        javascript.call("setMarkerColor", home.getName(), HOME_ICON);
+		    			
+		    		} else {
+				    	DeliveryPoint dp = getDeliveryPoint(oldValue);
+				    	
+				    	if (dp != null) {
+				    	
+					        Boolean active = getActive(oldValue);
+					        String color = active ? ACTIVE_ICON : INACTIVE_ICON;
+					        
+					        try {
+					        	javascript.call("setMarkerColor", dp.getName(), color);
+					        } catch (NullPointerException ex) {
+					        	System.out.println("no");
+					        }
+				    	}
+		    		}
+		    	}
+		    	
+		    	// set color for newly highlighted hbox
+		    	DeliveryPoint dp = getDeliveryPoint(newValue);
+		        
+		        Boolean active = getActive(newValue);
+		        String color = active ? HIGHLIGHT_ACTIVE : HIGHLIGHT_INACTIVE;
+		        
+		        javascript.call("setMarkerColor", dp.getName(), color);
+		    }
 		});
 	}
 	
@@ -193,6 +249,42 @@ public class MapForm extends Form {
 		return false;
 	}
 	
+	public void loadEmptyLocation(String locationName) {
+		this.points = new ArrayList<>();
+		
+		pointsView.getItems().clear();
+		
+		homeHBox = new HBox();
+		pointsView.getItems().add(homeHBox);
+		
+		// center on given location
+		javascript.call("geocodeNewLocation", locationName, ACTIVE_ICON, HOME_ICON);
+	}
+	
+	public void setHomePoint(String name, double lat, double lng) {
+		
+		TextField textHome = new TextField();
+		textHome.setEditable(false);
+		
+		homeHBox.getChildren().addAll(textHome);
+		
+		home = new DeliveryPoint(name, lat, lng);
+		
+		ChangeListener<Boolean> homeListener = new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
+		    	// gained focus
+				if (newValue) {
+					pointsView.getSelectionModel().select(homeHBox);
+				}
+		    }
+		};
+		
+		textHome.setText(home.toString());
+		
+		textHome.focusedProperty().addListener(homeListener);
+	}
+	
 	/**
 	 * load a hashmap of delivery points into the ListView<HBox>
 	 * @param points
@@ -201,8 +293,6 @@ public class MapForm extends Form {
 		this.points = new ArrayList<>();
 		
 		pointsView.getItems().clear();
-		
-		this.locationName = locationName;
 		
 		this.home = home;
 		
@@ -214,37 +304,6 @@ public class MapForm extends Form {
 		
 		homeHBox.getChildren().addAll(textHome);
 		pointsView.getItems().add(homeHBox);
-		
-		pointsView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<HBox>() {
-		    @Override
-		    public void changed(ObservableValue<? extends HBox> observable, HBox oldValue, HBox newValue) {
-		        
-		    	//set color for old highlighted hbox
-		    	if (oldValue != null) {
-		    		if (oldValue == homeHBox) {
-				        
-				        jsObject.call("setMarkerColor", home.getName(), HOME_ICON);
-		    			
-		    		} else {
-				    	DeliveryPoint dp = getDeliveryPoint(oldValue);
-				    	
-				        Boolean active = getActive(oldValue);
-				        String color = active ? ACTIVE_ICON : INACTIVE_ICON;
-				        
-				        jsObject.call("setMarkerColor", dp.getName(), color);
-		    		}
-		    	}
-		    	
-		    	
-		    	// set color for newly highlighted hbox
-		    	DeliveryPoint dp = getDeliveryPoint(newValue);
-		        
-		        Boolean active = getActive(newValue);
-		        String color = active ? HIGHLIGHT_ACTIVE : HIGHLIGHT_INACTIVE;
-		        
-		        jsObject.call("setMarkerColor", dp.getName(), color);
-		    }
-		});
 		
 		ChangeListener<Boolean> homeListener = new ChangeListener<Boolean>() {
 		    @Override
@@ -258,45 +317,20 @@ public class MapForm extends Form {
 		
 		textHome.focusedProperty().addListener(homeListener);
 		
-		WebView webView = new WebView();
-		WebEngine webEngine = webView.getEngine();
-        webEngine.setJavaScriptEnabled(true);
-        
-        // listener for when engine is loaded
-        webEngine.getLoadWorker().stateProperty().addListener(
-	        new ChangeListener<State>() {
-	            public void changed(ObservableValue ov, State oldState, State newState) {
-	                if (newState == State.SUCCEEDED) {
-	                	
-	            		jsObject = (JSObject) webEngine.executeScript("window");
-	            		
-	            		jsObject.call("loadMap", home.getLat(), home.getLng(), ACTIVE_ICON);
-	            		
-	            		//jsObject.call("geocode", locationName);
-	            		
-	            		jsObject.setMember("java", connector);
-	                	
-	                	// add the home point to the map
-	            		jsObject.call("addMarker", home.getLat(), home.getLng(), home.getName(), HOME_ICON);
-	                	
-	                	// loop to add delivery points to the map
-	            		for (DeliveryPoint dp : pointsMap.keySet()) {
-	            			addDeliveryPoint(dp, pointsMap.get(dp));
-	            			
-	            			String iconType = pointsMap.get(dp) ? ACTIVE_ICON : INACTIVE_ICON;
-	            			
-	            			jsObject.call("addMarker", dp.getLat(), dp.getLng(), dp.getName(), iconType);
-	            		}
+		javascript.call("loadMap", home.getLat(), home.getLng(), ACTIVE_ICON);
+		
+    	// add the home point to the map
+		javascript.call("addMarker", home.getLat(), home.getLng(), home.getName(), HOME_ICON);
 
-	                }
-	            }
-	        });
-		
-		webEngine.load(getClass().getResource("/javaFX_Forms/map/map.html").toString());
-		
-		VBox center = new VBox();
-		center.getChildren().addAll(description, webView);
-		layout.setCenter(center);
+
+    	// loop to add delivery points to the map
+		for (DeliveryPoint dp : pointsMap.keySet()) {
+			addDeliveryPoint(dp, pointsMap.get(dp));
+			
+			String iconType = pointsMap.get(dp) ? ACTIVE_ICON : INACTIVE_ICON;
+			
+			javascript.call("addMarker", dp.getLat(), dp.getLng(), dp.getName(), iconType);
+		}
 	}
 	
 	/**
@@ -366,7 +400,7 @@ public class MapForm extends Form {
 				}
 			}
 			
-			jsObject.call("setMarkerColor", dp.getName(), color);
+			javascript.call("setMarkerColor", dp.getName(), color);
 		});
 		
 		ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {
@@ -423,6 +457,19 @@ public class MapForm extends Form {
 		
 		public Connector(MapForm parent) {
 			this.parent = parent;
+		}
+		
+		public void addHomePointToEmptyLocation(Object coords, Object name) {
+			System.out.println("Connector called: addHomePointToEmptyLocation");
+    		
+			String coordsString = (String) coords;
+	    	String pointName = (String) name;
+	    	
+	    	double[] latLng = parent.parseLatLngFromJS(coordsString);
+	    	
+	    	parent.setHomePoint(pointName, latLng[0], latLng[1]);
+			
+    		System.out.println("Added home point: " + latLng[0] + " " + latLng[1]);
 		}
 		
 	    public void addDeliveryPoint(Object coords, Object name) {
