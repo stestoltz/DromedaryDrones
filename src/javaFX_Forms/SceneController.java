@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -63,7 +64,7 @@ public class SceneController {
 
 		resultsForm = new SimulationResultsForm(this, buildResultsBorderPane());
 		
-		Scene scene = new Scene(homeForm.getLayout());
+		Scene scene = new Scene(homeForm.getLayout(), Color.LIGHTGOLDENRODYELLOW);
 		stage.setScene(scene);
 	}
 	
@@ -178,6 +179,9 @@ public class SceneController {
 		
 		Button cancel = new Button("Cancel and Return");
 		Button saveChanges = new Button("Save Changes");
+		
+		cancel.setStyle("-fx-font-size: 12pt;");
+		saveChanges.setStyle("-fx-font-size: 12pt;");
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setLeft(cancel);

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javaClasses.ShiftDetails;
+import javaFX_Styling.StyleButton;
+import javaFX_Styling.StyleLabel;
+import javaFX_Styling.StyleTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -50,12 +53,12 @@ public class ShiftSettingsForm extends Form {
 		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
 		
-		Label description = new Label("Number of shifts and hours in a shift can " 
+		Label description = new StyleLabel("Number of shifts and hours in a shift can " 
 				+ "be edited on the left. Clicking \"Save Hours\" updates the list "
 				+ "on the right with a new entry for each hour. Then orders per hour " 
 				+ "can be edited within that list.");
 		
-		description.setPrefWidth(400);
+		description.setPrefWidth(600);
 		description.setWrapText(true);
 		description.setTextAlignment(TextAlignment.CENTER);
 
@@ -71,7 +74,6 @@ public class ShiftSettingsForm extends Form {
 			try {
 				shift.setNumberOfShifts(Integer.parseInt(numShiftsField.getText()));
 				shift.setHoursInShift(Integer.parseInt(hrsinShiftField.getText()));
-				List<Integer> editOrderPerHour = new ArrayList<Integer>();
 				
 				for (HBox o : hours.getItems()) {
 					TextField inputVal = (TextField)o.getChildren().get(1);
@@ -112,18 +114,19 @@ public class ShiftSettingsForm extends Form {
 
 		
 		//create and add the labels to the gridpane
-		Label numShifts = new Label("Number of Shifts");
+		Label numShifts = new StyleLabel("Number of Shifts:");
 		//numShifts.setFont
 		
-		numShiftsField = new TextField();
-		numShiftsField.setPrefWidth(40);
+		numShiftsField = new StyleTextField();
+		numShiftsField.setMaxWidth(50);
 
-		Label hrsinShift = new Label("Hours in a Shift");
+		Label hrsinShift = new StyleLabel("Hours in a Shift:");
 
-		hrsinShiftField = new TextField();
-		hrsinShiftField.setPrefWidth(40);
+		hrsinShiftField = new StyleTextField();
+		hrsinShiftField.setMaxWidth(50);
 		
-		Button saveHrs = new Button("Save Hours");
+		Button saveHrs = new StyleButton("Save Hours");
+		saveHrs.setPrefWidth(120);
 		VBox col1 = new VBox();
 		col1.getChildren().addAll(numShifts, hrsinShift);
 		VBox col2 = new VBox();
@@ -151,10 +154,11 @@ public class ShiftSettingsForm extends Form {
 
 		//create and set up the orders per hour list and add
 		//it to the gridpane
-		Label ordersPerHour = new Label("Orders Per Hour");
+		Label ordersPerHour = new StyleLabel("Orders Per Hour:");
 
 		hours = new ListView<>();
 		hours.setPrefSize(200,  200);
+		hours.setStyle("-fx-font-size: 12pt;");
 		
 		VBox col3 = new VBox();
 		col3.getChildren().addAll(ordersPerHour, hours);
@@ -190,7 +194,7 @@ public class ShiftSettingsForm extends Form {
 		// the current simulation
 		for(int i = 0; i < shiftDetails.getHoursInShift(); i++) {
 			TextField inputVal = new TextField();
-			inputVal.setPrefWidth(30);
+			inputVal.setPrefWidth(40);
 			inputVal.setText(Integer.toString(shiftDetails.getOrdersPerHour().get(i)));
 			HBox hbox = new HBox();
 			Label temp = new Label("Hour " + (i + 1));

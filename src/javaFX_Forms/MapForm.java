@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javaClasses.DeliveryPoint;
+import javaFX_Styling.StyleButton;
+import javaFX_Styling.StyleLabel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
@@ -45,6 +47,7 @@ public class MapForm extends Form {
 		super(sc, layout);
 		
 		pointsView = new ListView<>();
+		pointsView.setStyle("-fx-font-size: 10pt;");
 		
 		connector = new Connector(this);
 		
@@ -70,18 +73,18 @@ public class MapForm extends Form {
 		webEngine.load(getClass().getResource("/javaFX_Forms/map/map.html").toString());
 
 		//description
-		Label description = new Label("Click the map at a given coordinate that you wish to add. "
+		Label description = new StyleLabel("Click the map at a given coordinate that you wish to add. "
 				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
 				+ "and off using the checkboxes.\n"
 				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
-		
+		description.setWrapText(true);
 		VBox center = new VBox();
 		center.getChildren().addAll(description, webView);
 		layout.setCenter(center);
 		
 		HBox listButtons = new HBox();
-		Button edit = new Button("Edit");
-		Button delete = new Button("Delete");
+		Button edit = new StyleButton("Edit");
+		Button delete = new StyleButton("Delete");
 		listButtons.getChildren().add(edit);
 		listButtons.getChildren().add(delete);
 		

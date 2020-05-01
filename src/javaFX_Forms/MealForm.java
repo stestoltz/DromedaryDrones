@@ -9,7 +9,8 @@ import java.util.List;
 import javaClasses.Drone;
 import javaClasses.FoodItem;
 import javaClasses.Meal;
-
+import javaFX_Styling.StyleButton;
+import javaFX_Styling.StyleLabel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -55,57 +56,18 @@ public class MealForm extends Form
 		mealView = new ListView<>();
 
 
-		//makes the list be displayed vertically
+		//makes the lists be displayed vertically
 		foodView.setOrientation(Orientation.VERTICAL);
-		// Set the Size of the ListView
-		foodView.setPrefSize(120, 100);
 
-		// Set the Orientation of the ListView
 		mealView.setOrientation(Orientation.VERTICAL);
-		// Set the Size of the ListView
-		mealView.setPrefSize(120, 100);
 
 
 		//create food label
-		Label newMealLabel = new Label("New Meal");		
-
-		// Create the food VBox
-		VBox foodSelection = new VBox();
-		// Set Spacing to 10 pixels
-		foodSelection.setSpacing(10);
-		// Add the Label and the List to the VBox
-		foodSelection.getChildren().addAll(newMealLabel,foodView);
-		foodSelection.setPrefWidth(200);	//prevents a smooshed display
-
-		//create meal label
-		Label mealLabel = new Label("Meals:");
-		mealLabel.setFont(new Font("Verdana", 18));
-
-		// Create the meal VBox
-		VBox mealSelection = new VBox();
-		// Set Spacing to 10 pixels
-		mealSelection.setSpacing(10);
-		// Add the Label and the List to the VBox
-		mealSelection.getChildren().addAll(mealLabel,mealView);
-		mealSelection.setPrefWidth(300);	//prevents a smooshed display
-
-
-		/****************************set up edit list buttons***************************/
-		// create a button 
-		edit = new Button("Edit"); 
-		Button delete = new Button("Delete");
-
-		//button section on gui
-		VBox buttons = new VBox();
-		buttons.setSpacing(10);
-		buttons.getChildren().addAll(edit,delete);	//adds buttons to vbox
-		buttons.setPadding(new Insets(50, 10, 0, 0));	//above,right,below,left
-		buttons.setPrefWidth(150);	//prevents buttons from showing up as "..."
-		/***************************finished list buttons**************************/
-
-		/****************************set up add area***************************/
-
-		Button addMeal = new Button("Add New Meal");
+		Label newMealLabel = new StyleLabel("New Meal");
+		newMealLabel.setStyle("-fx-font-size: 15pt;");
+		
+		Button addMeal = new StyleButton("Add New Meal");
+		addMeal.setPrefWidth(140);
 
 		//calls function to check if adding stuff is valid
 		//need to check for duplicates
@@ -113,6 +75,39 @@ public class MealForm extends Form
 		addMeal.setOnAction(event-> {
 			addingEvent();
 		});
+
+		// Create the food VBox
+		VBox foodSelection = new VBox();
+		// Set Spacing to 10 pixels
+		foodSelection.setSpacing(10);
+		// Add the Label and the List to the VBox
+		foodSelection.getChildren().addAll(newMealLabel,foodView, addMeal);
+
+		//create meal label
+		Label mealLabel = new StyleLabel("Meals:");
+		mealLabel.setStyle("-fx-font-size: 15pt;");
+		
+		// Create the meal VBox
+		VBox mealSelection = new VBox();
+		// Set Spacing to 10 pixels
+		mealSelection.setSpacing(10);
+		// Add the Label and the List to the VBox
+		mealSelection.getChildren().addAll(mealLabel,mealView);
+
+
+		/****************************set up edit list buttons***************************/
+		// create a button 
+		edit = new StyleButton("Edit"); 
+		Button delete = new StyleButton("Delete");
+
+		//button section on gui
+		VBox buttons = new VBox();
+		buttons.setSpacing(10);
+		buttons.getChildren().addAll(edit,delete);	//adds buttons to vbox
+		buttons.setPadding(new Insets (50, 10, 0, 0));	//above,right,below,left
+		buttons.setPrefWidth(150);	//prevents buttons from being too close to food list
+		/***************************finished list buttons**************************/
+
 
 		delete.setOnAction((event) -> {
 			HBox selectedBox = (HBox) mealView.getSelectionModel().getSelectedItem();
@@ -137,9 +132,6 @@ public class MealForm extends Form
 			}
 		});
 
-
-		/***************************finished add area**************************/
-
 		// Create the GridPane
 		GridPane pane = new GridPane();
 		// Set the pane to the top center of the display
@@ -150,19 +142,18 @@ public class MealForm extends Form
 		// Add the two gui components
 		pane.addColumn(0, mealSelection);
 		pane.addColumn(1, buttons);
-		pane.addColumn(2, foodSelection,addMeal);
+		pane.addColumn(2, foodSelection);
 
 		// Set the Style-properties of the GridPane
 		pane.setPadding(new Insets(25,25,25,25));
 		
 		BorderPane completePane = new BorderPane();
-		Label description = new Label("All meal options are shown to the left with food quantities in the parenthesis. "
+		Label description = new StyleLabel("All meal options are shown to the left with food quantities in the parenthesis. "
 				+ "The likelihood of a meal being ordered can be edited\nin the textbox to the right of the meal. "
 				+ "All percentages must add up to 100 in order to save changes. "
 				+ "When creating a new meal,\nenter the quantities desired for each food. "
 				+ "Once you create the meal, it will be displayed in the list of meals on the left where its\n"
 				+ "percentage can be edited.");
-		description.setFont(new Font("Verdana", 14));
 		
 		completePane.setTop(description);
 		completePane.setCenter(pane);
@@ -188,8 +179,6 @@ public class MealForm extends Form
 				this.sc.switchToHome();
 			}
 		});
-
-		/***************************popup section******************************/
 
 	}
 
@@ -271,11 +260,11 @@ public class MealForm extends Form
 			if(mealSuccess){
 				//add new meal to display
 				TextField inputVal = new TextField("0");	//creates the textField
-				inputVal.setPrefWidth(40);
+				inputVal.setPrefWidth(50);
 				HBox hbox = new HBox();
 				//gets the food item as text
-				Label temp = new Label(m.toString());
-				temp.setMaxWidth(220);
+				Label temp = new StyleLabel(m.toString());
+				temp.setMaxWidth(310);
 				HBox.setHgrow(temp,Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
@@ -314,6 +303,7 @@ public class MealForm extends Form
 		int index = 0;
 		for(HBox selectedBox : mealView.getItems()) {
 			TextField temp = (TextField)(selectedBox.getChildren().get(1));
+			
 			String stringP = temp.getText();
 
 			try{
@@ -350,11 +340,11 @@ public class MealForm extends Form
 		ArrayList<HBox> foodElements = new ArrayList<>();
 		for(int i=0; i<foods.size(); i++) {
 			TextField inputVal = new TextField();	//creates the textField
-			inputVal.setPrefWidth(30);
+			inputVal.setPrefWidth(40);
 
 			HBox hbox = new HBox();
 			//gets the food item as text
-			Label temp = new Label(foods.get(i).toString());
+			Label temp = new StyleLabel(foods.get(i).toString());
 			temp.setMaxWidth(220);
 			HBox.setHgrow(temp,Priority.ALWAYS);
 			
@@ -370,7 +360,8 @@ public class MealForm extends Form
 
 		foodView.getItems().clear();
 		foodView.getItems().addAll(foodsList);
-		foodView.setMaxWidth(150);
+		foodView.setPrefSize(200, 200);
+		foodView.setStyle("-fx-font-size: 12pt;");
 
 		/****************************finished food list***************************/
 
@@ -382,10 +373,10 @@ public class MealForm extends Form
 			
 			//creates the textField
 			TextField inputVal = new TextField(""+meals.get(i).getPercentage());	
-			inputVal.setPrefWidth(40);
+			inputVal.setPrefWidth(50);
 			//gets the food item as text
-			Label temp = new Label(meals.get(i).toString());
-			temp.setMaxWidth(210);
+			Label temp = new StyleLabel(meals.get(i).toString());
+			temp.setMaxWidth(310);
 			HBox.setHgrow(temp,Priority.ALWAYS);
 			
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
@@ -398,23 +389,28 @@ public class MealForm extends Form
 
 		mealView.getItems().clear();
 		mealView.getItems().addAll(mealList);
-		mealView.setMaxWidth(250);
-
+		mealView.setPrefSize(325,250);
+		mealView.setStyle("-fx-font-size: 12pt;");
 
 		/****************************finished meal list***************************/
 		GridPane popupPane = new GridPane();
 		/****************************set up popup buttons area***************************/
 		ListView<HBox> popupList = new ListView<HBox>();
-		Label editMeal = new Label("Edit Meal");
-		editMeal.setFont(new Font("Verdana", 18));
+
+		popupList.setStyle("-fx-font-size: 12pt;");
+		Label editMeal = new StyleLabel("Edit Meal");
+		editMeal.setStyle("-fx-font-size: 15pt;");
+
 		//creates arraylist to store all hboxes going into the listview
 		ArrayList<HBox> foodElem = new ArrayList<>();
 		for(int i=0; i<foods.size(); i++) {
 			TextField inputVal = new TextField();	//creates the textField
-
+			inputVal.setPrefWidth(40);
 			HBox hbox = new HBox();
 			//gets the food item as text
-			Label temp = new Label(foods.get(i).toString());
+			Label temp = new StyleLabel(foods.get(i).toString());
+			temp.setMaxWidth(320);
+			HBox.setHgrow(temp,Priority.ALWAYS);
 			hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 			foodElem.add(hbox);	//adds the hbox to the arraylist
 			hbox.setPrefWidth(20);
@@ -431,7 +427,7 @@ public class MealForm extends Form
 
 		/****************************finished food list***************************/	//above,right,below,left
 
-		Button editSave = new Button("Save");
+		Button editSave = new StyleButton("Save");
 
 		VBox popupFields = new VBox();
 		popupFields.setSpacing(10);
@@ -439,7 +435,7 @@ public class MealForm extends Form
 		popupFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
 		/***************************end popup buttons area**************************/
 		popupPane.addColumn(0, popupFields);
-		Scene scene2 = new Scene(popupPane,300,200);
+		Scene scene2 = new Scene(popupPane,300,325);
 		Stage popup = new Stage();
 		popup.setScene(scene2);
 		popup.initModality(Modality.APPLICATION_MODAL);
@@ -607,9 +603,12 @@ public class MealForm extends Form
 			if(mealSuccess){
 				//add new meal to display
 				TextField inputVal = new TextField(""+percentage);	//creates the textField
+				inputVal.setPrefWidth(50);
 				HBox hbox = new HBox();
 				//gets the food item as text
-				Label temp = new Label(m.toString());
+				Label temp = new StyleLabel(m.toString());
+				temp.setMaxWidth(310);
+				HBox.setHgrow(temp,Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealView.getItems().remove(selectedMeal);
 				mealView.getItems().add(hbox);	//adds the hbox to the arraylist
@@ -638,7 +637,7 @@ public class MealForm extends Form
 							meals.remove(meal);
 							//adds the changed meal into the list
 							meals.add(m);
-							this.sc.runErrorPopUp("Meal edited successfully!");
+//							this.sc.runErrorPopUp("Meal edited successfully!");
 							return true;
 						}
 					}
