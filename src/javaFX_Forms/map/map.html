@@ -63,6 +63,8 @@
 
       function addMarker(latitude, longitude, name, color) {
 
+        java.log("Adding marker...");
+
         var infowindow = new google.maps.InfoWindow({
           content: name
         });
@@ -86,6 +88,10 @@
         })
 
         markers.push(marker);
+
+        java.log("Added marker " + name + " at " + latitude + ", " + longitude);
+
+        return marker;
       }
 
       function deleteMarker(name) {
@@ -146,6 +152,8 @@
 
         map.setCenter(center);
 
+        google.maps.event.clearListeners(map, 'click');
+
         map.addListener('click', function(e) {
 
           pointName = uniqueName();
@@ -157,15 +165,29 @@
         
       }
 
-      function geocode(locationName) {
+      function geocodeNewLocation(locationName, newColor, homeColor) {
         geocoder.geocode({'address': locationName}, function(results, status) {
           if (status === 'OK') {
-            map.setCenter(results[0].geometry.location);
-            java.log("geocoded to " + results[0].geometry.location.toString);
+
+            loadMap(results[0].geometry.location.lat(), results[0].geometry.location.lng(), newColor);
+
+            addMarker(center.lat(), center.lng(), locationName, homeColor);
+
+            java.addHomePointToEmptyLocation(center.toString(), locationName);
+
+            java.log("geocoded to " + results[0].geometry.location.toString());
           } else {
             java.log('Geocode was not successful for the following reason: ' + status);
           }
         });
+      }
+
+      function clearMap() {
+        for (i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+
+        markers = [];
       }
 
     </script>
