@@ -143,7 +143,8 @@ public class SceneController {
 			resultsForm.runSimulation(location);
 			stage.getScene().setRoot(getResultsLayout());
 		} catch (Exception e) {
-			System.out.println("Results list was empty");
+			runErrorPopUp("Sorry, there was an error running your simulation.");
+			e.printStackTrace();
 		}
 	}
 	

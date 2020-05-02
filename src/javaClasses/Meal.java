@@ -89,7 +89,11 @@ public class Meal implements Serializable {
 	 * @param f - takes in the FoodItem to delete
 	 */
 	public void deleteFood(FoodItem f) {
-		meal.remove(f);
+		for(HashMap.Entry<FoodItem, Integer> element : meal.entrySet()) {
+			if(f.getName().equals(element.getKey().getName())) {
+				meal.remove(element.getKey());
+			}
+		}
 	}
 
 	/**
