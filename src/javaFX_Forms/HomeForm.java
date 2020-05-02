@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javaClasses.Location;
 import javaFX_Styling.StyleButton;
+import javaFX_Styling.StyleLabel;
 import javaFX_Styling.StyleMenu;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -319,6 +320,7 @@ public class HomeForm extends Form {
 	}
 
 	private void newLocationGUI() {
-
+		Label header = new Label("New Location");
+		Label description = new StyleLabel("");
 	}
 }

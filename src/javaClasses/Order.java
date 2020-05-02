@@ -57,11 +57,6 @@ public class Order implements Comparable<Order> {
 		return orderedTime;
 	}
 	
-	// once ordered, we won't need to change the ordered time
-	/*public void setOrderedTime(double orderedTime) {
-		this.orderedTime = orderedTime;
-	}*/
-	
 	public double getDeliveredTime() {
 		return deliveredTime;
 	}
@@ -78,7 +73,7 @@ public class Order implements Comparable<Order> {
 	 * @return how long this order took to deliver
 	 */
 	public double getDuration() {
-		return orderedTime - deliveredTime;
+		return deliveredTime - orderedTime;
 	}
 	
 	
