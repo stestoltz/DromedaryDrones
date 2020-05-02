@@ -113,17 +113,17 @@ public class SimulationResultsForm extends Form {
 				} else {
 
 					// not in bucket - find right bucket
-			          while (currentBucket + 1 < buckets.length && 
-			              !(buckets[currentBucket] <= next && next <= buckets[currentBucket + 1])) {
-			            currentBucket++;
-			          }
-			          
-			          // catch floating-point rounding errors
-			          if (currentBucket >= numBuckets) {
-			            currentBucket = numBuckets - 1;
-			          }
+					while (currentBucket + 1 < buckets.length && 
+							!(buckets[currentBucket] <= next && next <= buckets[currentBucket + 1])) {
+						currentBucket++;
+					}
+					
+					// catch floating-point rounding errors
+					if (currentBucket >= numBuckets) {
+						currentBucket = numBuckets - 1;
+					}
 
-			          counts[currentBucket]++;
+					counts[currentBucket]++;
 				}
 			}
 

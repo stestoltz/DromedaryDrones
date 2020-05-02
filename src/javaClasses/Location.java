@@ -394,4 +394,30 @@ public class Location implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	/**
+	 * @return the maximum distance between any two delivery points
+	 */
+	public double maxDistanceBetweenPoints() {
+
+		// get a copy of the delivery points list
+		List<DeliveryPoint> points = getDeliveryPoints();
+		points.add(home);
+		
+		double maxDistance = 0;
+		
+		// compare each point to every other point
+		for (int i = 0; i < points.size(); i++) {
+			for (int j = i + 1; j < points.size(); j++) {
+				
+				double distance = points.get(i).distanceInFeet(points.get(j));
+				
+				if (distance > maxDistance) {
+					maxDistance = distance;
+				}
+			}
+		}
+		
+		return maxDistance;
+	}
 }

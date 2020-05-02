@@ -61,6 +61,8 @@ public class Simulation {
 			allOrders.add(generateOrders());
 		}
 		
+		double maxDistanceBetweenPoints = location.maxDistanceBetweenPoints();
+		
 		// for each packing algorithm
 		for (int p = 0; p < 2; p++) {
 		
@@ -75,9 +77,9 @@ public class Simulation {
 				
 				PackingAlgorithm packingAlgorithm;
 				if (p == 0) {
-					packingAlgorithm = new FIFOPacking(packingAlgorithmsOrders, location.getDrone());
+					packingAlgorithm = new FIFOPacking(packingAlgorithmsOrders, location.getDrone(), location.getHome());
 				} else {
-					packingAlgorithm = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone());
+					packingAlgorithm = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone(), location.getHome());
 				}
 		
 				// process the orders into drone trips
@@ -133,7 +135,7 @@ public class Simulation {
 							}
 						}
 					}
-					
+
 					//this updates the overall simulation time to the next time that a drone is available
 						//after sending out all of the ready orders
 					Collections.sort(nextAvailableTime);
@@ -212,15 +214,15 @@ public class Simulation {
 			
 			// home to first stop
 			if (i == 0) {
-				time += calcTime(home, stops[i].getDeliveryPoint());
+				time += calcTime(home, stops[i].getDeliveryPoint(), location.getDrone().getAverageCruisingSpeedFeetPerSecond());
 				
 			// last stop back to home
 			} else if (i == stops.length) {
-				time += calcTime(stops[i - 1].getDeliveryPoint(), home);
+				time += calcTime(stops[i - 1].getDeliveryPoint(), home, location.getDrone().getAverageCruisingSpeedFeetPerSecond());
 			
 			// normal stop
 			} else {
-				time += calcTime(stops[i - 1].getDeliveryPoint(), stops[i].getDeliveryPoint());
+				time += calcTime(stops[i - 1].getDeliveryPoint(), stops[i].getDeliveryPoint(), location.getDrone().getAverageCruisingSpeedFeetPerSecond());
 			}
 			
 			
@@ -244,11 +246,11 @@ public class Simulation {
 	 * @param destination
 	 * @return
 	 */
-	private double calcTime(DeliveryPoint origin, DeliveryPoint destination) {
+	public static double calcTime(DeliveryPoint origin, DeliveryPoint destination, double droneSpeedFpS) {
 		double distance = origin.distanceInFeet(destination);
 		
 		// D = RT, so T = D / R
-		return distance / location.getDrone().getAverageCruisingSpeedFeetPerSecond();
+		return distance / droneSpeedFpS;
 	}
 	
 	/**
