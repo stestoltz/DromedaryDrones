@@ -96,7 +96,7 @@ public class Location implements Serializable {
 		meal4.put(burger, 2);
 		meal4.put(fries, 1);
 		meals.add(new Meal(meal4, 15));
-
+		
 		// create default drone and default shift details
 		this.drone = new Drone();
 		this.shiftDetails = new ShiftDetails();
