@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import javaClasses.Location;
 import javaFX_Styling.StyleButton;
 import javaFX_Styling.StyleLabel;
@@ -101,7 +100,7 @@ public class HomeForm extends Form {
 		});
 		
 		MenuItem foodItem = menu.getItems().get(1);
-		Image foodIcon = new Image(new FileInputStream("res/food.jpg"));
+		Image foodIcon = new Image(new FileInputStream("res/food.png"));
 		ImageView food = new ImageView(foodIcon);
 		food.setFitHeight(50);
 		food.setFitWidth(50);
@@ -112,7 +111,7 @@ public class HomeForm extends Form {
 		});
 		
 		MenuItem mealItem = menu.getItems().get(2);
-		Image mealIcon = new Image(new FileInputStream("res/meal.jpg"));
+		Image mealIcon = new Image(new FileInputStream("res/meal.png"));
 		ImageView meal = new ImageView(mealIcon);
 		meal.setFitHeight(50);
 		meal.setFitWidth(50);

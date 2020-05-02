@@ -39,6 +39,7 @@ public class SceneController {
 	private Stage stage;
 
 	private Image logo;
+	private Image settingsLogo;
 	
 	private HomeForm homeForm;
 	private DroneForm droneForm;
@@ -56,6 +57,7 @@ public class SceneController {
 		this.stage = stage;
 		
 		logo = new Image(new FileInputStream("res/Dromedary_drones_logo.png"));
+		settingsLogo = new Image(new FileInputStream("res/logo_without_title.png"));
 		
 		homeForm = new HomeForm(this, buildHomeBorderPane());
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
@@ -304,7 +306,7 @@ public class SceneController {
 		VBox titles = new VBox(5);
 		titles.getChildren().addAll(dromedary, header);
 		
-		ImageView imageView = new ImageView(logo);
+		ImageView imageView = new ImageView(settingsLogo);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(150);
 		
