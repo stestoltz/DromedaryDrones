@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javaClasses.Location;
+import javaFX_Styling.StyleButton;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,6 +23,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -31,21 +34,49 @@ public class HomeForm extends Form {
 	
 	private FileChooser chooser;
 	
-	private Label locationNameLabel;
+	private Label locationName;
 	
 	public HomeForm(SceneController sc, BorderPane layout) throws FileNotFoundException {
 		super(sc, layout);
 		
+		//file chooser that is used to saving and uploading location files
 		chooser = new FileChooser();
 		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt", "*.txt"));
 		
-		//create map
-		Image map = new Image(new FileInputStream("res/map.jfif"));
-		ImageView mapView = new ImageView(map);
-		mapView.setPreserveRatio(true);
-		mapView.setFitHeight(400);
+		//create the buttons and text to be used in the middle of the home form
+		locationName = new Label("Current Location: " + this.sc.getLocation().getName());
+		locationName.setFont(Font.font("Verdana", 20));
+		locationName.setAlignment(Pos.CENTER);
 		
-		layout.setCenter(mapView);
+		Button changeName = new StyleButton("Change Location Name");
+		Button changeLocation = new StyleButton("Change Location");
+		Button saveLocation = new StyleButton("Save Location");
+		
+		changeName.setPrefSize(200, 50);
+		changeLocation.setPrefSize(200, 50);
+		saveLocation.setPrefSize(200, 50);
+		
+		//create the logo
+		ImageView logo = new ImageView(this.sc.getLogo());
+		logo.setPreserveRatio(true);
+		logo.setFitWidth(300);
+		
+		//put the buttons in a VBox
+		VBox rightSide = new VBox(20);
+		rightSide.getChildren().addAll(changeName, changeLocation, saveLocation);
+		rightSide.setAlignment(Pos.CENTER);
+		
+		//put the logo next to the buttons in an HBox
+		HBox logoAndButtons = new HBox(100);
+		logoAndButtons.getChildren().addAll(logo, rightSide);
+		logoAndButtons.setAlignment(Pos.CENTER);
+		
+		//put the location name above all of that
+		VBox middle = new VBox(25);
+		middle.getChildren().addAll(logoAndButtons, locationName);
+		middle.setAlignment(Pos.CENTER);
+		
+		layout.setCenter(middle);
 		
 		BorderPane top = (BorderPane) layout.getTop();
 		MenuBar menuBar = (MenuBar) top.getRight();
@@ -115,13 +146,6 @@ public class HomeForm extends Form {
 		
 		BorderPane bottom = (BorderPane) layout.getBottom();
 		Button startSimulation = (Button) bottom.getCenter();
-		HBox locationName = (HBox) bottom.getLeft();
-		Button changeName = (Button) locationName.getChildren().get(1);
-		locationNameLabel = (Label) locationName.getChildren().get(0);
-		
-		HBox editLocation = ((HBox) bottom.getRight());
-		Button changeLocation = ((Button) editLocation.getChildren().get(0));
-		Button saveLocation = ((Button) editLocation.getChildren().get(1));
 		
 		startSimulation.setOnAction((event) -> {
 			if (this.sc.getLocation().getMeals().isEmpty()) {
@@ -152,7 +176,7 @@ public class HomeForm extends Form {
 	 * 
 	 */
 	public void loadHomeForm(Location location) {
-		locationNameLabel.setText("Location: " + location.getName());
+		locationName.setText("Current Location: " + location.getName());
 	}
 	
 	
@@ -167,12 +191,14 @@ public class HomeForm extends Form {
 		popUpPane.setAlignment(Pos.CENTER);
 			
 		Button save = new Button("Save");
+		save.setAlignment(Pos.CENTER);
 			
 		HBox editLocation = new HBox();
 		editLocation.getChildren().addAll(locationName, textLocationName);
 			
-		VBox popUpColumn = new VBox();
+		VBox popUpColumn = new VBox(20);
 		popUpColumn.getChildren().addAll(editLocation, save);
+		popUpColumn.setAlignment(Pos.CENTER);
 			
 		popUpPane.addColumn(0, popUpColumn);
 		Scene popUpScene = new Scene(popUpPane,300,100);
