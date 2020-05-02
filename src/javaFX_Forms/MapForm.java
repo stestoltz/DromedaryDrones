@@ -75,11 +75,15 @@ public class MapForm extends Form {
 		//description
 		Label description = new StyleLabel("Click the map at a given coordinate that you wish to add. "
 				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
-				+ "and off using the checkboxes.\n"
+				+ "and off using the checkboxes. "
 				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
+		
 		description.setWrapText(true);
-		VBox center = new VBox();
-		center.getChildren().addAll(description, webView);
+		description.setPrefHeight(100);
+		BorderPane center = new BorderPane();
+		center.setTop(description);
+		center.setCenter(webView);
+		//center.getChildren().addAll(description, webView);
 		layout.setCenter(center);
 		
 		HBox listButtons = new HBox();

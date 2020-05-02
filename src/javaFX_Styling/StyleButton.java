@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 public class StyleButton extends Button{
 	
 	public StyleButton(String name) {
+		super(name);
 		this.setText(name);
 		this.setStyle("-fx-background-color: Orange;"
 				+ "-fx-font-size: 12pt;");

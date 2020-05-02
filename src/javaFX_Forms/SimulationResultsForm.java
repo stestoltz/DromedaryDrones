@@ -3,6 +3,7 @@ package javaFX_Forms;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,7 @@ import javaClasses.Location;
 import javaClasses.Results;
 import javaClasses.RoutingAlgorithm;
 import javaClasses.Simulation;
+import javaFX_Styling.StyleLabel;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -64,7 +66,6 @@ public class SimulationResultsForm extends Form {
 
 		LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
-		lineChart.setTitle("Simulation Results");
 		
 		// largest time should be the same for both algorithm so that buckets line up
 		double largestTime = 0;
@@ -145,11 +146,18 @@ public class SimulationResultsForm extends Form {
 		HBox values = new HBox();
 		values.setAlignment(Pos.CENTER);
 		values.setSpacing(30);
-		Label fifo = new Label("FIFO Worst Time: " + simResults[0].worstTime() + "\n" +
-				"FIFO Average Time: " + simResults[0].averageTime());
-		Label knapsack = new Label("Knapsack Worst Time: " + simResults[1].worstTime() + "\n" +
-				"Knapsack Average Time: " + simResults[1].averageTime());
-		values.getChildren().addAll(fifo, knapsack);
+		
+		DecimalFormat df = new DecimalFormat("#.##");	//format decimals
+
+		Label fifo = new StyleLabel("FIFO Worst Time (s): \nFIFO Average Time (s): ");
+		Label fifoTime = new StyleLabel(df.format(simResults[0].worstTime()) 
+				+ "\n" +df.format(simResults[0].averageTime()));
+		
+		Label knapsack = new StyleLabel("Knapsack Worst Time (s): \nKnapsack Average Time (s):");
+		Label knapsackTime = new StyleLabel(df.format(simResults[1].worstTime()) 
+				+ "\n" + df.format(simResults[1].averageTime()));
+				
+		values.getChildren().addAll(fifo, fifoTime, knapsack, knapsackTime);
 		insideResults.setBottom(values);
 
 		//put the results (graph, max, etc) in the middle of the screen
