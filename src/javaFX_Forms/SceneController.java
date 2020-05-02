@@ -12,6 +12,8 @@ import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
 import javaClasses.ShiftDetails;
+import javaFX_Styling.StyleButton;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -214,7 +217,7 @@ public class SceneController {
 		ImageView simImage = new ImageView(simulationIcon);
 		simImage.setFitHeight(50);
 		simImage.setFitWidth(50);
-		Button startSimulation = new Button("Start Simulation", simImage);
+		Button startSimulation = new StyleButton("Start Simulation", simImage);
 		startSimulation.setPrefSize(200, 50);
 		
 		bottom.setCenter(startSimulation);
@@ -292,13 +295,17 @@ public class SceneController {
 		
 		Label header = new Label(headerText);
 		header.setFont(new Font("Verdana", 30));
+		header.setAlignment(Pos.CENTER);
 		
 		ImageView imageView = new ImageView(logo);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(150);
 		
-		top.setLeft(imageView);
-		top.setCenter(header);
+		HBox leftCorner = new HBox(20);
+		leftCorner.getChildren().addAll(imageView, header);
+		leftCorner.setAlignment(Pos.CENTER);
+		
+		top.setLeft(leftCorner);
 		
 		layout.setBottom(bottom);
 		layout.setTop(top);

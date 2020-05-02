@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javaClasses.Location;
+import javaFX_Styling.StyleButton;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -47,9 +48,9 @@ public class HomeForm extends Form {
 		locationName.setFont(Font.font("Verdana", 20));
 		locationName.setAlignment(Pos.CENTER);
 		
-		Button changeName = new Button("Change Location Name");
-		Button changeLocation = new Button("Change Location");
-		Button saveLocation = new Button("Save Location");
+		Button changeName = new StyleButton("Change Location Name");
+		Button changeLocation = new StyleButton("Change Location");
+		Button saveLocation = new StyleButton("Save Location");
 		
 		changeName.setPrefSize(200, 50);
 		changeLocation.setPrefSize(200, 50);
