@@ -149,12 +149,13 @@ public class MealForm extends Form
 		
 		BorderPane completePane = new BorderPane();
 		Label description = new StyleLabel("All meal options are shown to the left with food quantities in the parenthesis. "
-				+ "The likelihood of a meal being ordered can be edited\nin the textbox to the right of the meal. "
-				+ "All percentages must add up to 100 in order to save changes. "
-				+ "When creating a new meal,\nenter the quantities desired for each food. "
-				+ "Once you create the meal, it will be displayed in the list of meals on the left where its\n"
+				+ "The likelihood of a meal being ordered can be edited in the textbox to the right of the meal. "
+				+ "When creating a new meal, enter the quantities desired for each food. "
+				+ "Once you create the meal, it will be displayed in the list of meals where its "
 				+ "percentage can be edited.");
 		
+		description.setWrapText(true);
+		description.setTextAlignment(TextAlignment.CENTER);
 		completePane.setTop(description);
 		completePane.setCenter(pane);
 

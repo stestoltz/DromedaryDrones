@@ -58,7 +58,7 @@ public class ShiftSettingsForm extends Form {
 				+ "on the right with a new entry for each hour. Then orders per hour " 
 				+ "can be edited within that list.");
 		
-		description.setPrefWidth(600);
+		description.setPrefWidth(700);
 		description.setWrapText(true);
 		description.setTextAlignment(TextAlignment.CENTER);
 

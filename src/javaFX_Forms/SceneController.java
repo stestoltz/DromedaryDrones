@@ -13,7 +13,8 @@ import javaClasses.Location;
 import javaClasses.Meal;
 import javaClasses.ShiftDetails;
 import javaFX_Styling.StyleButton;
-import javafx.geometry.Insets;
+import javaFX_Styling.StyleMenu;
+import javaFX_Styling.StyleMenuBar;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -226,9 +227,9 @@ public class SceneController {
 		bottom.setCenter(startSimulation);
 		
 		//create a menubar for the hamburger menu
-		MenuBar menuBar = new MenuBar();
+		MenuBar menuBar = new StyleMenuBar();
 		
-		Menu menu1 = new Menu("Simulation Settings");
+		Menu menu1 = new StyleMenu("Simulation Settings");
 		menuBar.getMenus().add(menu1);
 		MenuItem menuItem1 = new MenuItem("Modify Mapping");
 		MenuItem menuItem2 = new MenuItem("Food Settings");
@@ -264,9 +265,12 @@ public class SceneController {
 		
 		BorderPane layout = buildBaseBorderPane("Simulation Results");
 		
-		Button rerun = new Button("Rerun Simulation");
-		Button returnHome = new Button("Back");
-		Button save = new Button("Save Results");
+		Button rerun = new StyleButton("Rerun Simulation");
+		rerun.setPrefWidth(150);
+		Button returnHome = new StyleButton("Back");
+		returnHome.setPrefWidth(150);
+		Button save = new StyleButton("Save Results");
+		save.setPrefWidth(150);
 		
 		rerun.setOnAction((event) -> {
 			switchToResults();
