@@ -293,16 +293,22 @@ public class SceneController {
 		BorderPane top = new BorderPane();
 		BorderPane bottom = new BorderPane();
 		
+		Label dromedary = new Label("Dromedary Drones");
+		dromedary.setFont(new Font("Verdana", 35));
+		dromedary.setTextFill(Color.web("Orange"));
+		
 		Label header = new Label(headerText);
-		header.setFont(new Font("Verdana", 30));
-		header.setAlignment(Pos.CENTER);
+		header.setFont(new Font("Verdana", 25));
+		
+		VBox titles = new VBox(5);
+		titles.getChildren().addAll(dromedary, header);
 		
 		ImageView imageView = new ImageView(logo);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(150);
 		
 		HBox leftCorner = new HBox(20);
-		leftCorner.getChildren().addAll(imageView, header);
+		leftCorner.getChildren().addAll(imageView, titles);
 		leftCorner.setAlignment(Pos.CENTER);
 		
 		top.setLeft(leftCorner);
