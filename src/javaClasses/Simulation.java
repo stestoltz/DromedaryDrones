@@ -2,6 +2,7 @@ package javaClasses;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Queue;
@@ -76,59 +77,83 @@ public class Simulation {
 				
 				PackingAlgorithm packingAlgorithm;
 				if (p == 0) {
-					
 					packingAlgorithm = new FIFOPacking(packingAlgorithmsOrders, location.getDrone(), location.getHome());
 				} else {
-					
 					packingAlgorithm = new KnapsackPacking(packingAlgorithmsOrders, location.getDrone(), location.getHome());
 				}
 		
 				// process the orders into drone trips
 		
 				// start at time of first order
-				double time = packingAlgorithm.nextOrderTime();
+				double simulationTime = packingAlgorithm.nextOrderTime();
 				
 				List<DroneTrip> trips = new ArrayList<>();
 				
-				// for each drone trip
+				//keep track of the next time that each drone will be available
+				List<Double> nextAvailableTime = new ArrayList<>();
+				
+				for (int droneNumber = 0; droneNumber < location.getNumberOfDrones(); droneNumber++) {
+					nextAvailableTime.add(simulationTime);
+				}
+				
+				// until all of the orders have been shipped
 				while (packingAlgorithm.hasNextOrder()) {
 					
 					// wait until we have an order
-					if (time < packingAlgorithm.nextOrderTime()) {
-						time = packingAlgorithm.nextOrderTime();
+					if (simulationTime < packingAlgorithm.nextOrderTime()) {
+						simulationTime = packingAlgorithm.nextOrderTime();
 					}
 					
 					// ASSUMPTION: IF WE HAVE AN ORDER, SHIP IT
-					
-					// find a drone's worth of orders available now
-					List<Order> nextTripOrders = packingAlgorithm.nextOrder(time);
-					
-					// route the drone for this trip
-					DroneTrip trip = routingAlgorithm.createTrip(nextTripOrders, location.getHome());
-					
-					// add time of drone trip
-					//  this updates the delivered times of all of the orders in the trip
-					double tripTime = processTrip(trip, time);
-					
-					time += tripTime;
-					trips.add(trip);
-					
-					// add turn around time
-					time += location.getDrone().getTurnAroundTimeSeconds();
+					//use all of the drones that we have
+					for (int droneNumber = 0; droneNumber < location.getNumberOfDrones(); droneNumber++) {
+						double droneTime = nextAvailableTime.get(droneNumber);
+						
+						//make sure that there are orders left in the shift
+						if (packingAlgorithm.hasNextOrder()) {
+							//make sure those orders have times before the simulation time and
+							//that the drone is available
+							if (packingAlgorithm.nextOrderTime() <= simulationTime && 
+									nextAvailableTime.get(droneNumber) <= simulationTime) {
+								
+								// find a drone's worth of orders available now
+								List<Order> nextTripOrders = packingAlgorithm.nextOrder(simulationTime);
+								
+								// route the drone for this trip
+								DroneTrip trip = routingAlgorithm.createTrip(nextTripOrders, location.getHome());
+								
+								//assign times for the drone trip
+								droneTime += processTrip(trip, simulationTime);
+								
+								//add the trip to the list of trips
+								trips.add(trip);
+								
+								//add turn around time
+								droneTime += location.getDrone().getTurnAroundTimeSeconds();
+								
+								nextAvailableTime.set(droneNumber, droneTime);
+							}
+						}
+					}
+
+					//this updates the overall simulation time to the next time that a drone is available
+						//after sending out all of the ready orders
+					Collections.sort(nextAvailableTime);
+					simulationTime = nextAvailableTime.get(0);
 				}
 				
-				// generate results for this shift and them to shift results[]
+				// generate results for this shift and then to shift results[]
 				shiftResults[i] = generateResults(trips);
-	
 			}
 			
 			// all shifts are done - this packing algorithm's simulation is done
-		
+			
 			// aggregate all shift's results into one results object and add it to simulationResults
 			simulationResults[p] = generateResults(shiftResults);
 		
 		}
-			
+		
+		System.out.println(simulationResults);
 		return simulationResults;
 	}
 
@@ -241,7 +266,7 @@ public class Simulation {
 		// for each order in each trip, add the time that order took
 		for (DroneTrip trip : trips) {
 			for (Order order : trip.getStops()) {
-				times.add(order.getDeliveredTime() - order.getOrderedTime());
+				times.add(order.getDuration());
 			}
 		}
 		

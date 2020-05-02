@@ -370,6 +370,7 @@ public class FoodForm extends Form
 			TextField input3) {
 
 		FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
+		
 
 		//variables
 		boolean errorFound = false; 	//error tracking boolean
@@ -426,6 +427,7 @@ public class FoodForm extends Form
 		//if there were no errors
 		if(!errorFound){
 			
+			
 			//create the food
 			FoodItem newFood = new FoodItem(name, w, time);
 
@@ -436,6 +438,24 @@ public class FoodForm extends Form
 			//add the edited food to the list after removing the old version
 			displayedFoods.remove(selectedFood);
 			displayedFoods.add(newFood);
+			
+			
+			//get meals that will be affected
+			for(int i=0; i<meals.size(); i++) {
+				if(meals.get(i).toString().contains(selectedFood.toString())){
+					HashMap<FoodItem, Integer> map = meals.get(i).getMeal();
+					for(HashMap.Entry<FoodItem, Integer> f : map.entrySet()) {
+						if(f.getKey().toString().equals(selectedFood.toString())) {
+							int tempCount = f.getValue();
+							meals.get(i).deleteFood(selectedFood);
+							meals.get(i).addFood(newFood, tempCount);
+							break;
+						}
+					}
+				}
+			}
+			
+			
 			//inform user
 			this.sc.runErrorPopUp("Successfully edited " + name + "!");
 			return true;	//return true since it added correctly

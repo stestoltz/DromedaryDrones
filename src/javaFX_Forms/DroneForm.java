@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class DroneForm extends Form {
 
@@ -33,8 +33,9 @@ public class DroneForm extends Form {
 				+ "weight in order to extend battery life or drone life if desired.");
 
 		description.setPrefHeight(75);
-		description.setPrefWidth(600);
+		description.setPrefWidth(800);
 		description.setWrapText(true);
+		description.setTextAlignment(TextAlignment.CENTER);
 
 		Label label1 = new StyleLabel("Cargo weight (lb): ");
 		txtCargoWeight = new StyleTextField();
@@ -85,7 +86,10 @@ public class DroneForm extends Form {
 		HBox.setHgrow(label7,Priority.ALWAYS);
 		HBox line7 = new HBox(label7, txtNumberOfDrones);
 		
-		VBox form = new VBox(description, line1, line2, line3, line4, line5, line6, line7);
+		VBox form = new VBox(line1, line2, line3, line4, line5, line6, line7);
+		//padding for centering
+		form.setPadding(new Insets(0,0,0,200));
+
 		// Create a gridpane for displaying the form VBox
 		GridPane pane = new GridPane();
 		
@@ -93,9 +97,10 @@ public class DroneForm extends Form {
 		pane.setAlignment(Pos.TOP_CENTER);
 		
 		// Add the form info to the pane
-		pane.addColumn(0, form);
+		pane.add(form, 0 , 1);
+		pane.add(description,  0, 0);
 		
-		form.setSpacing(10);
+		form.setSpacing(5);
 		layout.setCenter(pane);
 
 		// get buttons and set event handlers
