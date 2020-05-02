@@ -16,7 +16,10 @@ public class Main extends Application {
 		
 		controller.switchToHome();
 
-		stage.setMaximized(true);
+		//stage.setMaximized(true);
+		stage.setTitle("Dromedary Drones");
+		stage.setWidth(900);
+		stage.setHeight(600);
 		stage.show();
 		
 	}

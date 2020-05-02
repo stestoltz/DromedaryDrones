@@ -1,6 +1,7 @@
 package javaFX_Forms;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ import javaClasses.FoodItem;
 import javaClasses.Location;
 import javaClasses.Meal;
 import javaClasses.ShiftDetails;
+import javaFX_Styling.StyleButton;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,7 +29,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -37,6 +39,7 @@ public class SceneController {
 	private Stage stage;
 
 	private Image logo;
+	private Image settingsLogo;
 	
 	private HomeForm homeForm;
 	private DroneForm droneForm;
@@ -54,6 +57,7 @@ public class SceneController {
 		this.stage = stage;
 		
 		logo = new Image(new FileInputStream("res/Dromedary_drones_logo.png"));
+		settingsLogo = new Image(new FileInputStream("res/logo_without_title.png"));
 		
 		homeForm = new HomeForm(this, buildHomeBorderPane());
 		droneForm = new DroneForm(this, buildSettingsBorderPane("Drone Settings"));
@@ -166,6 +170,9 @@ public class SceneController {
 		this.location.setShiftDetails(shift);
 	}
 	
+	public Image getLogo() {
+		return logo;
+	}
 	
 	/**
 	 * builds a settings border pane
@@ -191,29 +198,31 @@ public class SceneController {
 	/**
 	 * builds the home border pane
 	 * @return
+	 * @throws FileNotFoundException 
 	 */
-	public BorderPane buildHomeBorderPane() {
-		BorderPane layout = buildBaseBorderPane("Dromedary Drones");
+	public BorderPane buildHomeBorderPane() throws FileNotFoundException {
+		BorderPane layout = new BorderPane();
 		
-		Button startSimulation = new Button("Start Simulation");
-		Label loc = new Label("Location: " + location.getName());
-		loc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-		Button changeName = new Button("Change Location Name");
-		Button changeLocation = new Button("Change Location");
-		Button saveLocation = new Button("Save Location");
+		BorderPane top = new BorderPane();
+		BorderPane bottom = new BorderPane();
 		
-		HBox editLocation = new HBox();
-		editLocation.setSpacing(10);
-		editLocation.getChildren().addAll(changeLocation, saveLocation);
+		layout.setBottom(bottom);
+		layout.setTop(top);
 		
-		HBox locationName = new HBox();
-		locationName.setSpacing(10);
-		locationName.getChildren().addAll(loc, changeName);
+		// Set the padding of the layout
+		layout.setStyle("-fx-padding: 10;" +
+				"-fx-border-width: 2;" +
+				"-fx-border-insets: 5;" +
+				"-fx-border-radius: 5;");
 		
-		BorderPane bottom = ((BorderPane) layout.getBottom());
+		Image simulationIcon = new Image(new FileInputStream("res/sim_clipart.png"));
+		ImageView simImage = new ImageView(simulationIcon);
+		simImage.setFitHeight(50);
+		simImage.setFitWidth(50);
+		Button startSimulation = new StyleButton("Start Simulation", simImage);
+		startSimulation.setPrefSize(200, 50);
+		
 		bottom.setCenter(startSimulation);
-		bottom.setLeft(locationName);
-		bottom.setRight(editLocation);
 		
 		//create a menubar for the hamburger menu
 		MenuBar menuBar = new MenuBar();
@@ -232,7 +241,6 @@ public class SceneController {
 		menu1.getItems().add(menuItem4);
 		menu1.getItems().add(menuItem5);
 		
-		BorderPane top = ((BorderPane) layout.getTop());
 		top.setRight(menuBar);
 		
 		// disable mapping until Google Maps loads in
@@ -245,7 +253,6 @@ public class SceneController {
 	public void enableMapping() {
 		mappingMenuItem.setDisable(false);
 	}
-	
 	
 	
 	/**
@@ -290,13 +297,17 @@ public class SceneController {
 		
 		Label header = new Label(headerText);
 		header.setFont(new Font("Verdana", 30));
+		header.setAlignment(Pos.CENTER);
 		
-		ImageView imageView = new ImageView(logo);
+		ImageView imageView = new ImageView(settingsLogo);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(150);
 		
-		top.setLeft(imageView);
-		top.setCenter(header);
+		HBox leftCorner = new HBox(20);
+		leftCorner.getChildren().addAll(imageView, header);
+		leftCorner.setAlignment(Pos.CENTER);
+		
+		top.setLeft(leftCorner);
 		
 		layout.setBottom(bottom);
 		layout.setTop(top);
