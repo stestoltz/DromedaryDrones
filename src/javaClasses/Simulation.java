@@ -137,7 +137,7 @@ public class Simulation {
 					//this updates the overall simulation time to the next time that a drone is available
 						//after sending out all of the ready orders
 					Collections.sort(nextAvailableTime);
-					simulationTime += nextAvailableTime.get(0);
+					simulationTime = nextAvailableTime.get(0);
 				}
 				
 				// generate results for this shift and then to shift results[]
