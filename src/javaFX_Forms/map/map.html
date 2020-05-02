@@ -62,12 +62,9 @@
       }
 
       function addMarker(latitude, longitude, name, color) {
-
-        java.log("Adding marker...");
-
-        var infowindow = new google.maps.InfoWindow({
-          content: name
-        });
+        //var infowindow = new google.maps.InfoWindow({
+        //  content: name
+        //});
         
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng({lat: latitude, lng: longitude}),
@@ -80,7 +77,9 @@
         });
 
         marker.addListener('click', function() {
-          infowindow.open(map, marker);
+          //infowindow.open(map, marker);
+
+          java.markerClicked(marker.title);
         });
 
         marker.addListener('dragend', function(e) {
@@ -88,8 +87,6 @@
         })
 
         markers.push(marker);
-
-        java.log("Added marker " + name + " at " + latitude + ", " + longitude);
 
         return marker;
       }
@@ -128,6 +125,14 @@
         var m = getMarker(name);
 
         m.setIcon({url: colorURL(color)});
+      }
+
+      function centerOnMarker(name) {
+        var m = getMarker(name);
+
+        center = m.position;
+
+        map.setCenter(center);
       }
 
       function colorURL(color) {

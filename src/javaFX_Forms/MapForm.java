@@ -238,6 +238,7 @@ public class MapForm extends Form {
 		        String color = active ? HIGHLIGHT_ACTIVE : HIGHLIGHT_INACTIVE;
 		        
 		        javascript.call("setMarkerColor", dp.getName(), color);
+		        javascript.call("centerOnMarker", dp.getName());
 		    }
 		});
 	}
@@ -372,6 +373,21 @@ public class MapForm extends Form {
 		}
 		
 		return null;
+	}
+	
+	private HBox getHBox(DeliveryPoint dp) {
+    	if (dp == home) {
+    		return homeHBox;
+    	} else {
+
+    		for (HBox hbox : pointsView.getItems()) {
+    			if (getDeliveryPoint(hbox) == dp) {
+    				return hbox;
+    			}
+    		}
+    	}
+    	
+    	return null;
 	}
 	
 	public void addDeliveryPoint(DeliveryPoint dp, boolean active) {
@@ -511,6 +527,21 @@ public class MapForm extends Form {
     		
     		System.out.println("Moved point: " + latLng[0] + " " + latLng[1]);
 	    	
+	    }
+	    
+	    public void markerClicked(Object name) {
+	    	System.out.println("Connector called: markerClicked");
+	    	String pointName = (String) name;
+	    	
+	    	DeliveryPoint dp = getDeliveryPoint(pointName);
+	    	
+	    	HBox hbox = getHBox(dp);
+	    	
+	    	pointsView.getSelectionModel().select(hbox);
+	    	
+	    	pointsView.scrollTo(hbox);
+	    	
+    		System.out.println("Highlighted marker: " + name);
 	    }
 	    
 	    public void log(Object msg) {
