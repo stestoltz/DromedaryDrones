@@ -92,6 +92,23 @@ public class Drone implements Serializable {
 	}
 	
 	/**
+	 * @return max flight time in seconds
+	 */
+	public double getMaxFlightTimeInSeconds() {
+		return maxFlightTime * 60.0;
+	}
+	
+	/**
+	 * @return max flight time in feet - distance = rate * time
+	 */
+	public double getMaxFlightDistanceInFeet(int numStops) {
+		// max flight time decreases for each stop made
+		double maxFlightTimeAfterStops = getMaxFlightTimeInSeconds() - (numStops * getTurnAroundTimeSeconds());
+		
+		return getAverageCruisingSpeedFeetPerSecond() * maxFlightTimeAfterStops;
+	}
+	
+	/**
 	 * @param maxFlightTime max flight time in minutes
 	 */
 	public void setMaxFlightTime(double maxFlightTime) {
