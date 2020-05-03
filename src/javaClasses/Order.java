@@ -85,7 +85,9 @@ public class Order implements Comparable<Order> {
 		this.deliveryPoint = deliveryPoint;
 	}
 	
-	//sorts orders from heaviest to lightest
+	/**
+	 * sorts orders from heaviest to lightest
+	 */
 	@Override
     public int compareTo(Order o) {
         if(this.meal.getMealWeight() > o.meal.getMealWeight()) {

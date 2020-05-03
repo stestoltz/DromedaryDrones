@@ -184,9 +184,9 @@ public class MealForm extends Form
 	}
 
 
-/**
- * Method that handles adding a new meal to the simulation
- */
+	/**
+	 * Method that handles adding a new meal to the simulation
+	 */
 	public void addingEvent() {
 		HashMap<FoodItem,Integer> foodList = new HashMap<>();	//stores foods being added
 		double mealWeight = 0.0;	//total weight for the meal
@@ -638,7 +638,6 @@ public class MealForm extends Form
 							meals.remove(meal);
 							//adds the changed meal into the list
 							meals.add(m);
-//							this.sc.runErrorPopUp("Meal edited successfully!");
 							return true;
 						}
 					}

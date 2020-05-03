@@ -463,6 +463,10 @@ public class FoodForm extends Form
 		return false;		//could not add food so return false
 	}
 
+	/**
+	 * delete the selected food item
+	 * @param selectedFood
+	 */
 	private void deleteFood(FoodItem selectedFood) {
 		List<HBox> mealElements = new ArrayList<>();
 		List<Meal> tempMeals = new ArrayList<>();	//for storing meals that wont be deleted

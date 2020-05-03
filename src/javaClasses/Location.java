@@ -23,7 +23,8 @@ public class Location implements Serializable {
 	
 	
 	/**
-	 * constructor for a brand new location - defaults to default provided by project description
+	 * constructor for a brand new location
+	 * defaults to default provided by project description
 	 * @param name - name of the location
 	 * @param homeName - name of the starting point/ origin
 	 */
@@ -135,14 +136,28 @@ public class Location implements Serializable {
 		this.numberOfDrones = numberOfDrones;
 	}
 	
+	/**
+	 * copy constructor
+	 * @param loc
+	 */
 	public Location(Location loc) {
-		this.deliveryPoints = loc.deliveryPoints;
-		this.home = loc.home;
+		this.deliveryPoints = loc.getDeliveryPointsMap();
+		this.home = new DeliveryPoint(loc.home);
 		this.name = loc.name;
-		this.meals = loc.meals;
-		this.drone = loc.drone;
-		this.foods = loc.foods;		
-		this.shiftDetails = loc.shiftDetails;
+		this.meals = new ArrayList<>();
+		
+		for (Meal m : loc.meals) {
+			this.meals.add(m);
+		}
+
+		this.drone = new Drone(loc.drone);
+		this.foods = new ArrayList<>();
+		
+		for (FoodItem f : loc.foods) {
+			this.foods.add(f);
+		}
+		
+		this.shiftDetails = new ShiftDetails(loc.shiftDetails);
 		this.numberOfDrones = loc.numberOfDrones;
 	}
 

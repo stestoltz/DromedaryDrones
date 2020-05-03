@@ -27,6 +27,7 @@ import netscape.javascript.JSObject;
 
 public class MapForm extends Form {
 	
+	// used for JavaScript map icons
 	private final String ACTIVE_ICON = "red-dot";
 	private final String INACTIVE_ICON = "grey";
 	private final String HOME_ICON = "green";
@@ -55,16 +56,19 @@ public class MapForm extends Form {
 		webEngine = webView.getEngine();
         webEngine.setJavaScriptEnabled(true);
         
-        // listener for when engine is loaded
+        // listener for when javascript engine is loaded
         webEngine.getLoadWorker().stateProperty().addListener(
 	        new ChangeListener<State>() {
 	            public void changed(ObservableValue<? extends State> ov, State oldState, State newState) {
 	                if (newState == State.SUCCEEDED) {
 	                	
+	                	// setup javascript
 	            		javascript = (JSObject) webEngine.executeScript("window");
 	            		
+	            		// give javascript a way to communicate with us
 	            		javascript.setMember("java", connector);
 	            		
+	            		// allow the user to come to this form
 	            		sc.enableMapping();
 	                }
 	            }
@@ -83,7 +87,6 @@ public class MapForm extends Form {
 		BorderPane center = new BorderPane();
 		center.setTop(description);
 		center.setCenter(webView);
-		//center.getChildren().addAll(description, webView);
 		layout.setCenter(center);
 		
 		HBox listButtons = new HBox();
@@ -92,25 +95,28 @@ public class MapForm extends Form {
 		listButtons.getChildren().add(edit);
 		listButtons.getChildren().add(delete);
 		
+		// delete the selected delivery point
 		delete.setOnAction((event) -> {
 			
-			if (javascript != null) {
-				HBox hbox = pointsView.getSelectionModel().getSelectedItem();
-				
-				if (hbox != null) {
-					DeliveryPoint selectedPoint = getDeliveryPoint(hbox);
-					
-					if (selectedPoint != home) {
-					
-						points.remove(selectedPoint);
-						pointsView.getItems().remove(hbox);
-						
+			HBox hbox = pointsView.getSelectionModel().getSelectedItem();
+
+			if (hbox != null) {
+				DeliveryPoint selectedPoint = getDeliveryPoint(hbox);
+
+				// cannot delete home
+				if (selectedPoint != home) {
+
+					points.remove(selectedPoint);
+					pointsView.getItems().remove(hbox);
+
+					if (javascript != null) {
 						javascript.call("deleteMarker", selectedPoint.getName());
 					}
 				}
 			}
 		});
 		
+		// edit the name of the selected delivery point
 		edit.setOnAction((event) -> {
 			HBox hbox = pointsView.getSelectionModel().getSelectedItem();
 			
@@ -119,7 +125,8 @@ public class MapForm extends Form {
 				
 				String currentVal = text.getText();
 				
-				// temporarily listener to prevent empty strings in text fields
+				// temporarily listener to prevent invalid strings in text fields
+				// reverts name to old name if user leaves it empty or the same name as another point
 				ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {
 				    @Override
 				    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
@@ -169,11 +176,13 @@ public class MapForm extends Form {
 		top.setPadding(new Insets(10, 10, 10, 10));
 		bottom.setPadding(new Insets(10, 10, 10, 10));
 		
+		// user does not want changes to go into effect
 		cancel.setOnAction((event) -> {
 			javascript.call("clearMap");
 			this.sc.switchToHome();
 		});
 		
+		// commit changes to location object, return to home
 		save.setOnAction((event) -> {
 			
 			Map<DeliveryPoint, Boolean> endPoints = new HashMap<>();
@@ -200,15 +209,17 @@ public class MapForm extends Form {
 				this.sc.replaceDeliveryPoints(endPoints, home);
 				this.sc.switchToHome();
 			} else {
-				System.out.println("No active delivery points selected");
+				this.sc.runErrorPopUp("No active delivery points selected.");
 			}
 		});
 		
+		
+		// change highlighting when selected point changes
 		pointsView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<HBox>() {
 		    @Override
 		    public void changed(ObservableValue<? extends HBox> observable, HBox oldValue, HBox newValue) {
 		        
-		    	//set color for old highlighted hbox
+		    	// set color for old highlighted hbox
 		    	if (oldValue != null) {
 		    		if (oldValue == homeHBox) {
 				        
@@ -222,11 +233,7 @@ public class MapForm extends Form {
 					        Boolean active = getActive(oldValue);
 					        String color = active ? ACTIVE_ICON : INACTIVE_ICON;
 					        
-					        try {
-					        	javascript.call("setMarkerColor", dp.getName(), color);
-					        } catch (NullPointerException ex) {
-					        	System.out.println("no");
-					        }
+					        javascript.call("setMarkerColor", dp.getName(), color);
 				    	}
 		    		}
 		    	}
@@ -243,6 +250,10 @@ public class MapForm extends Form {
 		});
 	}
 	
+	/**
+	 * @param name
+	 * @return true if any other delivery point has that name
+	 */
 	public boolean isNameTaken(String name) {
 		if (name.equals(home.getName())) {
 			return true;
@@ -257,6 +268,10 @@ public class MapForm extends Form {
 		return false;
 	}
 	
+	/**
+	 * Given just a name, load in where Google thinks that is and make home point there too
+	 * @param locationName
+	 */
 	public void loadEmptyLocation(String locationName) {
 		this.points = new ArrayList<>();
 		
@@ -269,6 +284,12 @@ public class MapForm extends Form {
 		javascript.call("geocodeNewLocation", locationName, ACTIVE_ICON, HOME_ICON);
 	}
 	
+	/**
+	 * Create the home point from lat and lng provided by JavaScript (called after loadEmptyLocation)
+	 * @param name
+	 * @param lat
+	 * @param lng
+	 */
 	public void setHomePoint(String name, double lat, double lng) {
 		
 		TextField textHome = new TextField();
@@ -361,6 +382,11 @@ public class MapForm extends Form {
 		return null;
 	}
 	
+	/**
+	 * Retrieve a DeliveryPoint given a name
+	 * @param name
+	 * @return
+	 */
 	private DeliveryPoint getDeliveryPoint(String name) {
 		if (home.getName().equals(name)) {
 			return home;
@@ -375,6 +401,11 @@ public class MapForm extends Form {
 		return null;
 	}
 	
+	/**
+	 * Retrieve an HBox given a delivery point
+	 * @param dp
+	 * @return
+	 */
 	private HBox getHBox(DeliveryPoint dp) {
     	if (dp == home) {
     		return homeHBox;
@@ -390,6 +421,11 @@ public class MapForm extends Form {
     	return null;
 	}
 	
+	/**
+	 * Add a delivery point with its active status
+	 * @param dp
+	 * @param active
+	 */
 	public void addDeliveryPoint(DeliveryPoint dp, boolean active) {
 		this.points.add(dp);
 		
@@ -402,6 +438,7 @@ public class MapForm extends Form {
 		CheckBox check = new CheckBox();
 		check.setSelected(active);
 		
+		// respond correctly to activation/deactivation and highlighting/unhighlighting
 		check.setOnAction((event) -> {
 			
 			boolean isActive = check.isSelected();
@@ -426,6 +463,7 @@ public class MapForm extends Form {
 			javascript.call("setMarkerColor", dp.getName(), color);
 		});
 		
+		// select hbox if user clicks on text box
 		ChangeListener<Boolean> listener = new ChangeListener<Boolean>() {
 		    @Override
 		    public void changed(ObservableValue<? extends Boolean> hasFocus, Boolean oldValue, Boolean newValue) {
@@ -459,6 +497,11 @@ public class MapForm extends Form {
 		return false;
 	}
 	
+	/**
+	 * Given a string from javascript in the format (lat, lng), convert to a double[] with 2 values
+	 * @param latLng
+	 * @return
+	 */
 	public double[] parseLatLngFromJS(String latLng) {
 		
 		double[] output = new double[2];
@@ -474,6 +517,10 @@ public class MapForm extends Form {
 		return output;
 	}
 
+	/**
+	 * Called by javascript with "java.methodName"
+	 * Allows javascript to communicate map events with Java
+	 */
 	public class Connector {
 		
 		private MapForm parent;
@@ -482,8 +529,12 @@ public class MapForm extends Form {
 			this.parent = parent;
 		}
 		
+		/**
+		 * Called in a new location by javascript, after getting latlng from Google Geocoding
+		 * @param coords
+		 * @param name
+		 */
 		public void addHomePointToEmptyLocation(Object coords, Object name) {
-			System.out.println("Connector called: addHomePointToEmptyLocation");
     		
 			String coordsString = (String) coords;
 	    	String pointName = (String) name;
@@ -491,12 +542,14 @@ public class MapForm extends Form {
 	    	double[] latLng = parent.parseLatLngFromJS(coordsString);
 	    	
 	    	parent.setHomePoint(pointName, latLng[0], latLng[1]);
-			
-    		System.out.println("Added home point: " + latLng[0] + " " + latLng[1]);
 		}
 		
+		/**
+		 * Called after the user clicks the map to add a delivery point
+		 * @param coords
+		 * @param name
+		 */
 	    public void addDeliveryPoint(Object coords, Object name) {
-	    	System.out.println("Connector called: addDeliveryPoint");
 	    	
 	    	String coordsString = (String) coords;
 	    	String pointName = (String) name;
@@ -506,12 +559,14 @@ public class MapForm extends Form {
 	    	DeliveryPoint dp = new DeliveryPoint(pointName, latLng[0], latLng[1]);
 	    	
 	    	parent.addDeliveryPoint(dp, true);
-    		
-    		System.out.println("Added point: " + latLng[0] + " " + latLng[1]);
 	    }
 	    
+	    /**
+	     * Called after the user drags a marker on the map
+	     * @param coords
+	     * @param name
+	     */
 	    public void moveDeliveryPoint(Object coords, Object name) {
-	    	System.out.println("Connector called: moveDeliveryPoint");
 	    	
 	    	String coordsString = (String) coords;
 	    	String pointName = (String) name;
@@ -524,11 +579,13 @@ public class MapForm extends Form {
 	    		dp.setLat(latLng[0]);
 	    		dp.setLng(latLng[1]);
 	    	}
-    		
-    		System.out.println("Moved point: " + latLng[0] + " " + latLng[1]);
 	    	
 	    }
 	    
+	    /**
+	     * Called after the user clicks a marker on the map
+	     * @param name
+	     */
 	    public void markerClicked(Object name) {
 	    	System.out.println("Connector called: markerClicked");
 	    	String pointName = (String) name;
@@ -544,6 +601,10 @@ public class MapForm extends Form {
     		System.out.println("Highlighted marker: " + name);
 	    }
 	    
+	    /**
+	     * Allows javascript to print to the java console
+	     * @param msg
+	     */
 	    public void log(Object msg) {
 	    	System.out.println((String)msg);
 	    }
