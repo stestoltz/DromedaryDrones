@@ -150,7 +150,6 @@ public class Simulation {
 		
 		}
 		
-		System.out.println(simulationResults);
 		return simulationResults;
 	}
 
