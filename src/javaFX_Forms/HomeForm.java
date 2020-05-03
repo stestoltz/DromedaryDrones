@@ -198,12 +198,12 @@ public class HomeForm extends Form {
 	 * 		a pop up
 	 */
 	private void changeLocationName() {
-		Label locationName = new Label("Location Name: ");
-		TextField textLocationName = new TextField(this.sc.getLocation().getName());
+		Label locationName = new StyleLabel("Location Name: ");
+		TextField textLocationName = new StyleTextField(this.sc.getLocation().getName());
 		GridPane popUpPane = new GridPane();
 		popUpPane.setAlignment(Pos.CENTER);
 
-		Button save = new Button("Save");
+		Button save = new StyleButton("Save");
 		save.setAlignment(Pos.CENTER);
 
 		HBox editLocation = new HBox();
@@ -214,7 +214,7 @@ public class HomeForm extends Form {
 		popUpColumn.setAlignment(Pos.CENTER);
 
 		popUpPane.addColumn(0, popUpColumn);
-		Scene popUpScene = new Scene(popUpPane,300,100);
+		Scene popUpScene = new Scene(popUpPane,350,150);
 		Stage namePopUp = new Stage();
 		namePopUp.setScene(popUpScene);
 		namePopUp.initModality(Modality.APPLICATION_MODAL);
@@ -235,9 +235,12 @@ public class HomeForm extends Form {
 	 */
 	private void changeLocation() {
 		Label directions = new StyleLabel("Please select whether you would like to upload a location from"
-				+ " a save file or enter information for a new location through the system.");
+				+ " a save file or enter information for a new location through the system. If you would "
+				+ "like to access the current location again make sure to save it before uploading or "
+				+ "creating a new location.");
 		directions.setWrapText(true);
 		directions.setTextAlignment(TextAlignment.CENTER);
+		directions.setPadding(new Insets(0, 20, 0, 20));
 
 		Button uploadLocation = new StyleButton("Upload Location");
 		Button enterInformation = new StyleButton("Enter Location Information");
@@ -268,7 +271,7 @@ public class HomeForm extends Form {
 
 		enterInformation.setOnAction((event) -> {
 			change.close();
-			newLocationGUI();
+			this.sc.switchToNewLocation();
 		});
 
 		change.showAndWait();
@@ -332,159 +335,4 @@ public class HomeForm extends Form {
 			}
 		}
 	} 
-
-	private void newLocationGUI() {
-		//vbox for the whole pop up
-		VBox newLocationList = new VBox(15);
-		newLocationList.setAlignment(Pos.CENTER);
-		newLocationList.setPadding(new Insets(15, 15, 15, 15));
-		
-		//title for the pop up
-		Label header = new Label("New Location");
-		header.setFont(new Font("Verdana", 35));
-		header.setTextAlignment(TextAlignment.CENTER);
-		header.setTextFill(Color.web("Orange"));
-		
-		Label description = new StyleLabel("Please enter all values below. Some information, such as "
-				+ "delivery points will be entered through the settings menus instead of this form.");
-		description.setAlignment(Pos.CENTER);
-		description.setWrapText(true);
-		
-		//create all of the user input values ///////////////////////////////////
-		
-		//name
-		Label name = new StyleLabel("Location Name: ");
-		TextField txtName = new StyleTextField();
-		txtName.setDisable(false);
-		name.setMaxWidth(300);
-		HBox.setHgrow(name, Priority.ALWAYS);
-		HBox nameLine = new HBox(name, txtName);
-		
-		//cargo weight
-		Label cargoWeight = new StyleLabel("Cargo weight (lb): ");
-		TextField txtCargoWeight = new StyleTextField();
-		txtCargoWeight.setDisable(false);
-		cargoWeight.setMaxWidth(300);
-		HBox.setHgrow(cargoWeight,Priority.ALWAYS);
-		HBox cargoWeightLine = new HBox(cargoWeight, txtCargoWeight);
-		
-		//cruise speed
-		Label cruiseSpeed = new StyleLabel("Average cruising speed (mph): ");
-		TextField txtCruisingSpeed = new StyleTextField();
-		txtCruisingSpeed.setDisable(false);
-		cruiseSpeed.setMaxWidth(300);
-		HBox.setHgrow(cruiseSpeed,Priority.ALWAYS);
-		HBox cruiseSpeedLine = new HBox(cruiseSpeed, txtCruisingSpeed);
-
-		//max flight time
-		Label maxFlightTime = new StyleLabel("Maximum flight time (min): ");
-		TextField txtMaxFlightTime = new StyleTextField();
-		maxFlightTime.setMaxWidth(300);
-		HBox.setHgrow(maxFlightTime,Priority.ALWAYS);
-		HBox maxFlightTimeLine = new HBox(maxFlightTime, txtMaxFlightTime);
-
-		//turn around time
-		Label turnAroundTime = new StyleLabel("Turn around time (min): ");
-		TextField txtTurnAroundTime = new StyleTextField();
-		turnAroundTime.setMaxWidth(300);
-		HBox.setHgrow(turnAroundTime,Priority.ALWAYS);
-		HBox turnAroundTimeLine = new HBox(turnAroundTime, txtTurnAroundTime);
-
-		//delivery time
-		Label deliveryTime = new StyleLabel("Delivery time (s): ");
-		TextField txtDeliveryTime = new StyleTextField();
-		deliveryTime.setMaxWidth(300);
-		HBox.setHgrow(deliveryTime,Priority.ALWAYS);
-		HBox deliveryTimeLine = new HBox(deliveryTime, txtDeliveryTime);
-		
-		//restricted cargo weight
-		Label userSpecifiedWeight = new StyleLabel("Restricted cargo weight (lb): ");
-		TextField txtUserSpecifiedWeight = new StyleTextField();
-		userSpecifiedWeight.setMaxWidth(300);
-		HBox.setHgrow(userSpecifiedWeight,Priority.ALWAYS);
-		HBox userSpecifiedWeightLine = new HBox(userSpecifiedWeight, txtUserSpecifiedWeight);
-		
-		//number of drones
-		Label numberOfDrones = new StyleLabel("Number of Drones: ");
-		TextField txtNumberOfDrones = new StyleTextField();
-		numberOfDrones.setMaxWidth(300);
-		HBox.setHgrow(numberOfDrones,Priority.ALWAYS);
-		HBox numberOfDronesLine = new HBox(numberOfDrones, txtNumberOfDrones);
-		
-		//number of shifts
-		Label numShifts = new StyleLabel("Number of Shifts: ");
-		TextField txtNumShifts = new StyleTextField();
-		numShifts.setMaxWidth(300);
-		HBox.setHgrow(numShifts, Priority.ALWAYS);
-		HBox numShiftsLine = new HBox(numShifts, txtNumShifts);
-		
-		//shift hours
-		Label shiftHours = new StyleLabel("Hours in a Shift: ");
-		TextField txtShiftHours = new StyleTextField();
-		shiftHours.setMaxWidth(300);
-		HBox.setHgrow(shiftHours, Priority.ALWAYS);
-		HBox shiftHoursLine = new HBox(shiftHours, txtShiftHours);
-		// end of user input values //////////////////////////////////////////////////////
-		
-		
-		//scroller for all of the inputs
-		ArrayList<HBox> boxList = new ArrayList<>();
-		boxList.add(nameLine);
-		boxList.add(cargoWeightLine);
-		boxList.add(cruiseSpeedLine);
-		boxList.add(maxFlightTimeLine);
-		boxList.add(turnAroundTimeLine);
-		boxList.add(deliveryTimeLine);
-		boxList.add(userSpecifiedWeightLine);
-		boxList.add(numberOfDronesLine);
-		boxList.add(numShiftsLine);
-		boxList.add(shiftHoursLine);
-		
-		ObservableList<HBox> inputList = FXCollections.<HBox>observableArrayList(boxList);
-		
-		ListView<HBox> scroller = new ListView<>(inputList);
-		
-		scroller.setOrientation(Orientation.VERTICAL);
-		scroller.setPrefWidth(350);
-	    
-		//create the buttons for the bottom
-		Button createLocation = new StyleButton("Create Location");
-		createLocation.setPrefWidth(150);
-		
-		Button cancel = new StyleButton("Cancel");
-		
-		HBox buttons = new HBox(40);
-		buttons.getChildren().addAll(cancel, createLocation);
-		
-		//put everything in the vbox for the whole window
-		newLocationList.getChildren().addAll(
-				header,
-				description,
-				scroller,
-				buttons);
-		
-		//create the actual pop up
-		Scene newLocationScene = new Scene(newLocationList, 600, 400);
-		Stage newLocationPopUp = new Stage();
-		newLocationPopUp.setScene(newLocationScene);
-		newLocationPopUp.initModality(Modality.APPLICATION_MODAL);
-		
-		createLocation.setOnAction((event) -> {
-			//verifyLocationInputs()
-			
-			this.sc.runErrorPopUp("All shifts will automatically have 15 meals "
-					+ "per shift and that can be edited through the settings page");
-			newLocationPopUp.close();
-			
-			//take the user to the map to add the home 
-			//and other delivery points
-			this.sc.switchToMap();
-		});
-		
-		cancel.setOnAction((event) -> {;
-			newLocationPopUp.close();
-		});
-		
-		newLocationPopUp.showAndWait();
-	}
 }

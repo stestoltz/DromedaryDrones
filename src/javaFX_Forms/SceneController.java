@@ -16,6 +16,7 @@ import javaFX_Styling.StyleButton;
 import javaFX_Styling.StyleLabel;
 import javaFX_Styling.StyleMenu;
 import javaFX_Styling.StyleMenuBar;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -50,6 +51,7 @@ public class SceneController {
 	private MapForm mapForm;
 	private ShiftSettingsForm shiftForm;
 	private SimulationResultsForm resultsForm;
+	private NewLocationForm newLocationForm;
 	
 	private MenuItem mappingMenuItem;
 	
@@ -66,10 +68,9 @@ public class SceneController {
 		foodForm = new FoodForm(this, buildSettingsBorderPane("Food Settings"));
 		mealForm = new MealForm(this, buildSettingsBorderPane("Meal Settings"));
 		mapForm = new MapForm(this, buildSettingsBorderPane("Map Settings"));
-
 		shiftForm = new ShiftSettingsForm(this, buildSettingsBorderPane("Shift Settings"));
-
 		resultsForm = new SimulationResultsForm(this, buildResultsBorderPane());
+		newLocationForm = new NewLocationForm(this, buildSettingsBorderPane("Create New Location"));
 		
 		Scene scene = new Scene(homeForm.getLayout(), Color.LIGHTGOLDENRODYELLOW);
 		stage.setScene(scene);
@@ -105,6 +106,12 @@ public class SceneController {
 	
 	public BorderPane getResultsLayout() {
 		return resultsForm.getLayout();
+	}
+	
+	public BorderPane getNewLocationLayout() {
+		//always start with a new built form
+		newLocationForm = new NewLocationForm(this, buildSettingsBorderPane("Create New Location"));
+		return newLocationForm.getLayout();
 	}
 	
 	public void switchToHome() {
@@ -152,6 +159,10 @@ public class SceneController {
 		}
 	}
 	
+	public void switchToNewLocation() {
+		stage.getScene().setRoot(getNewLocationLayout());
+	}
+	
 	public void replaceDrone(Drone d) {
 		this.location.setDrone(d);
 	}
@@ -185,11 +196,11 @@ public class SceneController {
 	public BorderPane buildSettingsBorderPane(String headerText) {
 		BorderPane layout = buildBaseBorderPane(headerText);
 		
-		Button cancel = new Button("Cancel and Return");
-		Button saveChanges = new Button("Save Changes");
+		Button cancel = new StyleButton("Cancel and Return");
+		Button saveChanges = new StyleButton("Save Changes");
 		
-		cancel.setStyle("-fx-font-size: 12pt;");
-		saveChanges.setStyle("-fx-font-size: 12pt;");
+		cancel.setPrefWidth(175);
+		saveChanges.setPrefWidth(150);
 		
 		BorderPane bottom = ((BorderPane) layout.getBottom());
 		bottom.setLeft(cancel);
@@ -332,7 +343,7 @@ public class SceneController {
 		
 		return layout;
 		
-	}	
+	}
 
 	public Location getLocation() {
 		return location;
@@ -354,6 +365,7 @@ public class SceneController {
 		Label error = new StyleLabel(errorText);
 		error.setWrapText(true);
 		error.setTextAlignment(TextAlignment.CENTER);
+		error.setPadding(new Insets(0, 10, 0, 10));
 		
 		GridPane popUpPane = new GridPane();
 		popUpPane.setAlignment(Pos.CENTER);
@@ -367,7 +379,7 @@ public class SceneController {
 			
 		popUpPane.addColumn(0, popUpColumn);
 
-		Scene popUpScene = new Scene(popUpPane,300,200);
+		Scene popUpScene = new Scene(popUpPane,350,200);
 
 		Stage errorPopUp = new Stage();
 		errorPopUp.setScene(popUpScene);

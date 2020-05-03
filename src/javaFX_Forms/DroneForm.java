@@ -115,7 +115,7 @@ public class DroneForm extends Form {
 
 		save.setOnAction((event) -> {
 			Drone d = getFormData();
-
+		
 			if (d != null){
 				this.sc.replaceDrone(d);
 				this.sc.getLocation().setNumberOfDrones(Integer.parseInt(txtNumberOfDrones.getText()));
