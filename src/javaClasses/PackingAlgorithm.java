@@ -87,10 +87,6 @@ public abstract class PackingAlgorithm {
 		
 		boolean fitsInOneTrip = maxDistanceForTrip <= drone.getMaxFlightDistanceInFeet(numStops);
 		
-		if (!fitsInOneTrip) {
-			System.out.println(numStops + " " + maxDistanceForTrip + " " + this.getClass() + " " + droneWeight);
-		}
-		
 		return fitsInDrone(droneWeight) && fitsInOneTrip;
 	}
 	
