@@ -53,8 +53,8 @@ public class SimulationResultsForm extends Form {
 		//run the simulation to get the results
 		Simulation sim = new Simulation(location);
 
-		RoutingAlgorithm ra = new GreedyAlgorithm();
-		//RoutingAlgorithm ra = new BacktrackingSearch();
+		//RoutingAlgorithm ra = new GreedyAlgorithm();
+		RoutingAlgorithm ra = new BacktrackingSearch();
 		simResults = sim.runSimulation(ra);
 
 		//create the graph
@@ -66,24 +66,24 @@ public class SimulationResultsForm extends Form {
 
 		LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
-		
+
 		// largest time should be the same for both algorithm so that buckets line up
 		double largestTime = 0;
 		for (Results r : simResults) {
 			List<Double> times = r.getTimes();
 
 			Collections.sort(times);
-			
+
 			if (times.get(times.size() - 1) > largestTime) {
 				largestTime = times.get(times.size() - 1);
 			}
-			
+
 		}
 
 		for (int index = 0; index < simResults.length; index++) {
-			
+
 			Results r = simResults[index];
-			
+
 			Series<Number, Number> series = new XYChart.Series<>();
 
 			int numBuckets = 25;
@@ -117,7 +117,7 @@ public class SimulationResultsForm extends Form {
 							!(buckets[currentBucket] <= next && next <= buckets[currentBucket + 1])) {
 						currentBucket++;
 					}
-					
+
 					// catch floating-point rounding errors
 					if (currentBucket >= numBuckets) {
 						currentBucket = numBuckets - 1;
@@ -130,7 +130,7 @@ public class SimulationResultsForm extends Form {
 			for (int i = 0; i < numBuckets; i++) {
 				series.getData().add(new XYChart.Data<Number, Number>((buckets[i] + buckets[i + 1]) / 2, ((double)counts[i] / times.size()) * 100));
 			}
-			
+
 			if (index == 0) {
 				series.setName("FIFO");
 			} else if (index == 1) {
@@ -152,17 +152,17 @@ public class SimulationResultsForm extends Form {
 		HBox values = new HBox();
 		values.setAlignment(Pos.CENTER);
 		values.setSpacing(30);
-		
+
 		DecimalFormat df = new DecimalFormat("#.##");	//format decimals
 
 		Label fifo = new StyleLabel("FIFO Worst Time (s): \nFIFO Average Time (s): ");
 		Label fifoTime = new StyleLabel(df.format(simResults[0].worstTime()) 
 				+ "\n" +df.format(simResults[0].averageTime()));
-		
+
 		Label knapsack = new StyleLabel("Knapsack Worst Time (s): \nKnapsack Average Time (s):");
 		Label knapsackTime = new StyleLabel(df.format(simResults[1].worstTime()) 
 				+ "\n" + df.format(simResults[1].averageTime()));
-				
+
 		values.getChildren().addAll(fifo, fifoTime, knapsack, knapsackTime);
 		insideResults.setBottom(values);
 
@@ -176,56 +176,60 @@ public class SimulationResultsForm extends Form {
 	 */
 	public void saveResults() {
 		if (simResults != null) {
-			
+
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setInitialFileName("results");
 			fileChooser.setTitle("Save Results");
-			
+
 			ExtensionFilter csv = new ExtensionFilter("CSV (Comma delimited)", "*.csv");
 			fileChooser.getExtensionFilters().add(csv);
 			fileChooser.setSelectedExtensionFilter(csv);
-			
+
 			File file = fileChooser.showSaveDialog(null);
 
-			try {
-				FileWriter write = new FileWriter(file);
-				
-				StringBuilder sb = new StringBuilder();
-				
-				sb.append("FIFO\n");
-				
-				sb.append(simResults[0].getTimesString(","));
-				sb.append("\n");
-				sb.append("Worst,");
-				sb.append(simResults[0].worstTime());
-				sb.append("\n");
-				sb.append("Average,");
-				sb.append(simResults[0].averageTime());
-				sb.append("\n");
-				sb.append("\n");
-				
-				sb.append("Knapsack\n");
-				
-				sb.append(simResults[1].getTimesString(","));
-				sb.append("\n");
-				sb.append("Worst,");
-				sb.append(simResults[1].worstTime());
-				sb.append("\n");
-				sb.append("Average,");
-				sb.append(simResults[1].averageTime());
-				sb.append("\n");
-				sb.append("\n");
-				
-				write.write(sb.toString());
-				
-				write.close();
-				
-			} catch (IOException e) {
-				System.out.println("File error saving results; file name=" + file.getName());
-				e.printStackTrace();
-			} catch (Exception e) {
-				System.out.println("Results list empty in saveResults");
-				e.printStackTrace();
+			// only continue if user didn't cancel
+			if (file != null) {
+
+				try {
+					FileWriter write = new FileWriter(file);
+
+					StringBuilder sb = new StringBuilder();
+
+					sb.append("FIFO\n");
+
+					sb.append(simResults[0].getTimesString(","));
+					sb.append("\n");
+					sb.append("Worst,");
+					sb.append(simResults[0].worstTime());
+					sb.append("\n");
+					sb.append("Average,");
+					sb.append(simResults[0].averageTime());
+					sb.append("\n");
+					sb.append("\n");
+
+					sb.append("Knapsack\n");
+
+					sb.append(simResults[1].getTimesString(","));
+					sb.append("\n");
+					sb.append("Worst,");
+					sb.append(simResults[1].worstTime());
+					sb.append("\n");
+					sb.append("Average,");
+					sb.append(simResults[1].averageTime());
+					sb.append("\n");
+					sb.append("\n");
+
+					write.write(sb.toString());
+
+					write.close();
+
+				} catch (IOException e) {
+					System.out.println("File error saving results; file name=" + file.getName());
+					e.printStackTrace();
+				} catch (Exception e) {
+					System.out.println("Results list empty in saveResults");
+					e.printStackTrace();
+				}
 			}
 
 		}

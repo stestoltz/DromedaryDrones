@@ -58,7 +58,7 @@ public class Results {
 	 */
 	public double worstTime() throws Exception {
 		if (times.size() == 0) {
-			throw new Exception("Attempted to min empty results");
+			throw new Exception("Attempted to max empty results");
 		}
 		
 		return Collections.max(times);
