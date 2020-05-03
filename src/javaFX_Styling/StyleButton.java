@@ -12,6 +12,7 @@ public class StyleButton extends Button{
 		this.setText(name);
 		this.setStyle("-fx-background-color: Orange;"
 				+ "-fx-font-size: 12pt;");
+		
 		this.setPrefWidth(80);
 		
 		this.addEventHandler(MouseEvent.MOUSE_ENTERED,
@@ -39,6 +40,7 @@ public class StyleButton extends Button{
 		this.setText(name);
 		this.setStyle("-fx-background-color: Orange;"
 				+ "-fx-font-size: 12pt;");
+
 		this.setPrefWidth(80);
 		
 		this.addEventHandler(MouseEvent.MOUSE_ENTERED,

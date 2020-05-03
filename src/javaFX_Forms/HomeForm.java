@@ -6,23 +6,35 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 import javaClasses.Location;
 import javaFX_Styling.StyleButton;
 import javaFX_Styling.StyleLabel;
+import javaFX_Styling.StyleMenu;
+import javaFX_Styling.StyleTextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
@@ -186,12 +198,12 @@ public class HomeForm extends Form {
 	 * 		a pop up
 	 */
 	private void changeLocationName() {
-		Label locationName = new Label("Location Name: ");
-		TextField textLocationName = new TextField(this.sc.getLocation().getName());
+		Label locationName = new StyleLabel("Location Name: ");
+		TextField textLocationName = new StyleTextField(this.sc.getLocation().getName());
 		GridPane popUpPane = new GridPane();
 		popUpPane.setAlignment(Pos.CENTER);
 
-		Button save = new Button("Save");
+		Button save = new StyleButton("Save");
 		save.setAlignment(Pos.CENTER);
 
 		HBox editLocation = new HBox();
@@ -202,7 +214,7 @@ public class HomeForm extends Form {
 		popUpColumn.setAlignment(Pos.CENTER);
 
 		popUpPane.addColumn(0, popUpColumn);
-		Scene popUpScene = new Scene(popUpPane,300,100);
+		Scene popUpScene = new Scene(popUpPane,350,150);
 		Stage namePopUp = new Stage();
 		namePopUp.setScene(popUpScene);
 		namePopUp.initModality(Modality.APPLICATION_MODAL);
@@ -222,13 +234,18 @@ public class HomeForm extends Form {
 	 * 		to file in prompted information through the GUI
 	 */
 	private void changeLocation() {
-		Label directions = new Label("Please select whether you would like to upload a location from"
-				+ " a save file or enter information for a new location through the system.");
+		Label directions = new StyleLabel("Please select whether you would like to upload a location from"
+				+ " a save file or enter information for a new location through the system. If you would "
+				+ "like to access the current location again make sure to save it before uploading or "
+				+ "creating a new location.");
 		directions.setWrapText(true);
 		directions.setTextAlignment(TextAlignment.CENTER);
+		directions.setPadding(new Insets(0, 20, 0, 20));
 
-		Button uploadLocation = new Button("Upload Location");
-		Button enterInformation = new Button("Enter Location Information");
+		Button uploadLocation = new StyleButton("Upload Location");
+		Button enterInformation = new StyleButton("Enter Location Information");
+		uploadLocation.setPrefWidth(250);
+		enterInformation.setPrefWidth(250);
 
 		HBox buttons = new HBox(10);
 		buttons.getChildren().addAll(uploadLocation, enterInformation);
@@ -241,9 +258,10 @@ public class HomeForm extends Form {
 		changePane.setAlignment(Pos.CENTER);
 
 		changePane.addColumn(0, allItems);
-		Scene popUpScene = new Scene(changePane, 350, 150);
+		Scene popUpScene = new Scene(changePane, 600, 250);
 		Stage change = new Stage();
 		change.setScene(popUpScene);
+		change.setTitle("Change Location");
 		change.initModality(Modality.APPLICATION_MODAL);
 
 		uploadLocation.setOnAction((event) -> {
@@ -253,7 +271,7 @@ public class HomeForm extends Form {
 
 		enterInformation.setOnAction((event) -> {
 			change.close();
-			newLocationGUI();
+			this.sc.switchToNewLocation();
 		});
 
 		change.showAndWait();
@@ -316,10 +334,5 @@ public class HomeForm extends Form {
 				ex.printStackTrace();
 			}
 		}
-	}
-
-	private void newLocationGUI() {
-		Label header = new Label("New Location");
-		Label description = new StyleLabel("");
-	}
+	} 
 }

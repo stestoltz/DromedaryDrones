@@ -77,10 +77,10 @@ public class MapForm extends Form {
 		webEngine.load(getClass().getResource("/javaFX_Forms/map/map.html").toString());
 
 		//description
-		Label description = new StyleLabel("Click the map at a given coordinate that you wish to add. "
-				+ "This will add the new delivery point to the list. Delivery points can be toggled on "
-				+ "and off using the checkboxes. "
-				+ "The map displays all delivery points and highlights points that will be used in the simulation.");
+		Label description = new StyleLabel("Delivery points can be added by clicking the map at any point. "
+				+ "Delivery points can be toggled on and off using the checkboxes. Select a point from the list to edit "
+				+ "or delete. Points can also be moved by holding and dragging the point around the map. "
+				+ "The green point indicates the home point and cannot be turned off.");
 		
 		description.setWrapText(true);
 		description.setPrefHeight(100);
