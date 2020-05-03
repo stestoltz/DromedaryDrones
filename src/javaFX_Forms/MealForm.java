@@ -24,7 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -229,7 +228,7 @@ public class MealForm extends Form
 			this.sc.runErrorPopUp("The meal being created weighs too much for the drone.");
 		}
 		else {
-			boolean mealSuccess = false;
+			boolean mealSuccess = true;
 			Meal m = new Meal(foodList, 0);
 			String[] tempM = m.toString().split(" ");
 			List<String> tempNewList = Arrays.asList(tempM);

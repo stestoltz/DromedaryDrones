@@ -59,9 +59,7 @@ public class Simulation {
 		for (int i = 0; i < numShifts; i++) {
 			allOrders.add(generateOrders());
 		}
-		
-		double maxDistanceBetweenPoints = location.maxDistanceBetweenPoints();
-		
+				
 		// for each packing algorithm
 		for (int p = 0; p < 2; p++) {
 		
