@@ -51,13 +51,8 @@ public class NewLocationForm extends Form {
 	private TextField txtFoodWeight;
 	private TextField txtFoodPrepTime;
 	
-	private Location newLocation;
-	
 	public NewLocationForm(SceneController sc, BorderPane layout) {
 		super(sc, layout);
-		
-		//start with the location being the same, this will be overwritten
-		newLocation = new Location(this.sc.getLocation());
 
 		Label description = new StyleLabel("Please enter all values below. Some information, such as "
 				+ "delivery points will be entered through the settings menus instead of this form. "
@@ -226,10 +221,10 @@ public class NewLocationForm extends Form {
 		createLocation.setOnAction((event) -> {
 			//verify location will let the user know of any problems with their inputs
 			//this also sets up the location with all of the information if it is correct
-			boolean correct = verifyInputs();
+			Location newLocation = createLocation();
 					
 			//if all inputs are correct then take the user to the next step of creating a location
-			if(correct) {
+			if(newLocation != null) {
 				this.sc.setLocation(newLocation);
 
 				//take the user to the map to add the home 
@@ -247,13 +242,16 @@ public class NewLocationForm extends Form {
 		});
 	}
 	
-	private boolean verifyInputs() {
+	private Location createLocation() {
+		
+		//start with the location being the same, this will be overwritten
+		Location newLocation = new Location(this.sc.getLocation());
 		
 		//pull location name and check to make sure it has info
 		String name = txtLocationName.getText();
 		if (name.equals("")) {
 			this.sc.runErrorPopUp("The location name cannot be empty.");
-			return false;
+			return null;
 		}
 		
 		newLocation.setName(name);
@@ -271,17 +269,17 @@ public class NewLocationForm extends Form {
 			//check drone values
 			if (userSpecifiedWeight > cargoWeight) {
 				this.sc.runErrorPopUp("The restricted drone weight must be less than or equal to the max cargo weight of the drone.");
-				return false;
+				return null;
 			}
 			
 			if (userSpecifiedWeight <= 0 || cargoWeight <= 0) {
 				this.sc.runErrorPopUp("Drone cargo weight and restricted cargo weight must be above zero.");
-				return false;
+				return null;
 			}
 			
 			if (numberOfDrones <= 0) {
 				this.sc.runErrorPopUp("There must be at least one drone to run a simulation.");
-				return false;
+				return null;
 			}
 		
 			Drone d;
@@ -295,7 +293,7 @@ public class NewLocationForm extends Form {
 				numberOfDrones < 0)
 			{
 				this.sc.runErrorPopUp("All values in the drone form must be positive values.");
-				return false;
+				return null;
 			} else {
 				d = new Drone(
 						cargoWeight, 
@@ -316,12 +314,12 @@ public class NewLocationForm extends Form {
 			
 			if (numShifts <= 0) {
 				this.sc.runErrorPopUp("The number of shifts must be greater than zero to create a location.");
-				return false;
+				return null;
 			}
 			
 			if (shiftHours <= 0) {
 				this.sc.runErrorPopUp("The hours in a shift must be greater than zero to create a location.");
-				return false;
+				return null;
 			}
 			
 			//set shift information to location
@@ -339,22 +337,22 @@ public class NewLocationForm extends Form {
 			
 			if (foodName.equals("")) {
 				this.sc.runErrorPopUp("The food must have a name to create a new location.");
-				return false;
+				return null;
 			}
 			
 			if (foodWeight <= 0) {
 				this.sc.runErrorPopUp("Food weight must be greater than zero.");
-				return false;
+				return null;
 			}
 			
 			if (foodWeight > cargoWeight) {
 				this.sc.runErrorPopUp("Food weight cannot be more than drone cargo weight.");
-				return false;
+				return null;
 			}
 			
 			if (foodPrepTime < 0) {
 				this.sc.runErrorPopUp("Food prep time cannot be negative.");
-				return false;
+				return null;
 			}
 			
 			//create the food and meal information
@@ -371,9 +369,9 @@ public class NewLocationForm extends Form {
 			
 		} catch (Exception e) {
 			this.sc.runErrorPopUp("All inputs must be in a valid format.");
-			return false;
+			return null;
 		}
 		
-		return true;
+		return newLocation;
 	}
 }
