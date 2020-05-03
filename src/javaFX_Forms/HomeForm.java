@@ -241,6 +241,8 @@ public class HomeForm extends Form {
 
 		Button uploadLocation = new StyleButton("Upload Location");
 		Button enterInformation = new StyleButton("Enter Location Information");
+		uploadLocation.setPrefWidth(250);
+		enterInformation.setPrefWidth(250);
 
 		HBox buttons = new HBox(10);
 		buttons.getChildren().addAll(uploadLocation, enterInformation);
@@ -253,9 +255,10 @@ public class HomeForm extends Form {
 		changePane.setAlignment(Pos.CENTER);
 
 		changePane.addColumn(0, allItems);
-		Scene popUpScene = new Scene(changePane, 450, 250);
+		Scene popUpScene = new Scene(changePane, 600, 250);
 		Stage change = new Stage();
 		change.setScene(popUpScene);
+		change.setTitle("Change Location");
 		change.initModality(Modality.APPLICATION_MODAL);
 
 		uploadLocation.setOnAction((event) -> {
