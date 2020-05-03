@@ -345,6 +345,10 @@ public class SceneController {
 		return stage;
 	}
 	
+	/**
+	 * given an error message, display a popup to the user
+	 * @param errorText
+	 */
 	public void runErrorPopUp(String errorText) {
 		Label error = new Label(errorText);
 		error.setWrapText(true);
