@@ -2,6 +2,7 @@ package javaFX_Styling;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 
 public class StyleButton extends Button{
 	
@@ -10,6 +11,7 @@ public class StyleButton extends Button{
 		this.setText(name);
 		this.setStyle("-fx-background-color: Orange;"
 				+ "-fx-font-size: 12pt;");
+		
 		this.setPrefWidth(80);
 	}
 	
@@ -18,6 +20,7 @@ public class StyleButton extends Button{
 		this.setText(name);
 		this.setStyle("-fx-background-color: Orange;"
 				+ "-fx-font-size: 12pt;");
+
 		this.setPrefWidth(80);
 	}
 }

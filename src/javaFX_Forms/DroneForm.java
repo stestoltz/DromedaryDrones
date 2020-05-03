@@ -165,6 +165,11 @@ public class DroneForm extends Form {
 				this.sc.runErrorPopUp("Drone cargo weight and specified weight must be above zero.");
 				return null;
 			}
+			
+			if (numberOfDrones <= 0) {
+				this.sc.runErrorPopUp("There must be at least one drone to run a simulation.");
+				return null;
+			}
  
 			if (cargoWeight > 0 && 
 				cruisingSpeed > 0 && 
@@ -172,7 +177,7 @@ public class DroneForm extends Form {
 				turnAroundTime >= 0 && 
 				deliveryTime >= 0 && 
 				userSpecifiedWeight >= 0 &&
-				numberOfDrones >= 0)
+				numberOfDrones > 0)
 			{
 				return new Drone(cargoWeight, cruisingSpeed, maxFlightTime, turnAroundTime, deliveryTime, userSpecifiedWeight);
 			}
