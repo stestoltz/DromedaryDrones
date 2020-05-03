@@ -587,7 +587,6 @@ public class MapForm extends Form {
 	     * @param name
 	     */
 	    public void markerClicked(Object name) {
-	    	System.out.println("Connector called: markerClicked");
 	    	String pointName = (String) name;
 	    	
 	    	DeliveryPoint dp = getDeliveryPoint(pointName);
@@ -597,8 +596,6 @@ public class MapForm extends Form {
 	    	pointsView.getSelectionModel().select(hbox);
 	    	
 	    	pointsView.scrollTo(hbox);
-	    	
-    		System.out.println("Highlighted marker: " + name);
 	    }
 	    
 	    /**
