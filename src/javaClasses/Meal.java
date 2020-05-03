@@ -140,6 +140,7 @@ public class Meal implements Serializable {
 	/**
 	 * returns a readable string giving the FoodItems and their quantities
 	 */
+	@Override
 	public String toString() {
 		String ret = "";
 		//loops through the map for each food

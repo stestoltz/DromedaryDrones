@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import javaClasses.Location;
 import javaFX_Styling.StyleButton;
 import javaFX_Styling.StyleLabel;
-import javaFX_Styling.StyleMenu;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
