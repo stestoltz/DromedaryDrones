@@ -346,6 +346,10 @@ public class SceneController {
 		return stage;
 	}
 	
+	/**
+	 * given an error message, display a popup to the user
+	 * @param errorText
+	 */
 	public void runErrorPopUp(String errorText) {
 		Label error = new StyleLabel(errorText);
 		error.setWrapText(true);
@@ -362,7 +366,9 @@ public class SceneController {
 		popUpColumn.setAlignment(Pos.CENTER);
 			
 		popUpPane.addColumn(0, popUpColumn);
-		Scene popUpScene = new Scene(popUpPane,400,150);
+
+		Scene popUpScene = new Scene(popUpPane,300,200);
+
 		Stage errorPopUp = new Stage();
 		errorPopUp.setScene(popUpScene);
 		errorPopUp.initModality(Modality.APPLICATION_MODAL);

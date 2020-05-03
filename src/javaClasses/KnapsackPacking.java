@@ -118,6 +118,9 @@ public class KnapsackPacking extends PackingAlgorithm {
 		return ready;
 	}
 	
+	/**
+	 * @return true if there is still an order
+	 */
 	public boolean hasNextOrder() {
 		if (shiftOrders.isEmpty() && skippedOrders.isEmpty()) {
 			return false;
@@ -125,6 +128,10 @@ public class KnapsackPacking extends PackingAlgorithm {
 		return true;
 	}
 	
+
+	/**
+	 * @return the time of the next order
+	 */
 	public double nextOrderTime() {
 		//in this case it might just have skipped orders to send out
 		if (shiftOrders.isEmpty()) {

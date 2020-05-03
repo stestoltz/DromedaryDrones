@@ -32,6 +32,7 @@
 
       var markers = [];
 
+      // create the map
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: centerLat, lng: centerLng},
@@ -42,6 +43,7 @@
         geocoder = new google.maps.Geocoder();
       }
 
+      // create a name not currently in use
       function uniqueName() {
         newPointName = "Delivery Point ";
         newPointIndex = 0;
@@ -61,11 +63,8 @@
         return newPointName + newPointIndex;
       }
 
+      // add a marker to the map, set up appropriate listeners
       function addMarker(latitude, longitude, name, color) {
-        //var infowindow = new google.maps.InfoWindow({
-        //  content: name
-        //});
-        
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng({lat: latitude, lng: longitude}),
           map: map,
@@ -77,8 +76,6 @@
         });
 
         marker.addListener('click', function() {
-          //infowindow.open(map, marker);
-
           java.markerClicked(marker.title);
         });
 
@@ -91,8 +88,8 @@
         return marker;
       }
 
+      // delete a marker from the map and from the marker list
       function deleteMarker(name) {
-        java.log("delete marker " + name);
         index = -1;
 
         for (i = 0; i < markers.length; i++) {
@@ -111,34 +108,35 @@
         markers.splice(index, 1);
       }
 
+      // change the name of a marker
       function editMarker(oldName, newName) {
-        java.log("editing marker " + oldName + " to " + newName);
-
         var m = getMarker(oldName);
 
         m.title = newName;
       }
 
+      // change the color of a marker
       function setMarkerColor(name, color) {
-        java.log("changing color of marker " + name + " to " + color);
-
         var m = getMarker(name);
 
         m.setIcon({url: colorURL(color)});
       }
 
+      // center the map on a given marker
       function centerOnMarker(name) {
         var m = getMarker(name);
 
         center = m.position;
 
-        map.setCenter(center);
+        map.panTo(center);
       }
 
+      // given a color, find the reference to that color's icon image
       function colorURL(color) {
         return "http://maps.google.com/mapfiles/ms/icons/" + color + ".png";
       }
 
+      // given a unique name, return the associated marker
       function getMarker(name) {
         for (i = 0; i < markers.length; i++) {
           m = markers[i];
@@ -151,7 +149,8 @@
         return null;
       }
 
-      function loadMap(latitude, longitude, newColor) {
+      // load in the map, centered on lat lng
+      function loadMap(latitude, longitude, colorOfNewMarkers) {
 
         center = new google.maps.LatLng({lat: latitude, lng: longitude});
 
@@ -159,17 +158,19 @@
 
         google.maps.event.clearListeners(map, 'click');
 
+        // when the user clicks the map, make a new marker
         map.addListener('click', function(e) {
 
           pointName = uniqueName();
           
-          addMarker(e.latLng.lat(), e.latLng.lng(), pointName, newColor);
+          addMarker(e.latLng.lat(), e.latLng.lng(), pointName, colorOfNewMarkers);
 
           java.addDeliveryPoint(e.latLng.toString(), pointName);
         });
         
       }
 
+      // create a new location based on a user-specified name, geocoded by Google
       function geocodeNewLocation(locationName, newColor, homeColor) {
         geocoder.geocode({'address': locationName}, function(results, status) {
           if (status === 'OK') {
@@ -179,14 +180,13 @@
             addMarker(center.lat(), center.lng(), locationName, homeColor);
 
             java.addHomePointToEmptyLocation(center.toString(), locationName);
-
-            java.log("geocoded to " + results[0].geometry.location.toString());
           } else {
             java.log('Geocode was not successful for the following reason: ' + status);
           }
         });
       }
 
+      // reset the map
       function clearMap() {
         for (i = 0; i < markers.length; i++) {
           markers[i].setMap(null);

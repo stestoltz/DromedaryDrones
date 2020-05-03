@@ -2,7 +2,6 @@ package javaClasses;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Queue;
@@ -60,9 +59,7 @@ public class Simulation {
 		for (int i = 0; i < numShifts; i++) {
 			allOrders.add(generateOrders());
 		}
-		
-		double maxDistanceBetweenPoints = location.maxDistanceBetweenPoints();
-		
+				
 		// for each packing algorithm
 		for (int p = 0; p < 2; p++) {
 		

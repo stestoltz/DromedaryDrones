@@ -15,6 +15,12 @@ public abstract class PackingAlgorithm {
 	
 	private final double FILL_TO = 0.95;
 	
+	/**
+	 * parent constructor for PackingAlgorithms
+	 * @param orders
+	 * @param drone
+	 * @param home
+	 */
 	public PackingAlgorithm(Queue<Order> orders, Drone drone, DeliveryPoint home) {
 		this.shiftOrders = new LinkedList<>(orders);
 		this.drone = drone;
@@ -32,14 +38,25 @@ public abstract class PackingAlgorithm {
 	 */
 	public abstract List<Order> nextOrder(double time);
 	
+	
 	public abstract boolean hasNextOrder();
 	
 	public abstract double nextOrderTime();
 	
+	/**
+	 * see if a weight will fit in the drone, with a bit of wiggle room
+	 * @param weight
+	 * @return
+	 */
 	public boolean fitsInDrone(double weight) {
 		return weight <= MAX_WEIGHT * FILL_TO;
 	}
 	
+	/**
+	 * see if a trip will fit in the drone
+	 * @param trip
+	 * @return
+	 */
 	public boolean fitsInDrone(List<Order> trip) {
 		double weight = 0.0;
 		

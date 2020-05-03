@@ -1,5 +1,6 @@
 package javaFX_Forms;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -370,7 +370,6 @@ public class FoodForm extends Form
 			TextField input3) {
 
 		FoodItem selectedFood = (FoodItem) foodView.getSelectionModel().getSelectedItem();
-		
 
 		//variables
 		boolean errorFound = false; 	//error tracking boolean
@@ -426,8 +425,8 @@ public class FoodForm extends Form
 
 		//if there were no errors
 		if(!errorFound){
-			
-			
+
+
 			//create the food
 			FoodItem newFood = new FoodItem(name, w, time);
 
@@ -438,24 +437,30 @@ public class FoodForm extends Form
 			//add the edited food to the list after removing the old version
 			displayedFoods.remove(selectedFood);
 			displayedFoods.add(newFood);
-			
-			
-			//get meals that will be affected
-			for(int i=0; i<meals.size(); i++) {
-				if(meals.get(i).toString().contains(selectedFood.toString())){
-					HashMap<FoodItem, Integer> map = meals.get(i).getMeal();
-					for(HashMap.Entry<FoodItem, Integer> f : map.entrySet()) {
-						if(f.getKey().toString().equals(selectedFood.toString())) {
-							int tempCount = f.getValue();
-							meals.get(i).deleteFood(selectedFood);
-							meals.get(i).addFood(newFood, tempCount);
-							break;
+
+
+			//if the food was changed at all then adjust the meals it was in
+			if(!selectedFood.getName().equals(newFood.getName())
+					|| selectedFood.getPrepTime() != newFood.getPrepTime()
+					|| selectedFood.getWeight() != newFood.getWeight()) {
+
+				//get meals that will be affected
+				for(int i=0; i<meals.size(); i++) {
+					if(meals.get(i).toString().contains(selectedFood.toString())){
+						HashMap<FoodItem, Integer> map = meals.get(i).getMeal();
+						for(HashMap.Entry<FoodItem, Integer> f : map.entrySet()) {
+							if(f.getKey().toString().equals(selectedFood.toString())) {
+								int tempCount = f.getValue();
+								meals.get(i).deleteFood(f.getKey());
+								meals.get(i).addFood(newFood, tempCount);
+								break;
+							}
 						}
 					}
 				}
 			}
-			
-			
+
+
 			//inform user
 			this.sc.runErrorPopUp("Successfully edited " + name + "!");
 			return true;	//return true since it added correctly
@@ -463,6 +468,10 @@ public class FoodForm extends Form
 		return false;		//could not add food so return false
 	}
 
+	/**
+	 * delete the selected food item
+	 * @param selectedFood
+	 */
 	private void deleteFood(FoodItem selectedFood) {
 		List<HBox> mealElements = new ArrayList<>();
 		List<Meal> tempMeals = new ArrayList<>();	//for storing meals that wont be deleted
@@ -470,11 +479,15 @@ public class FoodForm extends Form
 		for(int i=0; i<meals.size(); i++) {
 			if(meals.get(i).toString().contains(selectedFood.toString())){
 				//creates the textField
-				TextField inputVal = new TextField(""+meals.get(i).getPercentage());	
+				TextField inputVal = new TextField(""+meals.get(i).getPercentage());
+				inputVal.setPrefWidth(50);
+				inputVal.setDisable(true);
 
 				HBox hbox = new HBox();
 				//gets the food item as text
-				Text temp = new Text(meals.get(i).toString());
+				Label temp = new Label(meals.get(i).toString());
+				temp.setMaxWidth(300);
+				HBox.setHgrow(temp,Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);	//creates hbox with the food and the textField
 				mealElements.add(hbox);	//adds the hbox to the arraylist
 				hbox.setPrefWidth(20);
@@ -491,6 +504,8 @@ public class FoodForm extends Form
 
 
 		ListView<HBox> mealView = new ListView<>();
+		mealView.setStyle("-fx-font-size: 12pt;");
+		mealView.setPrefWidth(300);
 
 		ObservableList<HBox> mealList = FXCollections.<HBox>observableArrayList(mealElements);
 
@@ -501,12 +516,13 @@ public class FoodForm extends Form
 
 
 		GridPane popupPane = new GridPane();
-		Label mealsLabel = new Label("Meals that will be deleted:");
+		Label mealsLabel = new StyleLabel("Meals that will be deleted:");
 
 
-		Button cancelButton = new Button("Cancel");
-		Button confirmButton = new Button("Confirm");
+		Button cancelButton = new StyleButton("Cancel");
+		Button confirmButton = new StyleButton("Confirm");
 		HBox popupButtons = new HBox();
+		popupButtons.setSpacing(10);
 		popupButtons.getChildren().addAll(cancelButton, confirmButton);
 
 		VBox popupFields = new VBox();
@@ -515,7 +531,7 @@ public class FoodForm extends Form
 		popupFields.setPadding(new Insets(25, 10, 0, 0));	//above,right,below,left
 		/***************************end popup buttons area**************************/
 		popupPane.addColumn(0, popupFields);
-		Scene scene2 = new Scene(popupPane,400,300);
+		Scene scene2 = new Scene(popupPane,500,400);
 		Stage popup = new Stage();
 		popup.setScene(scene2);
 		popup.initModality(Modality.APPLICATION_MODAL);
@@ -533,7 +549,9 @@ public class FoodForm extends Form
 			if(totalPercent !=0) {
 				for(Meal m: meals) {
 					double temp = m.getPercentage();
-					m.setPercentage(temp* (100 / totalPercent));
+					DecimalFormat df = new DecimalFormat("#.#");	//format decimals
+					double perc = Double.parseDouble(df.format(temp* (100 / totalPercent)));
+					m.setPercentage(perc);
 				}
 				this.sc.runErrorPopUp("Remaining meals' percentages have increased proportionately");
 			}
