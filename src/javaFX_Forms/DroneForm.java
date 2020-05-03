@@ -157,12 +157,12 @@ public class DroneForm extends Form {
 			int numberOfDrones = Integer.parseInt(txtNumberOfDrones.getText());
 			
 			if (userSpecifiedWeight > cargoWeight) {
-				this.sc.runErrorPopUp("The specified weight must be less than or equal to the max cargo weight of the drone.");
+				this.sc.runErrorPopUp("The restricted weight must be less than or equal to the max cargo weight of the drone.");
 				return null;
 			}
 			
 			if (userSpecifiedWeight <= 0 || cargoWeight <= 0) {
-				this.sc.runErrorPopUp("Drone cargo weight and specified weight must be above zero.");
+				this.sc.runErrorPopUp("Drone cargo weight and restricted weight must be above zero.");
 				return null;
 			}
 			

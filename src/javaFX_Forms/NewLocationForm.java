@@ -270,12 +270,12 @@ public class NewLocationForm extends Form {
 			
 			//check drone values
 			if (userSpecifiedWeight > cargoWeight) {
-				this.sc.runErrorPopUp("The specified drone weight must be less than or equal to the max cargo weight of the drone.");
+				this.sc.runErrorPopUp("The restricted drone weight must be less than or equal to the max cargo weight of the drone.");
 				return false;
 			}
 			
 			if (userSpecifiedWeight <= 0 || cargoWeight <= 0) {
-				this.sc.runErrorPopUp("Drone cargo weight and specified weight must be above zero.");
+				this.sc.runErrorPopUp("Drone cargo weight and restricted cargo weight must be above zero.");
 				return false;
 			}
 			
