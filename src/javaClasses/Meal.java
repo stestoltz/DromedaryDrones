@@ -89,11 +89,7 @@ public class Meal implements Serializable {
 	 * @param f - takes in the FoodItem to delete
 	 */
 	public void deleteFood(FoodItem f) {
-		for(HashMap.Entry<FoodItem, Integer> element : meal.entrySet()) {
-			if(f.getName().equals(element.getKey().getName())) {
-				meal.remove(element.getKey());
-			}
-		}
+		meal.remove(f);
 	}
 
 	/**
@@ -165,7 +161,7 @@ public class Meal implements Serializable {
 		if(meal.size() != foodArray.length) {
 			return false;
 		}
-		
+
 		//sort the two meals' foods alphabetically
 		List<String> myFoodList = new ArrayList<>();
 		for (HashMap.Entry<FoodItem,Integer> element : meal.entrySet()) { 
@@ -176,7 +172,7 @@ public class Meal implements Serializable {
 
 		List<String> otherFoodList = Arrays.asList(foodArray);
 		Collections.sort(otherFoodList);	//sorts the new list
-		
+
 		//check if each food (now sorted) is the same and break if any differ
 		for(int i = 0; i<meal.size(); i++) {
 			if(!myFoodList.get(i).equals(otherFoodList.get(i))) {

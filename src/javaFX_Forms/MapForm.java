@@ -173,7 +173,7 @@ public class MapForm extends Form {
 		Button cancel = ((Button) bottom.getLeft());
 		Button save = ((Button) bottom.getRight());
 		
-		top.setPadding(new Insets(10, 10, 10, 10));
+		top.setPadding(new Insets(0, 10, 0, 10));
 		bottom.setPadding(new Insets(10, 10, 10, 10));
 		
 		// user does not want changes to go into effect
@@ -429,7 +429,7 @@ public class MapForm extends Form {
 	public void addDeliveryPoint(DeliveryPoint dp, boolean active) {
 		this.points.add(dp);
 		
-		HBox hbox = new HBox();
+		HBox hbox = new HBox(10);
 		
 		TextField text = new TextField();
 		text.setText(dp.toString());

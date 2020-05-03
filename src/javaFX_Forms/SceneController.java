@@ -13,6 +13,7 @@ import javaClasses.Location;
 import javaClasses.Meal;
 import javaClasses.ShiftDetails;
 import javaFX_Styling.StyleButton;
+import javaFX_Styling.StyleLabel;
 import javaFX_Styling.StyleMenu;
 import javaFX_Styling.StyleMenuBar;
 import javafx.geometry.Pos;
@@ -350,14 +351,14 @@ public class SceneController {
 	 * @param errorText
 	 */
 	public void runErrorPopUp(String errorText) {
-		Label error = new Label(errorText);
+		Label error = new StyleLabel(errorText);
 		error.setWrapText(true);
 		error.setTextAlignment(TextAlignment.CENTER);
 		
 		GridPane popUpPane = new GridPane();
 		popUpPane.setAlignment(Pos.CENTER);
 			
-		Button ok = new Button("Ok");
+		Button ok = new StyleButton("Ok");
 		ok.setAlignment(Pos.CENTER);
 			
 		VBox popUpColumn = new VBox(30);
@@ -365,7 +366,7 @@ public class SceneController {
 		popUpColumn.setAlignment(Pos.CENTER);
 			
 		popUpPane.addColumn(0, popUpColumn);
-		Scene popUpScene = new Scene(popUpPane,300,100);
+		Scene popUpScene = new Scene(popUpPane,300,200);
 		Stage errorPopUp = new Stage();
 		errorPopUp.setScene(popUpScene);
 		errorPopUp.initModality(Modality.APPLICATION_MODAL);
