@@ -45,6 +45,19 @@ public class Drone implements Serializable {
 	}
 	
 	/**
+	 * copy constructor
+	 * @param drone
+	 */
+	public Drone(Drone drone) {
+		this.cargoWeight = drone.cargoWeight;
+		this.averageCruisingSpeed = drone.averageCruisingSpeed;
+		this.maxFlightTime = drone.maxFlightTime;
+		this.turnAroundTime = drone.turnAroundTime;
+		this.deliveryTime = drone.deliveryTime;
+		this.userSpecifiedWeight = drone.userSpecifiedWeight;
+	}
+
+	/**
 	 * @return cargo weight in lbs
 	 */
 	public double getCargoWeight() {
