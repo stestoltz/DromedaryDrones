@@ -202,7 +202,7 @@ public class ShiftSettingsForm extends Form {
 			HBox.setHgrow(temp, Priority.ALWAYS);
 			hbox.getChildren().addAll(temp, inputVal);
 			orderElements.add(hbox);
-			hbox.setPrefWidth(20);
+			hbox.setPrefWidth(30);
 		}
 
 		this.shift = shiftDetails;
@@ -238,7 +238,7 @@ public class ShiftSettingsForm extends Form {
 		try {
 			for(int i = 0; i < Integer.parseInt(hrsinShiftField.getText()); i++) {
 				TextField inputVal = new TextField();
-				inputVal.setPrefWidth(30);
+				inputVal.setPrefWidth(40);
 				if(shift.getHoursInShift() > i) {
 					inputVal.setText(Integer.toString(shift.getOrdersPerHour().get(i)));
 				}
@@ -249,7 +249,7 @@ public class ShiftSettingsForm extends Form {
 				HBox.setHgrow(temp, Priority.ALWAYS);
 				hbox.getChildren().addAll(temp, inputVal);
 				orderElements.add(hbox);
-				hbox.setPrefWidth(20);
+				hbox.setPrefWidth(30);
 			}
 		}
 
