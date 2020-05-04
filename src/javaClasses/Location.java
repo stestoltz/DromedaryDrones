@@ -80,7 +80,7 @@ public class Location implements Serializable {
 		typical.put(burger, 1);
 		typical.put(fries, 1);
 		typical.put(drink, 1);
-		meals.add(new Meal(typical, 55));
+		meals.add(new Meal(typical, 50));
 		
 		HashMap<FoodItem, Integer> meal2 = new HashMap<>();
 		meal2.put(burger, 2);
