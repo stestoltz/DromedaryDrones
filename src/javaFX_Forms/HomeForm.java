@@ -325,8 +325,6 @@ public class HomeForm extends Form {
 				//close streams
 				fileIn.close();
 				objectIn.close();
-
-				this.sc.runErrorPopUp("Location file uploaded successfully!");
 				this.sc.switchToHome();
 
 			} catch (Exception ex) {
