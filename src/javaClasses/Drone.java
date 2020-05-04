@@ -7,9 +7,9 @@ public class Drone implements Serializable {
 	private static final long serialVersionUID = 13456L;
 	
 	private double cargoWeight; /* default: 12 lbs */
-	private double averageCruisingSpeed; /* default: 20 miles per hour */
+	private double averageCruisingSpeed; /* default: 25 miles per hour */
 	private double maxFlightTime; /* default: 20 minutes */
-	private double turnAroundTime; /* default: 3 minutes */
+	private double turnAroundTime; /* default: 2.5 minutes */
 	private double deliveryTime; /* default: 30 seconds */
 	private double userSpecifiedWeight; /*default: equal to cargoWeight */
 	
@@ -37,9 +37,9 @@ public class Drone implements Serializable {
 	 */
 	public Drone() {
 		this.cargoWeight = 12;
-		this.averageCruisingSpeed = 20;
+		this.averageCruisingSpeed = 25;
 		this.maxFlightTime = 20;
-		this.turnAroundTime = 3;
+		this.turnAroundTime = 2.5;
 		this.deliveryTime = 30;
 		this.userSpecifiedWeight = cargoWeight;
 	}

@@ -16,10 +16,10 @@ public class ShiftDetails implements Serializable {
 		this.numberOfShifts = 50;
 		this.hoursInShift = 4;
 		this.ordersPerHour = new ArrayList<>();
-		this.ordersPerHour.add(15);
-		this.ordersPerHour.add(17);
-		this.ordersPerHour.add(22);
-		this.ordersPerHour.add(15);
+		this.ordersPerHour.add(38);
+		this.ordersPerHour.add(45);
+		this.ordersPerHour.add(60);
+		this.ordersPerHour.add(30);
 	}
 	
 	/**
