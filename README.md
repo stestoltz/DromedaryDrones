@@ -1,6 +1,6 @@
 # Dromedary Drones - Blue Team
 
-Dromedary Drones is a java project for running a simulation of a drone food delivery service. The project is run through a user interface with settings pages, a results screen, and savable data. The user is able to modify the drone's specs, the location for where the simulation will take place, the points a drone can deliver to, the food and meal items, as well as the number of orders coming in for the drone. 
+Dromedary Drones is a java project for running a simulation of a drone food delivery service. The project is run through a user interface with settings pages, a results screen, and savable data. The user is able to modify the drone's specs, the location for where the simulation will take place, the points drone(s) can deliver to, the food and meal items, as well as the number of orders coming in for the drone.
 
 ## Getting Started
 In order to get your own copy of this project up and running you will need to have eclipse (or another java IDE), java, and javaFX installed on your computer. Once you have those, all you need to do is clone the repository and you will be able to run the simulation. There are no dependencies needed to be downloaded.
@@ -9,11 +9,13 @@ In order to get your own copy of this project up and running you will need to ha
 
 In order to get the sprint1 version of this repository, navigate to branch "sprint1" and either clone the repository or download it as a ZIP file.
 
+In order to get the sprint2 version of this repository, navigate to the master branch and either clone the repository or download it as a ZIP file.
+
 ## Motivation
 This project was created in order to check the legitimacy and possibility of
 integrating a drone delivery system on college campuses with the option to
 extend to other locations. The initial test is checking Grove City College's
-ability to run an effective delivery system.
+ability to run an effective delivery system, but the ability to add additional locations is also available.
 
 ## Tech/Framework Used
 This project uses standard coding practices.
@@ -22,12 +24,12 @@ This project uses standard coding practices.
 - Java
 - JavaFX
 - Eclipse IDE
+- Google Maps API
 
 
 ## How to Use
 Once you have your copy of the project you can go ahead and run the
-Main.java class in the javaFXForms package ([Found here](./src/javaFX_Forms/Main.java)). This will display the main form GUI which will allow you to access several settings forms as well as run a
-simulation and view the results of that simulation.
+Main.java class in the javaFXForms package ([Found here](./src/javaFX_Forms/Main.java)). This will display the main form GUI which will allow you to access several settings forms as well as run a simulation and view the results of that simulation.
 
 ![](res/main_form_image.jpg)
 
