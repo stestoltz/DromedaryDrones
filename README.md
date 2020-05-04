@@ -3,7 +3,7 @@
 Dromedary Drones is a java project for running a simulation of a drone food delivery service. The project is run through a user interface with settings pages, a results screen, and savable data. The user is able to modify the drone's specs, the location for where the simulation will take place, the points drone(s) can deliver to, the food and meal items, as well as the number of orders coming in for the drone.
 
 ## Getting Started
-In order to get your own copy of this project up and running you will need to have eclipse (or another java IDE), java, and javaFX installed on your computer. Once you have those, all you need to do is clone the repository and you will be able to run the simulation. There are no dependencies needed to be downloaded.
+In order to get your own copy of this project up and running you will need to have eclipse (or another java IDE), java, and javaFX installed on your computer. Once you have those, you need to clone the repository and be sure you have an internet connection (for map functionality) and then you will be able to run the simulation. There are no dependencies needed to be downloaded.
 
 **Which Branch to Clone:**
 
